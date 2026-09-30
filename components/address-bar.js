@@ -134,6 +134,18 @@
     });
   }
 
+  function measureCompact(bar) {
+    const url = bar.querySelector(".addr-url");
+    const probe = document.createElement("span");
+    probe.textContent = url ? url.textContent : "";
+    probe.style.cssText = "position:absolute;left:-9999px;top:0;font:400 16px/22px Roboto,system-ui,sans-serif;white-space:nowrap";
+    document.body.appendChild(probe);
+    const textW = probe.getBoundingClientRect().width;
+    probe.remove();
+    const warn = bar.querySelector(".addr-warn") ? 32 : 0;
+    return Math.ceil(16 + warn + textW);
+  }
+
   function setSmall(target, small) {
     const el = typeof target === "string" ? document.querySelector(target) : target;
     if (!el) return null;
@@ -144,27 +156,14 @@
       bar.dataset.size = next ? "small" : "default";
       return bar;
     }
-    const reduce = global.matchMedia && global.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const pill = bar.querySelector(".addr");
-    const canMeasure = !reduce && pill && pill.getBoundingClientRect().width > 0;
-    if (canMeasure) {
-      const from = pill.getBoundingClientRect().width;
-      bar.classList.toggle("is-small", next);
-      const to = pill.getBoundingClientRect().width;
-      pill.style.maxWidth = from + "px";
-      pill.getBoundingClientRect();
-      requestAnimationFrame(function () {
-        pill.style.maxWidth = to + "px";
-      });
-      const clear = function () {
-        pill.style.maxWidth = "";
-        pill.removeEventListener("transitionend", clear);
-      };
-      pill.addEventListener("transitionend", clear);
-      global.setTimeout(clear, 320);
+    if (next) {
+      bar.style.setProperty("--addr-compact", measureCompact(bar) + "px");
     } else {
-      bar.classList.toggle("is-small", next);
+      global.setTimeout(function () {
+        if (!bar.classList.contains("is-small")) bar.style.removeProperty("--addr-compact");
+      }, 300);
     }
+    bar.classList.toggle("is-small", next);
     bar.dataset.size = next ? "small" : "default";
     return bar;
   }

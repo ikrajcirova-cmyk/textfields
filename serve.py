@@ -298,15 +298,24 @@ def inject_scroll_bridge(html: str) -> str:
     }
     return t;
   }
-  function send(n){ try{ parent.postMessage({type:"addr-scroll",y:n==null?y():n},"*"); }catch(e){} }
+  var downAt=0;
+  function send(n){
+    var v=n==null?y():n;
+    if(v===0&&Date.now()-downAt<280) return;
+    try{ parent.postMessage({type:"addr-scroll",y:v},"*"); }catch(e){}
+  }
   unlock();
   window.addEventListener("scroll",function(){ send(); },{passive:true,capture:true});
   document.addEventListener("scroll",function(){ send(); },{passive:true,capture:true});
-  document.addEventListener("wheel",function(e){ send(e.deltaY>0?Math.max(1,y()):y()); },{passive:true});
+  document.addEventListener("wheel",function(e){
+    if(e.deltaY>0){ downAt=Date.now(); send(Math.max(1,y())); }
+    else send(y());
+  },{passive:true});
   document.addEventListener("touchstart",function(e){ window.__addrTY=e.touches&&e.touches[0]?e.touches[0].clientY:0; },{passive:true});
   document.addEventListener("touchmove",function(e){
     var cy=e.touches&&e.touches[0]?e.touches[0].clientY:0;
-    send((window.__addrTY-cy)>1?Math.max(1,y()):y());
+    if((window.__addrTY-cy)>1){ downAt=Date.now(); send(Math.max(1,y())); }
+    else send(y());
     window.__addrTY=cy;
   },{passive:true});
   send();

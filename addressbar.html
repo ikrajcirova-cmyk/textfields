@@ -386,18 +386,6 @@
     }
 
     .phone-screen.is-browse { overflow: hidden; }
-    .phone-screen.is-browse .addr-bar {
-      transition: padding 200ms ease;
-    }
-    .phone-screen.is-browse .addr {
-      transition: height 200ms ease, width 200ms ease, min-height 200ms ease, padding 200ms ease, gap 200ms ease;
-    }
-    .phone-screen.is-browse .addr-url {
-      transition: font-size 200ms ease, line-height 200ms ease, letter-spacing 200ms ease, padding 200ms ease;
-    }
-    .phone-screen.is-browse .addr-refresh {
-      transition: opacity 160ms ease, width 160ms ease, height 160ms ease;
-    }
     .webview-slot {
       position: relative;
       flex: 1 1 auto;
@@ -1239,12 +1227,21 @@
       };
       requestAnimationFrame(() => requestAnimationFrame(apply));
     }
-    function applyAddrScroll(spec, top) {
+    const addrScrollLock = {};
+    function applyAddrScroll(spec, top, via) {
       const host = document.getElementById(spec.addr);
       if (!host) return;
-      const next = top > 0;
-      host.dataset.addrCollapsed = next ? "1" : "0";
-      AddressBar.setSmall(host, next);
+      const y = Number(top) || 0;
+      if (y > 0) {
+        addrScrollLock[spec.addr] = Date.now();
+        host.dataset.addrCollapsed = "1";
+        AddressBar.setSmall(host, true);
+        return;
+      }
+      if (via === "poll") return;
+      if (Date.now() - (addrScrollLock[spec.addr] || 0) < 280) return;
+      host.dataset.addrCollapsed = "0";
+      AddressBar.setSmall(host, false);
     }
     function bindAddrScroll(frame, spec) {
       if (!frame || frame.dataset.addrScrollBound === "1") {
@@ -1276,9 +1273,9 @@
     function attachDocScroll(doc, spec) {
       if (!doc || !doc.documentElement || doc.documentElement.dataset.addrScrollBound === "1") return;
       doc.documentElement.dataset.addrScrollBound = "1";
-      const sync = () => applyAddrScroll(spec, maxDocScroll(doc));
+      const sync = () => applyAddrScroll(spec, maxDocScroll(doc), "scroll");
       const onWheel = (e) => {
-        if (e.deltaY > 0) applyAddrScroll(spec, Math.max(1, maxDocScroll(doc)));
+        if (e.deltaY > 0) applyAddrScroll(spec, Math.max(1, maxDocScroll(doc)), "gesture");
         else requestAnimationFrame(sync);
       };
       let touchY = 0;
@@ -1288,7 +1285,7 @@
       const onTouchMove = (e) => {
         if (!e.touches || !e.touches[0]) return;
         const y = e.touches[0].clientY;
-        if (touchY - y > 1) applyAddrScroll(spec, Math.max(1, maxDocScroll(doc)));
+        if (touchY - y > 1) applyAddrScroll(spec, Math.max(1, maxDocScroll(doc)), "gesture");
         else requestAnimationFrame(sync);
         touchY = y;
       };
@@ -1308,15 +1305,15 @@
       const spec = WEB[active.dataset.screen];
       const frame = spec && document.getElementById(spec.frame);
       if (!frame) return;
-      try { applyAddrScroll(spec, maxDocScroll(frame.contentDocument)); } catch (e) {}
-    }, 80);
+      try { applyAddrScroll(spec, maxDocScroll(frame.contentDocument), "poll"); } catch (e) {}
+    }, 160);
     window.addEventListener("message", (e) => {
       if (!e.data || e.data.type !== "addr-scroll") return;
       Object.keys(WEB).some((id) => {
         const spec = WEB[id];
         const frame = document.getElementById(spec.frame);
         if (!frame || e.source !== frame.contentWindow) return false;
-        applyAddrScroll(spec, Number(e.data.y) || 0);
+        applyAddrScroll(spec, Number(e.data.y) || 0, "scroll");
         return true;
       });
     });
