@@ -135,15 +135,20 @@
   }
 
   function measureCompact(bar) {
-    const url = bar.querySelector(".addr-url");
-    const probe = document.createElement("span");
-    probe.textContent = url ? url.textContent : "";
-    probe.style.cssText = "position:absolute;left:-9999px;top:0;font:400 16px/22px Roboto,system-ui,sans-serif;white-space:nowrap";
-    document.body.appendChild(probe);
-    const textW = probe.getBoundingClientRect().width;
-    probe.remove();
-    const warn = bar.querySelector(".addr-warn") ? 32 : 0;
-    return Math.ceil(16 + warn + textW);
+    const pill = bar.querySelector(".addr");
+    if (!pill) return 96;
+    const clone = pill.cloneNode(true);
+    clone.style.cssText = "position:absolute;left:-9999px;top:0;height:24px;width:max-content;max-width:none;padding:1px 8px;gap:8px;display:flex;align-items:center";
+    const refresh = clone.querySelector(".addr-refresh");
+    if (refresh) refresh.remove();
+    const cloneUrl = clone.querySelector(".addr-url");
+    if (cloneUrl) {
+      cloneUrl.style.cssText = "flex:none;width:auto;min-width:0;padding:0;font-size:16px;line-height:22px;letter-spacing:0.2px;white-space:nowrap;overflow:visible";
+    }
+    document.body.appendChild(clone);
+    const w = Math.ceil(clone.getBoundingClientRect().width);
+    clone.remove();
+    return w;
   }
 
   function setSmall(target, small) {
