@@ -1239,6 +1239,13 @@
       };
       requestAnimationFrame(() => requestAnimationFrame(apply));
     }
+    function applyAddrScroll(spec, top) {
+      const host = document.getElementById(spec.addr);
+      if (!host) return;
+      const next = top > 0;
+      host.dataset.addrCollapsed = next ? "1" : "0";
+      AddressBar.setSmall(host, next);
+    }
     function bindAddrScroll(frame, spec) {
       if (!frame || frame.dataset.addrScrollBound === "1") {
         try {
@@ -1253,24 +1260,66 @@
       });
       try { attachDocScroll(frame.contentDocument, spec); } catch (e) {}
     }
+    function maxDocScroll(doc) {
+      if (!doc) return 0;
+      let top = 0;
+      const win = doc.defaultView;
+      if (win) top = Math.max(top, win.scrollY || win.pageYOffset || 0);
+      const se = doc.scrollingElement || doc.documentElement;
+      if (se) top = Math.max(top, se.scrollTop || 0);
+      if (doc.body) top = Math.max(top, doc.body.scrollTop || 0);
+      doc.querySelectorAll("body *").forEach((el) => {
+        if (el.scrollTop > top && el.scrollHeight > el.clientHeight + 8) top = el.scrollTop;
+      });
+      return top;
+    }
     function attachDocScroll(doc, spec) {
       if (!doc || !doc.documentElement || doc.documentElement.dataset.addrScrollBound === "1") return;
       doc.documentElement.dataset.addrScrollBound = "1";
-      const THRESHOLD = 12;
-      const sync = (top) => {
-        const host = document.getElementById(spec.addr);
-        AddressBar.setSmall(host, top > THRESHOLD);
+      const sync = () => applyAddrScroll(spec, maxDocScroll(doc));
+      const onWheel = (e) => {
+        if (e.deltaY > 0) applyAddrScroll(spec, Math.max(1, maxDocScroll(doc)));
+        else requestAnimationFrame(sync);
       };
-      const readTop = (target) => {
-        if (target && target.scrollTop != null && target !== doc && target !== doc.defaultView) return target.scrollTop;
-        const se = doc.scrollingElement || doc.documentElement;
-        return (se && se.scrollTop) || (doc.body && doc.body.scrollTop) || 0;
+      let touchY = 0;
+      const onTouchStart = (e) => {
+        if (e.touches && e.touches[0]) touchY = e.touches[0].clientY;
       };
-      const onScroll = (e) => sync(readTop(e && e.target));
-      doc.addEventListener("scroll", onScroll, { passive: true, capture: true });
-      if (doc.defaultView) doc.defaultView.addEventListener("scroll", onScroll, { passive: true });
-      sync(readTop(doc.scrollingElement || doc.documentElement));
+      const onTouchMove = (e) => {
+        if (!e.touches || !e.touches[0]) return;
+        const y = e.touches[0].clientY;
+        if (touchY - y > 1) applyAddrScroll(spec, Math.max(1, maxDocScroll(doc)));
+        else requestAnimationFrame(sync);
+        touchY = y;
+      };
+      doc.addEventListener("scroll", sync, { passive: true, capture: true });
+      doc.addEventListener("wheel", onWheel, { passive: true });
+      doc.addEventListener("touchstart", onTouchStart, { passive: true });
+      doc.addEventListener("touchmove", onTouchMove, { passive: true });
+      if (doc.defaultView) {
+        doc.defaultView.addEventListener("scroll", sync, { passive: true });
+        doc.defaultView.addEventListener("wheel", onWheel, { passive: true });
+      }
+      sync();
     }
+    window.setInterval(() => {
+      const active = proto.querySelector(".phone-screen.is-browse.is-active");
+      if (!active) return;
+      const spec = WEB[active.dataset.screen];
+      const frame = spec && document.getElementById(spec.frame);
+      if (!frame) return;
+      try { applyAddrScroll(spec, maxDocScroll(frame.contentDocument)); } catch (e) {}
+    }, 80);
+    window.addEventListener("message", (e) => {
+      if (!e.data || e.data.type !== "addr-scroll") return;
+      Object.keys(WEB).some((id) => {
+        const spec = WEB[id];
+        const frame = document.getElementById(spec.frame);
+        if (!frame || e.source !== frame.contentWindow) return false;
+        applyAddrScroll(spec, Number(e.data.y) || 0);
+        return true;
+      });
+    });
     function syncPhoneChrome(id) {
       document.documentElement.dataset.phoneScreen = id || "hub";
       if (id !== "hub") document.documentElement.classList.remove("toolbar-open");

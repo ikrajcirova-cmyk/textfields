@@ -4,6 +4,7 @@
   padding: 12px 16px;
   flex: none;
   background: var(--surface, #ffffff);
+  transition: padding 240ms cubic-bezier(0.2, 0, 0, 1);
 }
 [data-theme="dark"] .addr-bar {
   --addr-placeholder: rgba(212, 215, 217, 0.40);
@@ -28,6 +29,15 @@
   font-family: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  margin-inline: auto;
+  max-width: 100%;
+  transition:
+    height 240ms cubic-bezier(0.2, 0, 0, 1),
+    min-height 240ms cubic-bezier(0.2, 0, 0, 1),
+    max-width 240ms cubic-bezier(0.2, 0, 0, 1),
+    padding 240ms cubic-bezier(0.2, 0, 0, 1),
+    gap 240ms cubic-bezier(0.2, 0, 0, 1),
+    border-radius 240ms cubic-bezier(0.2, 0, 0, 1);
 }
 .addr:active, .addr.is-pressed { background: var(--primary-6-pressed, rgba(1, 30, 57, 0.12)); }
 .addr-bar.is-small .addr {
@@ -50,6 +60,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition:
+    font-size 240ms cubic-bezier(0.2, 0, 0, 1),
+    line-height 240ms cubic-bezier(0.2, 0, 0, 1),
+    letter-spacing 240ms cubic-bezier(0.2, 0, 0, 1),
+    padding 240ms cubic-bezier(0.2, 0, 0, 1);
 }
 .addr.is-zadejte .addr-url {
   padding-left: 0;
@@ -70,6 +85,10 @@
   width: 24px;
   height: 24px;
   color: var(--primary-1, #011e39);
+  transition:
+    width 200ms cubic-bezier(0.2, 0, 0, 1),
+    height 200ms cubic-bezier(0.2, 0, 0, 1),
+    opacity 180ms cubic-bezier(0.2, 0, 0, 1);
 }
 .addr-search { color: var(--red-1, #cc0000); }
 .addr.is-warn .addr-url { padding-left: 0; }
@@ -86,6 +105,7 @@
   display: grid;
   place-items: center;
   overflow: hidden;
+  transition: width 240ms cubic-bezier(0.2, 0, 0, 1), height 240ms cubic-bezier(0.2, 0, 0, 1);
 }
 .addr-flag img { display: block; border-radius: 52px; }
 .addr.is-edit .addr-url {
@@ -140,6 +160,7 @@
   justify-content: space-between;
   gap: 12px;
   width: 100%;
+  transition: gap 240ms cubic-bezier(0.2, 0, 0, 1);
 }
 .addr-row .addr { flex: 1; min-width: 0; }
 .addr-avatar, .addr-ghost {
@@ -173,6 +194,7 @@
   opacity: 0;
   overflow: hidden;
   pointer-events: none;
+  margin: 0;
 }
 .addr-bar.is-small .addr-search {
   width: 20px;
@@ -204,4 +226,14 @@
   justify-self: end;
   width: 24px;
   height: 24px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .addr-bar,
+  .addr,
+  .addr-url,
+  .addr-ico,
+  .addr-row,
+  .addr-flag {
+    transition: none;
+  }
 }

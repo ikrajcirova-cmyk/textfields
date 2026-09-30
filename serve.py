@@ -265,6 +265,58 @@ def inject_webview_base(html: str, base: str) -> str:
     return re.sub(r"(<head[^>]*>)", r"\1" + f'<base href="{base}">', html, count=1, flags=re.I)
 
 
+def inject_scroll_bridge(html: str) -> str:
+    snippet = """<style id="addr-scroll-unlock">html,body{height:auto!important;max-height:none!important;overflow:auto!important;}</style>
+<script>
+(function(){
+  function unlock(){
+    var roots=[document.documentElement,document.body];
+    for(var i=0;i<roots.length;i++){
+      if(!roots[i]) continue;
+      roots[i].style.setProperty("overflow","auto","important");
+      roots[i].style.setProperty("height","auto","important");
+      roots[i].style.setProperty("max-height","none","important");
+    }
+    var nodes=document.querySelectorAll("body *");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var st=window.getComputedStyle(el);
+      if((st.overflowY==="hidden"||st.overflow==="hidden")&&el.scrollHeight>el.clientHeight+20){
+        el.style.setProperty("overflow","auto","important");
+      }
+    }
+  }
+  function y(){
+    var t=window.scrollY||0;
+    var se=document.scrollingElement||document.documentElement;
+    if(se) t=Math.max(t,se.scrollTop||0);
+    if(document.body) t=Math.max(t,document.body.scrollTop||0);
+    var nodes=document.querySelectorAll("body *");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      if(el.scrollTop>t&&el.scrollHeight>el.clientHeight+8) t=el.scrollTop;
+    }
+    return t;
+  }
+  function send(n){ try{ parent.postMessage({type:"addr-scroll",y:n==null?y():n},"*"); }catch(e){} }
+  unlock();
+  window.addEventListener("scroll",function(){ send(); },{passive:true,capture:true});
+  document.addEventListener("scroll",function(){ send(); },{passive:true,capture:true});
+  document.addEventListener("wheel",function(e){ send(e.deltaY>0?Math.max(1,y()):y()); },{passive:true});
+  document.addEventListener("touchstart",function(e){ window.__addrTY=e.touches&&e.touches[0]?e.touches[0].clientY:0; },{passive:true});
+  document.addEventListener("touchmove",function(e){
+    var cy=e.touches&&e.touches[0]?e.touches[0].clientY:0;
+    send((window.__addrTY-cy)>1?Math.max(1,y()):y());
+    window.__addrTY=cy;
+  },{passive:true});
+  send();
+})();
+</script>"""
+    if re.search(r"</body>", html, re.I):
+        return re.sub(r"</body>", snippet + "</body>", html, count=1, flags=re.I)
+    return html + snippet
+
+
 def freeze_site_ssr(html: str, site: dict) -> str:
     """Keep server-rendered HTML. Site JS often breaks off the real origin."""
     if site.get("strip_scripts"):
@@ -273,7 +325,7 @@ def freeze_site_ssr(html: str, site: dict) -> str:
     html = html.replace('"//', '"https://').replace("'//", "'https://")
     html = html.replace("url(//", "url(https://")
     html = re.sub(r"(?<=[\s,])//(?=[a-z0-9])", "https://", html)
-    return html
+    return inject_scroll_bridge(html)
 
 
 if __name__ == "__main__":

@@ -139,8 +139,33 @@
     if (!el) return null;
     const bar = el.classList.contains("addr-bar") ? el : el.querySelector(".addr-bar");
     if (!bar) return null;
-    bar.classList.toggle("is-small", !!small);
-    bar.dataset.size = small ? "small" : "default";
+    const next = !!small;
+    if (bar.classList.contains("is-small") === next) {
+      bar.dataset.size = next ? "small" : "default";
+      return bar;
+    }
+    const reduce = global.matchMedia && global.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const pill = bar.querySelector(".addr");
+    const canMeasure = !reduce && pill && pill.getBoundingClientRect().width > 0;
+    if (canMeasure) {
+      const from = pill.getBoundingClientRect().width;
+      bar.classList.toggle("is-small", next);
+      const to = pill.getBoundingClientRect().width;
+      pill.style.maxWidth = from + "px";
+      pill.getBoundingClientRect();
+      requestAnimationFrame(function () {
+        pill.style.maxWidth = to + "px";
+      });
+      const clear = function () {
+        pill.style.maxWidth = "";
+        pill.removeEventListener("transitionend", clear);
+      };
+      pill.addEventListener("transitionend", clear);
+      global.setTimeout(clear, 320);
+    } else {
+      bar.classList.toggle("is-small", next);
+    }
+    bar.dataset.size = next ? "small" : "default";
     return bar;
   }
 

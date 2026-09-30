@@ -504,34 +504,6 @@
     }
     .warn-cta .btn.navy { padding: 13px 40px; }
     .warn-cta .btn.text { padding: 0 8px; }
-    .browser-dock { flex: none; }
-    .browser-bar {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 6px 12px;
-    }
-    .browser-slot {
-      display: grid;
-      place-items: center;
-      padding: 10px 14px;
-      border-radius: 16px;
-      color: var(--on);
-    }
-    .browser-slot.is-on { background: var(--red-2); color: var(--red-1); }
-    .browser-slot .material-symbols-outlined { font-size: 24px; }
-    .browser-s {
-      width: 80px;
-      height: 44px;
-      border-radius: 16px;
-      background: var(--primary-6-hover);
-      display: grid;
-      place-items: center;
-      color: var(--red-1);
-      font-size: 22px;
-      font-weight: 700;
-      line-height: 1;
-    }
 
     main { padding: 32px 40px 80px; overflow: auto; }
     main h2 {
@@ -952,15 +924,6 @@
               <div class="warn-cta">
                 <button type="button" class="btn navy is-block" data-go="hub">Zpět do bezpečí</button>
                 <button type="button" class="btn text is-on" data-go="hub">Přesto pokračovat</button>
-              </div>
-            </div>
-            <div class="browser-dock">
-              <div class="browser-bar">
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">arrow_back</span></span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">arrow_forward</span></span>
-                <span class="browser-s" aria-hidden="true">S</span>
-                <span class="browser-slot is-on" aria-hidden="true"><span class="material-symbols-outlined">photo_library</span></span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">menu</span></span>
               </div>
             </div>
           </div>
