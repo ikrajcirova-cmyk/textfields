@@ -1,0 +1,207 @@
+/* Address Bar — Seznam Aplikace UI Kit. Reuse this file; do not copy these styles. */
+.addr-bar {
+  --addr-placeholder: #99a5b0;
+  padding: 12px 16px;
+  flex: none;
+  background: var(--surface, #ffffff);
+}
+[data-theme="dark"] .addr-bar {
+  --addr-placeholder: rgba(212, 215, 217, 0.40);
+}
+.addr-bar.is-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 16px;
+}
+.addr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 48px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 30px;
+  background: var(--primary-6-hover, rgba(1, 30, 57, 0.08));
+  color: var(--primary-1, #011e39);
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.addr:active, .addr.is-pressed { background: var(--primary-6-pressed, rgba(1, 30, 57, 0.12)); }
+.addr-bar.is-small .addr {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  min-height: 24px;
+  padding: 1px 8px;
+  gap: 8px;
+}
+.addr-url {
+  flex: 1;
+  min-width: 0;
+  padding-left: 24px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0.15px;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.addr.is-zadejte .addr-url {
+  padding-left: 0;
+  padding-right: 12px;
+  color: var(--addr-placeholder);
+}
+.addr-bar.is-small .addr-url {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: 0.2px;
+}
+.addr-ico {
+  display: block;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  color: var(--primary-1, #011e39);
+}
+.addr-search { color: var(--red-1, #cc0000); }
+.addr.is-warn .addr-url { padding-left: 0; }
+.addr-warn {
+  display: grid;
+  place-items: center;
+}
+.addr-warn img { display: block; }
+.addr-flag {
+  width: 26px;
+  height: 26px;
+  border-radius: 52px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.addr-flag img { display: block; border-radius: 52px; }
+.addr.is-edit .addr-url {
+  padding-left: 0;
+  padding-right: 0;
+  text-align: left;
+}
+.addr-text {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0.15px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.addr.is-edit .addr-text { align-items: stretch; min-height: 28px; }
+.addr-cursor {
+  width: 1px;
+  height: 24px;
+  background: #0075f5;
+  flex: none;
+}
+.addr-sel {
+  display: flex;
+  align-items: center;
+  background: #a3c6f0;
+  color: var(--primary-1, #011e39);
+}
+[data-theme="dark"] .addr-sel { background: rgba(163, 198, 240, 0.45); }
+.addr-handle {
+  position: relative;
+  width: 1px;
+  height: 28px;
+  align-self: center;
+  background: #0075f5;
+  flex: none;
+}
+.addr-handle img {
+  position: absolute;
+  left: 50%;
+  display: block;
+}
+.addr-handle.is-start img { top: 0; transform: translate(-50%, -50%); }
+.addr-handle.is-end img { bottom: 0; transform: translate(-50%, 50%); }
+.addr.is-edit { overflow: visible; }
+.addr-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+.addr-row .addr { flex: 1; min-width: 0; }
+.addr-avatar, .addr-ghost {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex: none;
+}
+.addr-avatar { object-fit: cover; display: block; }
+.addr-ghost { opacity: 0; }
+.addr-account {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--primary-6-hover, rgba(1, 30, 57, 0.08));
+  flex: none;
+  color: var(--primary-1, #011e39);
+}
+.addr-logo {
+  display: block;
+  height: 40px;
+  width: 156px;
+  object-fit: contain;
+}
+[data-theme="dark"] .addr-logo { filter: invert(1) hue-rotate(180deg); }
+.addr-bar.is-small .addr-refresh {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.addr-bar.is-small .addr-search {
+  width: 20px;
+  height: 20px;
+}
+.addr-bar.is-small .addr-row {
+  width: auto;
+  justify-content: center;
+  gap: 8px;
+}
+.addr-bar.is-small.is-translate .addr-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) minmax(0, max-content) minmax(0, 1fr) 24px;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+}
+.addr-bar.is-small .addr-row .addr {
+  flex: none;
+  width: auto;
+}
+.addr-bar.is-small.is-translate .addr {
+  grid-column: 3;
+  max-width: 100%;
+  min-width: 0;
+}
+.addr-bar.is-small.is-translate .addr-flag {
+  grid-column: 5;
+  justify-self: end;
+  width: 24px;
+  height: 24px;
+}
