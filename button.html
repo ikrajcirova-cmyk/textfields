@@ -113,15 +113,24 @@
       gap: 12px;
     }
     .brand-lead {
-      display: flex;
-      align-items: flex-start;
-      gap: 4px;
+      display: grid;
+      grid-template-columns: 40px auto;
+      align-items: center;
+      column-gap: 4px;
+      row-gap: 0;
       min-width: 0;
       flex: 1;
     }
     .brand-titles {
-      min-width: 0;
-      flex: 1;
+      display: contents;
+    }
+    .brand-titles h3 {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .brand-titles h1 {
+      grid-column: 1 / -1;
+      grid-row: 2;
     }
     .brand .preview-switch {
       flex: none;
@@ -159,7 +168,7 @@
       cursor: pointer;
       flex: none;
     }
-    .nav-toggle { margin: -8px 0 0 -8px; }
+    .nav-toggle { margin: 0; grid-column: 1; grid-row: 1; }
     .nav-toggle:active, .nav-close:active { background: var(--primary-6-pressed); }
     .nav-scrim {
       display: none;
@@ -678,10 +687,14 @@
     html[data-preview="device"] .brand {
       display: flex;
       position: absolute;
-      top: calc(24px + env(safe-area-inset-top));
-      left: calc(24px + env(safe-area-inset-left));
-      right: calc(24px + env(safe-area-inset-right));
+      top: calc(24px + env(safe-area-inset-top, 0px));
+      left: calc(24px + env(safe-area-inset-left, 0px));
+      right: calc(24px + env(safe-area-inset-right, 0px));
       z-index: 30;
+      width: auto;
+      min-width: 0;
+      padding: 0;
+      gap: 0;
     }
     html[data-preview="device"] .preview-switch {
       padding: 4px;
@@ -690,20 +703,54 @@
       width: 100%;
       justify-content: space-between;
     }
-    html[data-preview="device"] .brand-lead { flex: none; width: auto; }
-    html[data-preview="device"] .brand-titles { display: none; }
+    html[data-preview="device"] .brand-lead {
+      display: grid;
+      grid-template-columns: 40px auto;
+      align-items: center;
+      column-gap: 4px;
+      row-gap: 0;
+      flex: none;
+      width: auto;
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 0 12px 8px 0;
+    }
     html[data-preview="device"] .nav-toggle {
       display: grid;
+      grid-column: 1;
+      grid-row: 1;
       margin: 0;
-      background: var(--surface);
+      background: transparent;
+    }
+    html[data-preview="device"] .brand-titles {
+      display: contents;
+    }
+    html[data-preview="device"] .brand-titles h3 {
+      grid-column: 2;
+      grid-row: 1;
+      margin: 0;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+    }
+    html[data-preview="device"] .brand-titles h1 {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: block;
+      margin: 0;
+      font-size: 32px;
+      line-height: 40px;
+      font-weight: 700;
     }
     html[data-preview="device"] .hub-head,
     html[data-preview="device"] .appbar.hub-head {
-      padding-top: calc(64px + env(safe-area-inset-top));
+      padding: calc(108px + env(safe-area-inset-top, 0px)) 16px 16px;
     }
-    html[data-preview="device"]:not([data-phone-screen="hub"]) .preview-switch,
-    html[data-preview="device"]:not([data-phone-screen="hub"]) .toolbar-fab,
-    html[data-preview="device"]:not([data-phone-screen="hub"]) .nav-toggle {
+    html[data-preview="device"] .hub-kicker,
+    html[data-preview="device"] .hub-head > h1 {
+      display: none;
+    }
+    html[data-preview="device"]:not([data-phone-screen="hub"]) .toolbar-fab {
       display: none !important;
     }
     html[data-preview="device"] aside {
@@ -930,10 +977,8 @@
       </div>
       <p class="lead" data-i18n="ov.lead">This page covers the key information about buttons in Seznam Aplikace.</p>
       <p class="lan-url" id="lan-url" hidden>
-        <span data-i18n="ov.lan">Open on the same Wi‑Fi:</span>
+        <span data-i18n="ov.web">Otevřete na telefonu:</span>
         <a data-lan-page="button.html" hidden href="#"></a>
-        <a data-lan-page="addressbar.html" hidden href="#"></a>
-        <a data-lan-page="textfields.html" hidden href="#"></a>
       </p>
       <div class="def-head">
         <h2 id="types" data-i18n="t1.title">1. Types</h2>
@@ -1107,7 +1152,7 @@
         "nav.tf": "Text field",
         "ov.title": "Overview",
         "ov.lead": "This page covers the key information about buttons in Seznam Aplikace.",
-        "ov.lan": "On the phone open as http (not https), same Wi‑Fi:",
+        "ov.lan": "Open on the phone:",
         "ov.web": "Open on the phone:",
         "t1.title": "1. Types",
         "t1.lead": "This section covers the key information about button types.",
@@ -1171,7 +1216,7 @@
         "nav.tf": "Text field",
         "ov.title": "Přehled",
         "ov.lead": "Na této stránce najdete důležité informace o tlačítkách v Seznam Aplikace.",
-        "ov.lan": "Na telefonu otevřete jako http (ne https), stejná Wi‑Fi:",
+        "ov.lan": "Otevřete na telefonu:",
         "ov.web": "Otevřete na telefonu:",
         "t1.title": "1. Typy",
         "t1.lead": "V této sekci najdete důležité informace o typech tlačítek.",
@@ -1231,7 +1276,6 @@
     };
 
     let specLang = "cs";
-    let lanHref = "";
     function t(key) {
       return (I18N[specLang] && I18N[specLang][key]) || I18N.en[key] || key;
     }
@@ -1434,63 +1478,20 @@
       scrim.addEventListener("click", () => root.classList.remove("toolbar-open"));
     })();
 
-    function isHttpUrl(url) {
-      return /^https?:\/\//i.test(url);
-    }
-    function isPublicHttps() {
-      if (location.protocol !== "https:") return false;
-      const h = location.hostname;
-      if (h === "localhost" || h === "127.0.0.1") return false;
-      if (/^\d+\.\d+\.\d+\.\d+$/.test(h)) return false;
-      return true;
-    }
-    function pickLanBase(urls) {
-      if (!urls || !urls.length) return "";
-      return urls.find((u) => /https?:\/\/\d+\.\d+\.\d+\.\d+/.test(u)) || urls.find((u) => u.includes(".local")) || urls[0];
-    }
-    function paintLanUrl() {
+    (function showCatalogUrl() {
       const el = document.getElementById("lan-url");
-      if (!el || !lanHref || !isHttpUrl(lanHref)) return;
-      const base = String(lanHref).replace(/\/?$/, "/");
-      el.hidden = false;
-      el.querySelectorAll("[data-lan-page]").forEach((a) => {
-        const href = base + a.dataset.lanPage;
+      if (!el) return;
+      const origin = /\.vercel\.app$/i.test(location.hostname)
+        ? location.origin
+        : "https://textfields.vercel.app";
+      const href = origin.replace(/\/$/, "") + "/button.html";
+      const a = el.querySelector("[data-lan-page]");
+      if (a) {
         a.hidden = false;
         a.href = href;
         a.textContent = href;
-      });
-    }
-    (function showLanUrl() {
-      function setUrl(url) {
-        if (!isHttpUrl(url)) return;
-        lanHref = url;
-        paintLanUrl();
       }
-      if (isPublicHttps()) {
-        const label = document.querySelector("#lan-url [data-i18n]");
-        if (label) label.setAttribute("data-i18n", "ov.web");
-        setUrl(location.origin + "/");
-        return;
-      }
-      const baked = window.LAN && pickLanBase(window.LAN.urls);
-      if (baked) setUrl(baked);
-      const endpoints = [];
-      if (location.protocol === "http:" || location.protocol === "https:") {
-        endpoints.push(`${location.protocol}//${location.host}/__lan.json`);
-      }
-      endpoints.push("http://127.0.0.1:8765/__lan.json");
-      function tryNext(i) {
-        if (i >= endpoints.length) return;
-        fetch(endpoints[i], { cache: "no-store" })
-          .then((r) => (r.ok ? r.json() : null))
-          .then((data) => {
-            const base = data && pickLanBase(data.urls);
-            if (base) setUrl(base);
-            else tryNext(i + 1);
-          })
-          .catch(() => tryNext(i + 1));
-      }
-      tryNext(0);
+      el.hidden = false;
     })();
     applySpecLang("cs");
   </script>

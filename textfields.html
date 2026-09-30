@@ -162,16 +162,20 @@
       gap: 12px;
     }
     .brand-lead {
-      display: flex;
-      align-items: flex-start;
-      gap: 4px;
+      display: grid;
+      grid-template-columns: 40px auto;
+      align-items: center;
+      column-gap: 4px;
+      row-gap: 0;
       min-width: 0;
       flex: 1;
     }
     .nav-toggle {
       width: 40px;
       height: 40px;
-      margin: -8px 0 0 -8px;
+      margin: 0;
+      grid-column: 1;
+      grid-row: 1;
       padding: 0;
       border: 0;
       border-radius: 20px;
@@ -265,8 +269,15 @@
       cursor: default;
     }
     .brand-titles {
-      min-width: 0;
-      flex: 1;
+      display: contents;
+    }
+    .brand-titles h3 {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .brand-titles h1 {
+      grid-column: 1 / -1;
+      grid-row: 2;
     }
     .brand .preview-switch {
       flex: none;
@@ -1058,7 +1069,7 @@
       resize: none;
       height: 100%;
       padding-top: 24px;
-      padding-bottom: 16px;
+      padding-bottom: 12px;
     }
     /* Focused single-line: caret stays visible, value scrolls. */
     .tf:focus-within input:not([readonly]) {
@@ -1071,20 +1082,57 @@
     .tf.is-multiline .box {
       height: 120px;
       align-items: stretch;
+      overflow: hidden;
     }
     .tf.is-multiline .field {
+      height: 100%;
       min-height: 0;
+      align-items: stretch;
+      padding-bottom: 12px;
+      box-sizing: border-box;
     }
     .tf.is-multiline .label {
       top: calc(var(--field-h) / 2);
+      z-index: 1;
+    }
+    .tf.is-multiline.is-floated .label,
+    .tf.is-multiline:focus-within .label,
+    .tf.is-multiline.has-value .label {
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 32px;
+      padding: 8px 0;
+      box-sizing: border-box;
+      background: var(--surface);
+    }
+    .tf.is-multiline.outlined.is-floated .label,
+    .tf.is-multiline.outlined:focus-within .label,
+    .tf.is-multiline.outlined.has-value .label {
+      top: 2px;
+    }
+    .tf.is-multiline.filled.is-floated .label,
+    .tf.is-multiline.filled:focus-within .label,
+    .tf.is-multiline.filled.has-value .label {
+      background: var(--container);
+      padding-left: 16px;
+      padding-right: 16px;
     }
     .tf.is-multiline textarea {
+      display: block;
       height: 100%;
-      padding: 20px 0 6px;
+      min-height: 0;
+      max-height: 100%;
+      padding: 36px 0 0;
+      overflow: auto;
+    }
+    .tf.is-multiline.filled textarea {
+      padding-left: 16px;
+      padding-right: 16px;
     }
     .tf.is-multiline:not(:focus-within):not(.has-value):not(.is-floated) textarea {
       padding-top: 0;
-      padding-bottom: 6px;
     }
     .tf.is-wrap .box {
       height: auto;
@@ -1105,8 +1153,8 @@
       overflow-wrap: anywhere;
       min-height: 28px;
       height: auto;
-      padding-top: 20px;
-      padding-bottom: 6px;
+      padding-top: 24px;
+      padding-bottom: 12px;
     }
     .tf select {
       appearance: none;
@@ -1746,20 +1794,53 @@
       justify-content: space-between;
     }
     html[data-preview="device"] .brand-lead {
+      display: grid;
+      grid-template-columns: 40px auto;
+      align-items: center;
+      column-gap: 4px;
+      row-gap: 0;
       flex: none;
       width: auto;
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 0 12px 8px 0;
     }
     html[data-preview="device"] .nav-toggle {
       display: grid;
+      grid-column: 1;
+      grid-row: 1;
       margin: 0;
-      background: var(--surface);
+      background: transparent;
+    }
+    html[data-preview="device"] .brand-titles {
+      display: contents;
+    }
+    html[data-preview="device"] .brand-titles h3 {
+      grid-column: 2;
+      grid-row: 1;
+      margin: 0;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+    }
+    html[data-preview="device"] .brand-titles h1 {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: block;
+      margin: 0;
+      font-size: 32px;
+      line-height: 40px;
+      font-weight: 700;
+    }
+    html[data-preview="device"] .brand > p {
+      display: none;
     }
     html[data-preview="device"] .hub-head,
     html[data-preview="device"] .appbar.hub-head {
-      padding-top: calc(64px + env(safe-area-inset-top, 0px));
+      padding: calc(108px + env(safe-area-inset-top, 0px)) 16px 16px;
     }
-    html[data-preview="device"] .brand-titles,
-    html[data-preview="device"] .brand > p {
+    html[data-preview="device"] .hub-kicker,
+    html[data-preview="device"] .hub-head > h1 {
       display: none;
     }
     html[data-preview="device"] aside {
@@ -1873,10 +1954,6 @@
     html[data-preview="device"] .toolbar-fab .material-symbols-outlined {
       font-size: 24px;
       line-height: 24px;
-    }
-    html[data-preview="device"]:not([data-phone-screen="hub"]) .preview-switch,
-    html[data-preview="device"]:not([data-phone-screen="hub"]) .nav-toggle {
-      display: none !important;
     }
     html[data-preview="device"] .phone-screen {
       padding-top: 0;
@@ -2112,7 +2189,7 @@
               <div class="box">
                 <div class="field">
                   <label class="label">Zpráva</label>
-                  <textarea name="play-msg" rows="4" data-overflow="wrap" data-sample="Aplikace občas spadne při otevírání záložek ze složky Oblíbené."></textarea>
+                  <textarea name="play-msg" rows="1" data-overflow="wrap" data-sample="Aplikace občas spadne při otevírání záložek ze složky Oblíbené."></textarea>
                 </div>
               </div>
               <div class="support"><span>Multiline 120dp</span></div>
@@ -2264,7 +2341,7 @@
               <div class="box">
                 <div class="field">
                   <label class="label">Váš názor</label>
-                  <textarea name="feedback-msg" rows="4" data-overflow="wrap" data-sample="Aplikace občas spadne při otevírání záložek ze složky Oblíbené. Děje se to na Androidu."></textarea>
+                  <textarea name="feedback-msg" rows="1" data-overflow="wrap" data-sample="Aplikace občas spadne při otevírání záložek ze složky Oblíbené. Děje se to na Androidu."></textarea>
                 </div>
               </div>
               <div class="support"><span>Napište nám</span></div>
@@ -2307,9 +2384,7 @@
         This page covers the key information about text fields in Seznam Aplikace.
       </p>
       <p class="lan-url" id="lan-url" hidden>
-        <span data-i18n="ov.lan">Open on the same Wi‑Fi:</span>
-        <a data-lan-page="button.html" hidden href="#"></a>
-        <a data-lan-page="addressbar.html" hidden href="#"></a>
+        <span data-i18n="ov.web">Otevřete na telefonu:</span>
         <a data-lan-page="textfields.html" hidden href="#"></a>
       </p>
       <div class="def-head">
@@ -2527,7 +2602,7 @@
             <div class="box">
               <div class="field">
                 <span class="label">Zpráva</span>
-                <textarea rows="4" tabindex="-1" readonly>Aplikace občas spadne při otevírání záložek ze složky Oblíbené.</textarea>
+                <textarea rows="1" tabindex="-1" readonly>Aplikace občas spadne při otevírání záložek ze složky Oblíbené.</textarea>
               </div>
             </div>
             <div class="support"><span data-i18n="c6.t6s">Write to us</span></div>
@@ -3206,7 +3281,7 @@
         "nav.tf": "Text field",
         "ov.title": "Overview",
         "ov.lead": "This page covers the key information about text fields in Seznam Aplikace.",
-        "ov.lan": "On the phone open as http (not https), same Wi‑Fi:",
+        "ov.lan": "Open on the phone:",
         "ov.web": "Open on the phone:",
         "t1.title": "1. Types",
         "t1.lead": "This section covers the key information about text field types.",
@@ -3334,7 +3409,7 @@
         "nav.tf": "Text field",
         "ov.title": "Přehled",
         "ov.lead": "Na této stránce najdete důležité informace o textových polích v Seznam Aplikace.",
-        "ov.lan": "Na telefonu otevřete jako http (ne https), stejná Wi‑Fi:",
+        "ov.lan": "Otevřete na telefonu:",
         "ov.web": "Otevřete na telefonu:",
         "t1.title": "1. Typy",
         "t1.lead": "V této sekci najdete důležité informace o typech textových polí.",
@@ -3458,7 +3533,6 @@
     };
 
     let specLang = "cs";
-    let lanHref = "";
     function t(key) {
       return (I18N[specLang] && I18N[specLang][key]) || (I18N.en[key] || key);
     }
@@ -4120,63 +4194,20 @@
       scrim.addEventListener("click", closeToolbar);
     })();
 
-    function isHttpUrl(url) {
-      return /^https?:\/\//i.test(url);
-    }
-    function isPublicHttps() {
-      if (location.protocol !== "https:") return false;
-      const h = location.hostname;
-      if (h === "localhost" || h === "127.0.0.1") return false;
-      if (/^\d+\.\d+\.\d+\.\d+$/.test(h)) return false;
-      return true;
-    }
-    function pickLanBase(urls) {
-      if (!urls || !urls.length) return "";
-      return urls.find((u) => /https?:\/\/\d+\.\d+\.\d+\.\d+/.test(u)) || urls.find((u) => u.includes(".local")) || urls[0];
-    }
-    function paintLanUrl() {
+    (function showCatalogUrl() {
       const el = document.getElementById("lan-url");
-      if (!el || !lanHref || !isHttpUrl(lanHref)) return;
-      const base = String(lanHref).replace(/\/?$/, "/");
-      el.hidden = false;
-      el.querySelectorAll("[data-lan-page]").forEach((a) => {
-        const href = base + a.dataset.lanPage;
+      if (!el) return;
+      const origin = /\.vercel\.app$/i.test(location.hostname)
+        ? location.origin
+        : "https://textfields.vercel.app";
+      const href = origin.replace(/\/$/, "") + "/textfields.html";
+      const a = el.querySelector("[data-lan-page]");
+      if (a) {
         a.hidden = false;
         a.href = href;
         a.textContent = href;
-      });
-    }
-    (function showLanUrl() {
-      function setUrl(url) {
-        if (!isHttpUrl(url)) return;
-        lanHref = url;
-        paintLanUrl();
       }
-      if (isPublicHttps()) {
-        const label = document.querySelector("#lan-url [data-i18n]");
-        if (label) label.setAttribute("data-i18n", "ov.web");
-        setUrl(location.origin + "/");
-        return;
-      }
-      const baked = window.LAN && pickLanBase(window.LAN.urls);
-      if (baked) setUrl(baked);
-      const endpoints = [];
-      if (location.protocol === "http:" || location.protocol === "https:") {
-        endpoints.push(`${location.protocol}//${location.host}/__lan.json`);
-      }
-      endpoints.push("http://127.0.0.1:8765/__lan.json");
-      function tryNext(i) {
-        if (i >= endpoints.length) return;
-        fetch(endpoints[i], { cache: "no-store" })
-          .then((r) => (r.ok ? r.json() : null))
-          .then((data) => {
-            const base = data && pickLanBase(data.urls);
-            if (base) setUrl(base);
-            else tryNext(i + 1);
-          })
-          .catch(() => tryNext(i + 1));
-      }
-      tryNext(0);
+      el.hidden = false;
     })();
 
     document.querySelectorAll("[data-lang]").forEach((b) => {

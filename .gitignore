@@ -1,0 +1,6 @@
+.vercel
+.cursor
+.DS_Store
+node_modules
+.env*
+.verify
