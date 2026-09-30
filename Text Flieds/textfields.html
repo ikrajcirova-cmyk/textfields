@@ -1,0 +1,4198 @@
+<!DOCTYPE html>
+<html lang="cs" data-preview="frame" data-phone-screen="hub">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" id="theme-color" content="#ffffff" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>Text Fields — MD3 Expressive · Seznam Aplikace</title>
+  <script>
+    (function () {
+      var p = new URLSearchParams(location.search).get("preview");
+      var mode = "frame";
+      if (p === "device" || p === "phone") mode = "device";
+      else if (p === "frame") mode = "frame";
+      else if (window.matchMedia("(max-width: 700px) and (pointer: coarse)").matches) mode = "device";
+      document.documentElement.setAttribute("data-preview", mode);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <style>
+    :root {
+      --font: "Roboto", system-ui, sans-serif;
+      --radius: 4px;
+      --field-h: 56px;
+      --icon: 24px;
+
+      --base-1: #ffffff;
+      --base-2: #2d2d2d;
+      --primary-1: #011e39;
+      --primary-2: rgba(1, 30, 57, 0.60);
+      --primary-3: rgba(1, 30, 57, 0.40);
+      --primary-4: rgba(1, 30, 57, 0.12);
+      --primary-5: #ebedf0;
+      --primary-5-hover: #f3f4f5;
+      --primary-5-pressed: #d3d5d7;
+      --primary-6: rgba(1, 30, 57, 0.04);
+      --primary-6-hover: rgba(1, 30, 57, 0.08);
+      --primary-6-pressed: rgba(1, 30, 57, 0.12);
+      --red-1: #cc0000;
+      --red-1-hover: #d63333;
+      --red-1-pressed: #a30000;
+      --red-2: rgba(204, 0, 0, 0.08);
+      --on-surface: #ffffff;
+      --grey-1: rgba(0, 0, 0, 0.85);
+      --grey-2: rgba(0, 0, 0, 0.70);
+      --grey-3: rgba(0, 0, 0, 0.20);
+      --confirm: #417505;
+      --outline-sys: #3b99fc;
+
+      --bg: var(--base-1);
+      --surface: var(--base-1);
+      --on: var(--primary-1);
+      --on-var: var(--primary-2);
+      --container: var(--base-1);
+      --container-hover: var(--primary-6-hover);
+      --container-pressed: var(--primary-6-pressed);
+      --indicator: var(--primary-2);
+      --focus: var(--primary-1);
+      --error: var(--red-1);
+      --error-soft: var(--red-2);
+      --disabled-on: rgba(1, 30, 57, 0.38);
+      --disabled-container: var(--primary-6);
+      --cursor: var(--primary-1);
+      --scrim: rgba(1, 30, 57, 0.06);
+      --chip: var(--primary-5);
+      --phone-bezel: #111113;
+      --android-sel: rgba(51, 181, 229, 0.4);
+      --android-handle: #33b5e5;
+    }
+
+    [data-theme="dark"] {
+      --base-1: #121212;
+      --base-2: #474747;
+      --primary-1: #d4d7d9;
+      --primary-2: rgba(212, 215, 217, 0.60);
+      --primary-3: rgba(212, 215, 217, 0.40);
+      --primary-4: rgba(212, 215, 217, 0.16);
+      --primary-5: #2a2a2a;
+      --primary-5-hover: #333333;
+      --primary-5-pressed: #3a3a3a;
+      --primary-6: rgba(212, 215, 217, 0.04);
+      --primary-6-hover: rgba(212, 215, 217, 0.08);
+      --primary-6-pressed: rgba(212, 215, 217, 0.12);
+      --red-1: #e43938;
+      --red-1-hover: #eb7164;
+      --red-1-pressed: #b83e31;
+      --red-2: rgba(228, 57, 56, 0.16);
+      --on-surface: #ffffff;
+      --grey-1: rgba(255, 255, 255, 0.70);
+      --grey-2: rgba(255, 255, 255, 0.60);
+      --grey-3: rgba(255, 255, 255, 0.20);
+      --confirm: #5ea807;
+
+      --bg: #121212;
+      --surface: #121212;
+      --on: #d4d7d9;
+      --on-var: rgba(212, 215, 217, 0.70);
+      --container: var(--base-1);
+      --container-hover: var(--primary-6-hover);
+      --container-pressed: var(--primary-6-pressed);
+      --indicator: rgba(212, 215, 217, 0.60);
+      --focus: #d4d7d9;
+      --error: #e43938;
+      --error-soft: rgba(228, 57, 56, 0.16);
+      --disabled-on: rgba(212, 215, 217, 0.38);
+      --disabled-container: rgba(212, 215, 217, 0.04);
+      --cursor: #d4d7d9;
+      --scrim: rgba(255, 255, 255, 0.06);
+      --chip: #2a2a2a;
+      --android-sel: rgba(150, 230, 255, 0.4);
+      --android-handle: #96e6ff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--on);
+      min-height: 100vh;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      min-height: 100vh;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: max-content;
+      min-width: 0;
+      padding: 24px 20px 32px;
+      border-right: 1px solid var(--primary-4);
+      background: var(--surface);
+      overflow-x: hidden;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 0;
+      min-width: 100%;
+    }
+    .brand-top {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand-lead {
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+      min-width: 0;
+      flex: 1;
+    }
+    .nav-toggle {
+      width: 40px;
+      height: 40px;
+      margin: -8px 0 0 -8px;
+      padding: 0;
+      border: 0;
+      border-radius: 20px;
+      background: transparent;
+      color: var(--on);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      flex: none;
+    }
+    .nav-toggle .material-symbols-outlined {
+      font-size: 24px;
+      line-height: 24px;
+    }
+    .nav-toggle:active { background: var(--primary-6-pressed); }
+    .nav-scrim {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 49;
+      border: 0;
+      background: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+    html.nav-open .nav-scrim { display: block; }
+    .comp-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 50;
+      width: min(280px, 86vw);
+      background: var(--surface);
+      box-shadow: 8px 0 32px rgba(1, 30, 57, 0.16);
+      transform: translate3d(-105%, 0, 0);
+      transition: transform 280ms cubic-bezier(0.05, 0.7, 0.1, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+    }
+    html.nav-open .comp-nav { transform: none; }
+    .comp-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 8px 8px 20px;
+      flex: none;
+    }
+    .comp-nav-title {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--on);
+    }
+    .nav-close {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border: 0;
+      border-radius: 20px;
+      background: transparent;
+      color: var(--on);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+    .nav-close:active { background: var(--primary-6-pressed); }
+    .comp-nav-list {
+      list-style: none;
+      margin: 8px 0 24px;
+      padding: 0;
+    }
+    .comp-nav-list a {
+      display: block;
+      padding: 12px 20px;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 400;
+      color: var(--on);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .comp-nav-list a[aria-current="page"] {
+      font-weight: 600;
+      background: var(--primary-6);
+    }
+    .comp-nav-list a[aria-disabled="true"] {
+      color: var(--on-var);
+      pointer-events: none;
+      cursor: default;
+    }
+    .brand-titles {
+      min-width: 0;
+      flex: 1;
+    }
+    .brand .preview-switch {
+      flex: none;
+    }
+    .brand .preview-switch .seg {
+      width: auto;
+    }
+    .brand .preview-switch .seg button {
+      flex: none;
+      padding: 6px 12px;
+    }
+    .brand .kicker,
+    .brand h3 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--on);
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 40px;
+      font-weight: 700;
+    }
+    .brand p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--on-var);
+    }
+    .lan-url a {
+      display: block;
+      margin-top: 8px;
+      word-break: break-all;
+    }
+    html[data-preview="device"] .lan-url { display: none !important; }
+
+    .toolbar {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      flex-wrap: nowrap;
+      gap: 8px;
+      width: 100%;
+      max-width: none;
+      overflow: visible;
+    }
+    .toolbar-group {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .toolbar-group h3 { display: none; }
+    .seg {
+      display: flex;
+      width: 100%;
+      background: var(--chip);
+      border-radius: 999px;
+      padding: 3px;
+      gap: 2px;
+      overflow: visible;
+    }
+    .seg button {
+      flex: 1;
+      font-family: inherit;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 500;
+      border: 0;
+      background: transparent;
+      color: var(--on-var);
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: unset;
+      text-align: center;
+    }
+    .seg button[aria-pressed="true"] {
+      background: var(--on);
+      color: var(--surface);
+    }
+    .phone {
+      width: 412px;
+      margin: 8px auto 0;
+      position: relative;
+      background: linear-gradient(165deg, #3a3a3e 0%, #1a1a1c 18%, #111113 52%, #0c0c0e 100%);
+      border-radius: 48px;
+      padding: 11px 10px 13px;
+      box-shadow:
+        0 0 0 1px #2c2c30,
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+        0 28px 56px rgba(1, 30, 57, 0.22);
+    }
+    .phone::before {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: 148px;
+      width: 3px;
+      height: 64px;
+      background: #0a0a0b;
+      border-radius: 0 2px 2px 0;
+      box-shadow: inset 0 0 0 1px #2a2a2c;
+    }
+    .phone::after {
+      content: "";
+      position: absolute;
+      left: -2px;
+      top: 128px;
+      width: 3px;
+      height: 86px;
+      background: #0a0a0b;
+      border-radius: 2px 0 0 2px;
+      box-shadow: inset 0 0 0 1px #2a2a2c;
+    }
+    .phone-screen {
+      background: var(--surface);
+      border-radius: 36px;
+      overflow: hidden;
+      min-height: 640px;
+      display: flex;
+      flex-direction: column;
+    }
+    .status {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 22px 0;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      flex: none;
+      position: relative;
+      z-index: 1;
+    }
+    .status-time { font-variant-numeric: tabular-nums; }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--on);
+    }
+    .status-icons .material-symbols-outlined {
+      font-size: 17px;
+      font-variation-settings: "FILL" 1, "wght" 500, "GRAD" 0, "opsz" 24;
+    }
+    .status-battery {
+      width: 22px;
+      height: 11px;
+      border: 1.4px solid currentColor;
+      border-radius: 3px;
+      position: relative;
+      margin-left: 1px;
+      opacity: 0.95;
+    }
+    .status-battery::before {
+      content: "";
+      position: absolute;
+      inset: 1.5px 2px 1.5px 1.5px;
+      background: currentColor;
+      border-radius: 1px;
+    }
+    .status-battery::after {
+      content: "";
+      position: absolute;
+      right: -3.5px;
+      top: 2.5px;
+      width: 2px;
+      height: 4px;
+      background: currentColor;
+      border-radius: 0 1px 1px 0;
+    }
+    .appbar {
+      padding: 8px 16px 16px;
+    }
+    .appbar h3,
+    .hub-kicker {
+      margin: 0;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+      color: var(--on);
+    }
+    .appbar h1,
+    .hub-head h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 40px;
+      font-weight: 700;
+    }
+    .appbar h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 32px;
+      font-weight: 700;
+    }
+    .appbar span:not(.material-symbols-outlined),
+    .hub-lead {
+      display: block;
+      margin: 4px 0 0;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      color: var(--on-var);
+    }
+    .form {
+      padding: 8px 16px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      flex: 1;
+    }
+    .nav-hint {
+      margin: 8px 16px 20px;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--on-var);
+    }
+
+    main {
+      padding: 32px 40px 80px;
+      overflow: auto;
+    }
+    main h2 {
+      margin: 40px 0 8px;
+      font-size: 24px;
+      line-height: 32px;
+      scroll-margin-top: 88px;
+    }
+    main h2:first-child { margin-top: 0; }
+    .spec-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: flex-start;
+      gap: 12px 16px;
+      margin: 0 0 8px;
+    }
+    .spec-head h2 { margin: 0; }
+    .lang-switch {
+      display: inline-flex;
+      background: var(--chip);
+      border-radius: 999px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .lang-switch button {
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 500;
+      border: 0;
+      background: transparent;
+      color: var(--on-var);
+      padding: 7px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .lang-switch button[aria-pressed="true"] {
+      background: var(--on);
+      color: var(--surface);
+    }
+    .def-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: flex-start;
+      gap: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      margin: 32px -40px 8px;
+      padding: 16px 40px;
+      background: var(--bg);
+    }
+    .def-head h2 {
+      margin: 0;
+    }
+    .def-tabs {
+      display: inline-flex;
+      background: var(--chip);
+      border-radius: 999px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .def-tabs button {
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 500;
+      border: 0;
+      background: transparent;
+      color: var(--on-var);
+      padding: 7px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .def-tabs button[aria-selected="true"] {
+      background: var(--on);
+      color: var(--surface);
+    }
+    .def-panel[hidden] { display: none !important; }
+    .def-panel > h3:first-of-type { margin-top: 8px; }
+
+    .type-board {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px 48px;
+      align-items: start;
+      margin: 0 0 20px;
+      padding: 48px 32px 32px;
+      max-width: 760px;
+      background: var(--primary-6);
+      border-radius: 28px;
+    }
+    .type-example {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+    .type-example .tf { width: 100%; }
+    .type-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--on);
+      color: var(--surface);
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 600;
+      flex: none;
+    }
+    .type-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 0 0 8px;
+      padding: 0;
+      list-style: none;
+      max-width: 760px;
+    }
+    .type-legend li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--on);
+    }
+    @media (max-width: 640px) {
+      .type-board { grid-template-columns: 1fr; padding: 32px 20px; }
+    }
+    .state-board {
+      margin: 0 0 12px;
+      padding: 32px 28px;
+      background: var(--primary-6);
+      border-radius: 28px;
+    }
+    .state-board .grid { margin: 0; }
+    .measure-board {
+      --md-ink: #c43b6e;
+      --md-tick: #e59ab3;
+      --md-zone: #f3c2d2;
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+      margin: 8px 0 12px;
+      padding: 48px 40px 40px;
+      border-radius: 28px;
+      background: var(--primary-6);
+    }
+    .measure-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px 56px;
+    }
+    .md-spec {
+      --md-ink: #c43b6e;
+      --md-tick: #e59ab3;
+      --md-zone: #f3c2d2;
+      --ruler-h: 22px;
+      display: grid;
+      grid-template-columns: 28px 1fr 22px;
+      column-gap: 8px;
+      align-items: start;
+    }
+    .md-spec.is-icon { --ruler-h: 40px; }
+    .md-spec.is-plain { --ruler-h: 0px; }
+    .md-main { min-width: 0; }
+    .md-hgt,
+    .md-cap,
+    .md-4 {
+      color: var(--md-ink);
+      font-size: 11px;
+      line-height: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+    .md-hgt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: var(--ruler-h);
+    }
+    .md-hgt > i,
+    .md-hgt span i {
+      display: block;
+      width: 8px;
+      height: 56px;
+      margin-top: 3px;
+      box-sizing: border-box;
+      background: linear-gradient(var(--md-tick), var(--md-tick)) 50% 50% / 1px 100% no-repeat;
+      border-top: 1px solid var(--md-tick);
+      border-bottom: 1px solid var(--md-tick);
+    }
+    .md-hgt.is-stack {
+      height: 56px;
+      box-sizing: content-box;
+      justify-content: space-between;
+    }
+    .md-hgt.is-stack span {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .md-hgt.is-stack span i { height: 8px; margin-top: 2px; }
+    .md-ruler {
+      display: flex;
+      align-items: flex-end;
+      height: var(--ruler-h);
+      margin-bottom: 2px;
+    }
+    .md-ruler .grow { flex: 1; min-width: 0; }
+    .md-ruler.is-icon {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 2px;
+    }
+    .md-ruler.is-icon .md-row {
+      display: flex;
+      align-items: flex-end;
+      width: 100%;
+    }
+    .md-cap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: none;
+    }
+    .md-cap.w16, .md-slot.w16 { width: 16px; }
+    .md-cap.w12, .md-slot.w12 { width: 12px; }
+    .md-cap.w24, .md-slot.w24 { width: 24px; }
+    .md-slot { flex: none; }
+    .md-cap i {
+      display: block;
+      width: 100%;
+      height: 8px;
+      margin-top: 2px;
+      box-sizing: border-box;
+      background: linear-gradient(var(--md-tick), var(--md-tick)) 50% 50% / 100% 1px no-repeat;
+      border-left: 1px solid var(--md-tick);
+      border-right: 1px solid var(--md-tick);
+    }
+    .md-cap.is-up i {
+      order: -1;
+      margin-top: 0;
+      margin-bottom: 2px;
+    }
+    .tf.md-draw.outlined .box { background: var(--base-1); overflow: hidden; }
+    .tf.md-draw .box { padding: 0; gap: 0; }
+    .tf.md-draw .md-pad,
+    .tf.md-draw .md-gap,
+    .md-supline .md-pad,
+    .md-supgrid .md-pad {
+      flex: none;
+      align-self: stretch;
+      pointer-events: none;
+    }
+    .tf.md-draw .md-pad,
+    .md-supline .md-pad,
+    .md-supgrid .md-pad {
+      width: 16px;
+      min-height: 16px;
+      background: var(--md-zone, #f3c2d2);
+    }
+    .tf.md-draw .md-gap { width: 12px; }
+    .tf.md-draw .icon.trailing { margin: 0; }
+    .tf.md-draw .md-band {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: var(--md-zone);
+      pointer-events: none;
+    }
+    .tf.md-draw .md-band.top { top: 0; }
+    .tf.md-draw .md-band.bot { bottom: 0; }
+    .md-bar4 {
+      height: 4px;
+      background: var(--md-zone, #f3c2d2);
+    }
+    .md-4 {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: calc(var(--ruler-h) + 2px + 56px);
+      height: 4px;
+    }
+    .md-4 i {
+      display: block;
+      width: 8px;
+      height: 4px;
+      box-sizing: border-box;
+      background: linear-gradient(var(--md-tick), var(--md-tick)) 50% 50% / 100% 1px no-repeat;
+      border-left: 1px solid var(--md-tick);
+      border-right: 1px solid var(--md-tick);
+    }
+    .md-supline {
+      display: flex;
+      align-items: center;
+      min-height: 16px;
+      margin-top: 2px;
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0.4px;
+      color: var(--on-var);
+    }
+    .md-supline .md-txt { flex: 1; min-width: 0; }
+    .md-supline .md-count { flex: none; }
+    .md-under {
+      display: flex;
+      align-items: flex-start;
+      margin-top: 2px;
+    }
+    .md-under .grow { flex: 1; min-width: 0; }
+    .md-supgrid.has-count {
+      display: grid;
+      grid-template-columns: 16px 1fr 16px max-content 16px;
+      align-items: center;
+      margin-top: 2px;
+    }
+    .md-supgrid.has-count .md-txt,
+    .md-supgrid.has-count .md-count {
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0.4px;
+      color: var(--on-var);
+    }
+    .md-supgrid.has-count .md-cap { justify-self: center; }
+    .tf.md-draw.filled .box { overflow: hidden; }
+    [data-theme="dark"] .measure-board,
+    [data-theme="dark"] .md-spec {
+      --md-ink: #f48fb1;
+      --md-tick: #f48fb1;
+      --md-zone: rgba(244, 143, 177, 0.28);
+    }
+    .measure-card > .type-dot {
+      margin: 16px auto 0;
+    }
+    .measure-board + .type-legend {
+      margin-top: 20px;
+    }
+    @media (max-width: 720px) {
+      .measure-pair { grid-template-columns: 1fr; }
+      .measure-board { padding: 32px 16px 28px; }
+    }
+    main .lead {
+      margin: 8px 0 24px;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--on-var);
+      max-width: 720px;
+    }
+    main h2:has(+ .lead),
+    main h3:has(+ .lead),
+    .spec-head:has(+ .lead),
+    .def-head:has(+ .lead) {
+      margin-bottom: 0;
+    }
+    .def-head:has(+ .lead) {
+      padding-bottom: 0;
+    }
+    main strong {
+      color: var(--on);
+      font-weight: 700;
+    }
+    main a {
+      color: var(--on);
+      font-weight: 600;
+    }
+    main h3 {
+      margin: 24px 0 8px;
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 700;
+    }
+    main .lead + h3 { margin-top: 8px; }
+    main ul.spec-list {
+      margin: 0 0 16px;
+      padding-left: 20px;
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--on-var);
+    }
+    main ul.spec-list li { margin: 0 0 6px; }
+    main ul.spec-list strong { color: var(--on); font-weight: 600; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px 24px;
+    }
+    .cell {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cell .meta {
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--on);
+      font-weight: 500;
+    }
+
+    .config-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 800px;
+      margin: 0 0 8px;
+    }
+    .config-item {
+      display: grid;
+      grid-template-columns: minmax(240px, 320px) 1fr;
+      gap: 12px 28px;
+      align-items: center;
+    }
+    .config-item.is-tall { align-items: start; }
+    .config-item .desc {
+      margin: 0;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--on-var);
+    }
+    .config-item .desc strong {
+      display: block;
+      color: var(--on);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    @media (max-width: 720px) {
+      .config-item,
+      .config-item.is-tall { grid-template-columns: 1fr; }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--on-var);
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--primary-4);
+      vertical-align: top;
+    }
+    th:first-child,
+    td:first-child {
+      padding-left: 0;
+    }
+    td {
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--on-var);
+    }
+    th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--on);
+      font-weight: 700;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      background: var(--chip);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .swatch {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      vertical-align: -1px;
+      margin-right: 6px;
+      border: 1px solid var(--primary-4);
+    }
+
+    /* ---- Text field (MD3 Expressive anatomy) ---- */
+    .tf {
+      position: relative;
+      width: 100%;
+      font-family: var(--font);
+    }
+    .tf .box {
+      position: relative;
+      height: var(--field-h);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      min-width: 0;
+    }
+    .tf.filled .box {
+      background: var(--container);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 0;
+    }
+    .tf.filled .box::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 1px;
+      background: var(--indicator);
+    }
+    .tf.outlined .box {
+      background: transparent;
+      border-radius: var(--radius);
+      box-shadow: inset 0 0 0 1px var(--primary-3);
+    }
+
+    .tf .field {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+    .tf input, .tf textarea, .tf select {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font-family: inherit;
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: 0.2px;
+      color: var(--on);
+      padding: 20px 0 6px;
+      caret-color: var(--cursor);
+      user-select: text;
+    }
+    .tf input, .tf select {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tf input::-webkit-search-cancel-button {
+      appearance: none;
+      display: none;
+    }
+    .tf textarea {
+      box-sizing: border-box;
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      word-break: normal;
+      overflow: auto;
+      text-overflow: clip;
+      resize: none;
+      height: 100%;
+      padding-top: 24px;
+      padding-bottom: 16px;
+    }
+    /* Focused single-line: caret stays visible, value scrolls. */
+    .tf:focus-within input:not([readonly]) {
+      text-overflow: clip;
+    }
+    .tf.is-pick input {
+      user-select: none;
+      caret-color: transparent;
+    }
+    .tf.is-multiline .box {
+      height: 120px;
+      align-items: stretch;
+    }
+    .tf.is-multiline .field {
+      min-height: 0;
+    }
+    .tf.is-multiline .label {
+      top: calc(var(--field-h) / 2);
+    }
+    .tf.is-multiline textarea {
+      height: 100%;
+      padding: 20px 0 6px;
+    }
+    .tf.is-multiline:not(:focus-within):not(.has-value):not(.is-floated) textarea {
+      padding-top: 0;
+      padding-bottom: 6px;
+    }
+    .tf.is-wrap .box {
+      height: auto;
+      min-height: var(--field-h);
+      align-items: flex-start;
+    }
+    .tf.is-wrap .field {
+      align-items: stretch;
+    }
+    .tf.is-wrap .label {
+      top: 8px;
+      transform: none;
+      font-size: 12px;
+      line-height: 16px;
+    }
+    .tf.is-wrap textarea {
+      overflow: hidden;
+      overflow-wrap: anywhere;
+      min-height: 28px;
+      height: auto;
+      padding-top: 20px;
+      padding-bottom: 6px;
+    }
+    .tf select {
+      appearance: none;
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font-family: inherit;
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: 0.2px;
+      color: var(--on);
+      padding: 20px 0 6px;
+    }
+    .tf .prefix {
+      font-size: 16px;
+      line-height: 22px;
+      color: var(--on-var);
+      padding-top: 14px;
+      flex: none;
+    }
+    .tf .label {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      line-height: 22px;
+      color: var(--on-var);
+      pointer-events: none;
+      transform-origin: left top;
+      transition: transform 150ms cubic-bezier(0.2, 0, 0, 1), font-size 150ms cubic-bezier(0.2, 0, 0, 1), color 150ms, top 150ms;
+    }
+    .tf .icon {
+      width: var(--icon);
+      height: var(--icon);
+      font-size: 24px;
+      color: var(--on-var);
+      flex: none;
+      display: grid;
+      place-items: center;
+      user-select: none;
+    }
+    .tf .icon.btn {
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      color: inherit;
+      font-family: "Material Symbols Outlined";
+    }
+    .tf .support {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 16px;
+      padding: 4px 16px 0;
+      font-size: 12px;
+      line-height: 16px;
+      letter-spacing: 0.4px;
+      color: var(--on-var);
+    }
+    .tf.filled .support {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    /* Floated label: focus or populated */
+    .tf.is-floated .label,
+    .tf:focus-within .label,
+    .tf.has-value .label {
+      top: 8px;
+      transform: none;
+      font-size: 12px;
+      line-height: 16px;
+    }
+    .tf:not(.is-floated):not(:focus-within):not(.has-value) input,
+    .tf:not(.is-floated):not(:focus-within):not(.has-value) select {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    /* Focus — skip when error so Red 1 stays visible while typing */
+    .tf.filled:focus-within:not(.is-disabled):not(.is-error) .box::after,
+    .tf.filled.force-focus:not(.is-disabled):not(.is-error) .box::after {
+      height: 2px;
+      background: var(--focus);
+    }
+    .tf.outlined:focus-within:not(.is-disabled):not(.is-error) .box,
+    .tf.outlined.force-focus:not(.is-disabled):not(.is-error) .box {
+      box-shadow: inset 0 0 0 2px var(--focus);
+    }
+    .tf:focus-within:not(.is-error) .label,
+    .tf.force-focus:not(.is-error) .label {
+      color: var(--focus);
+    }
+
+    /* Error — including error + focused */
+    .tf.is-error.filled .box::after,
+    .tf.is-error.filled:focus-within .box::after,
+    .tf.is-error.filled.force-focus .box::after { height: 2px; background: var(--error); }
+    .tf.is-error.outlined .box,
+    .tf.is-error.outlined:focus-within .box,
+    .tf.is-error.outlined.force-focus .box { box-shadow: inset 0 0 0 2px var(--error); }
+    .tf.is-error .label,
+    .tf.is-error .support,
+    .tf.is-error .icon.trailing { color: var(--error); }
+    .tf.is-error .support { font-weight: 500; }
+    .tf .error-icon { display: none; }
+    .tf.is-error .error-icon { display: grid; }
+
+    /* Disabled */
+    .tf.is-disabled { pointer-events: none; }
+    .tf.is-disabled.filled .box { background: var(--disabled-container); }
+    .tf.is-disabled.filled .box::after { background: var(--disabled-on); }
+    .tf.is-disabled.outlined .box { box-shadow: inset 0 0 0 1px var(--primary-4); }
+    .tf.is-disabled input,
+    .tf.is-disabled .label,
+    .tf.is-disabled .support,
+    .tf.is-disabled .icon,
+    .tf.is-disabled .prefix { color: var(--disabled-on); }
+
+    .tf.force-focus input { caret-color: var(--cursor); }
+    .tf.catalog input,
+    .tf.catalog textarea,
+    .tf.catalog select { pointer-events: none; caret-color: transparent; }
+    .tf.catalog.force-focus input { caret-color: var(--cursor); }
+    .tf.is-error { --cursor: var(--error); }
+
+    .caret {
+      display: none;
+      width: 2px;
+      height: 20px;
+      background: var(--cursor);
+      margin: 0 -1px;
+      flex: none;
+      animation: blink 1s steps(1) infinite;
+    }
+    .tf.catalog.force-focus.has-value .caret { display: inline-block; }
+    .tf.catalog.has-selection .caret { display: none; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .tf .input-face {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 6px;
+      top: 20px;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: 0.2px;
+      color: var(--on);
+      pointer-events: none;
+      white-space: nowrap;
+      overflow: visible;
+    }
+    .tf input.is-ghost {
+      color: transparent;
+      caret-color: transparent;
+    }
+    .tf .sel {
+      position: relative;
+      background: var(--android-sel);
+      color: var(--on);
+    }
+    .tf .handle {
+      position: absolute;
+      top: 100%;
+      width: 12px;
+      height: 12px;
+      margin-top: 1px;
+      background: var(--android-handle);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .tf .handle-start { left: 0; transform: translateX(-50%); }
+    .tf .handle-end { right: 0; transform: translateX(50%); }
+    .tf.catalog.has-selection .support { margin-top: 10px; }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .chip {
+      font-size: 11px;
+      line-height: 16px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--on-var);
+    }
+
+    .hub-head {
+      padding: 8px 16px 16px;
+    }
+    .hub-section {
+      margin: 0;
+      padding: 8px 16px 8px;
+      font-size: 22px;
+      line-height: 28px;
+      font-weight: 700;
+      color: var(--on);
+    }
+    .hub-list + .hub-section {
+      padding-top: 16px;
+    }
+    .hub-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 16px 8px;
+    }
+    .hub-list:last-child {
+      padding-bottom: 28px;
+    }
+    .hub-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      margin: 0;
+      background: var(--chip);
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-align: left;
+      font-family: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+    .hub-row:hover { background: var(--primary-5-hover); }
+    .hub-row .hub-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: var(--surface);
+      color: var(--on);
+      flex: none;
+    }
+    .hub-row .hub-icon .material-symbols-outlined {
+      margin: 0;
+      font-size: 22px;
+    }
+    .hub-row .hub-copy { flex: 1; min-width: 0; }
+    .hub-row strong {
+      display: block;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 500;
+    }
+    .hub-row .hint {
+      display: block;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--on-var);
+    }
+    .hub-row > .material-symbols-outlined { margin-left: auto; color: var(--on-var); flex: none; }
+    .phone-screen[hidden] { display: none !important; }
+
+    .phone-stage {
+      position: relative;
+      overflow: hidden;
+      height: 892px;
+      border-radius: 36px;
+      background: var(--surface);
+    }
+    .phone-stage::before {
+      content: "";
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      width: 12px;
+      height: 12px;
+      margin-left: -6px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%, #3d4a58 0%, #12151a 48%, #050506 100%);
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 0 0 3px rgba(255, 255, 255, 0.06);
+      z-index: 12;
+      pointer-events: none;
+    }
+    .phone-stage::after {
+      content: "";
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      width: 108px;
+      height: 4px;
+      margin-left: -54px;
+      border-radius: 4px;
+      background: var(--on);
+      opacity: 0.38;
+      z-index: 12;
+      pointer-events: none;
+    }
+    .phone.product-phone .phone-stage > .phone-screen {
+      position: absolute;
+      inset: 0;
+      min-height: 0;
+      height: 100%;
+      width: 100%;
+      border-radius: 0;
+      background: var(--surface);
+      overflow: auto;
+    }
+    .phone-stage > .phone-screen.is-active { z-index: 1; }
+    .phone-stage > .phone-screen.is-animating { display: flex !important; }
+    .phone-stage > .phone-screen.enter-forward {
+      z-index: 4;
+      animation: android-enter-forward 320ms cubic-bezier(0.32, 0, 0.2, 1) both;
+    }
+    .phone-stage > .phone-screen.exit-forward {
+      z-index: 1;
+      animation: android-exit-forward 320ms cubic-bezier(0.32, 0, 0.2, 1) both;
+    }
+    .phone-stage > .phone-screen.enter-back {
+      z-index: 1;
+      animation: android-enter-back 320ms cubic-bezier(0.32, 0, 0.2, 1) both;
+    }
+    .phone-stage > .phone-screen.exit-back {
+      z-index: 4;
+      animation: android-exit-back 320ms cubic-bezier(0.32, 0, 0.2, 1) both;
+    }
+    @keyframes android-enter-forward {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    @keyframes android-exit-forward {
+      from { transform: translateX(0); }
+      to { transform: translateX(-28%); }
+    }
+    @keyframes android-enter-back {
+      from { transform: translateX(-28%); }
+      to { transform: translateX(0); }
+    }
+    @keyframes android-exit-back {
+      from { transform: translateX(0); }
+      to { transform: translateX(100%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .phone-stage > .phone-screen.enter-forward,
+      .phone-stage > .phone-screen.exit-forward,
+      .phone-stage > .phone-screen.enter-back,
+      .phone-stage > .phone-screen.exit-back {
+        animation: none;
+      }
+    }
+    .appbar.row button.icon-btn,
+    .appbar.large button.icon-btn {
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      color: inherit;
+      font-family: "Material Symbols Outlined";
+      font-size: 24px;
+      line-height: 24px;
+    }
+    .tf.is-pick { cursor: pointer; }
+    .folder-list {
+      display: flex;
+      flex-direction: column;
+      padding: 8px 0 28px;
+    }
+    .folder-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      margin: 0;
+      padding: 12px 16px 12px calc(16px + (var(--lvl, 0) * 36px));
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-family: inherit;
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: 0.2px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .folder-row:hover { background: var(--container-hover); }
+    .folder-row .material-symbols-outlined {
+      font-size: 24px;
+      color: var(--on-var);
+      flex: none;
+    }
+    .folder-row .folder-name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .folder-row .folder-check {
+      opacity: 0;
+      color: var(--on-var);
+    }
+    .folder-row[aria-pressed="true"] .folder-check { opacity: 1; }
+    .phone.product-phone {
+      width: 412px;
+      min-width: 412px;
+      margin: 0;
+    }
+    .phone.product-phone .phone-screen {
+      min-height: 0;
+      height: 100%;
+    }
+    .appbar.row {
+      display: flex;
+      align-items: center;
+      min-height: 64px;
+      padding: 8px 4px;
+      gap: 0;
+      position: relative;
+      flex: none;
+    }
+    .appbar.row h2 {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+      padding: 0 4px 0 8px;
+      font-size: 22px;
+      line-height: 28px;
+      font-weight: 400;
+      letter-spacing: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .appbar.row .icon-btn,
+    .appbar.row > .material-symbols-outlined {
+      width: 48px;
+      height: 48px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--on);
+      font-size: 24px;
+      line-height: 24px;
+      font-family: "Material Symbols Outlined";
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      position: relative;
+      cursor: pointer;
+    }
+    .appbar.row .icon-btn::before,
+    .appbar.row > .material-symbols-outlined::before {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 100px;
+    }
+    .appbar.row .icon-btn:hover::before,
+    .appbar.row .icon-btn:active::before {
+      background: var(--container-pressed);
+    }
+    .appbar.large {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 8px 16px 12px;
+    }
+    .appbar.large h2 {
+      font-size: 32px;
+      line-height: 42px;
+    }
+    .appbar.large .material-symbols-outlined {
+      font-size: 24px;
+      color: var(--on);
+      flex: none;
+    }
+    .prod-card {
+      background: var(--surface);
+      border: 1px solid var(--primary-4);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .prod-card > .prod-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--primary-4);
+    }
+    .prod-card > .prod-head strong {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 700;
+    }
+    .prod-card > .prod-head span {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--on-var);
+    }
+    .prod-field {
+      display: flex;
+      flex-direction: column;
+    }
+    .prod-field .prod-label {
+      padding: 16px 16px 4px;
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: 0.2px;
+      color: var(--on-var);
+    }
+    .prod-field .prod-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px 11px;
+      min-height: 44px;
+    }
+    .prod-field input,
+    .prod-field textarea,
+    .prod-field select {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font-family: inherit;
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: 0.2px;
+      color: var(--on);
+      caret-color: var(--cursor);
+    }
+    .prod-field textarea { resize: vertical; min-height: 44px; }
+    .prod-field select:invalid { color: rgba(0, 0, 0, 0.2); }
+    [data-theme="dark"] .prod-field select:invalid { color: rgba(212, 215, 217, 0.38); }
+    .prod-field select:valid { color: var(--on); }
+    .prod-field input::placeholder,
+    .prod-field textarea::placeholder {
+      color: rgba(0, 0, 0, 0.2);
+    }
+    [data-theme="dark"] .prod-field input::placeholder,
+    [data-theme="dark"] .prod-field textarea::placeholder {
+      color: rgba(212, 215, 217, 0.38);
+    }
+    .prod-field .prod-line {
+      height: 1px;
+      width: 100%;
+      background: var(--primary-4);
+    }
+    .prod-field:focus-within .prod-line {
+      height: 2px;
+      background: var(--focus);
+    }
+    .prod-field .prod-icon {
+      width: 24px;
+      height: 24px;
+      flex: none;
+      border: 0;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      overflow: clip;
+    }
+    .prod-field .prod-icon img,
+    .prod-field .prod-icon-static img {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+    .prod-field .prod-icon-static {
+      width: 24px;
+      height: 24px;
+      flex: none;
+      overflow: clip;
+    }
+    .prod-field.is-pick .prod-row { cursor: pointer; }
+
+    @media (max-width: 980px) {
+      .app { grid-template-columns: minmax(0, 1fr); }
+      aside {
+        position: relative;
+        height: auto;
+        width: max-content;
+        min-width: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--primary-4);
+      }
+    }
+
+    html[data-preview="device"],
+    html[data-preview="device"] body {
+      height: 100%;
+      min-height: 100dvh;
+      min-height: 100svh;
+    }
+    html[data-preview="device"] body {
+      overflow: hidden;
+      height: 100dvh;
+      height: 100svh;
+    }
+    html[data-preview="device"] .app {
+      display: flex;
+      flex-direction: column;
+      grid-template-columns: none;
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      min-height: 0;
+    }
+    html[data-preview="device"] main {
+      display: none;
+    }
+    html[data-preview="device"] .brand {
+      display: flex;
+      position: absolute;
+      top: calc(24px + env(safe-area-inset-top, 0px));
+      left: calc(24px + env(safe-area-inset-left, 0px));
+      right: calc(24px + env(safe-area-inset-right, 0px));
+      z-index: 30;
+      width: auto;
+      min-width: 0;
+      padding: 0;
+      gap: 0;
+    }
+    html[data-preview="device"] .preview-switch {
+      padding: 4px;
+    }
+    html[data-preview="device"] .brand-top {
+      width: 100%;
+      justify-content: space-between;
+    }
+    html[data-preview="device"] .brand-lead {
+      flex: none;
+      width: auto;
+    }
+    html[data-preview="device"] .nav-toggle {
+      display: grid;
+      margin: 0;
+      background: var(--surface);
+    }
+    html[data-preview="device"] .hub-head,
+    html[data-preview="device"] .appbar.hub-head {
+      padding-top: calc(64px + env(safe-area-inset-top, 0px));
+    }
+    html[data-preview="device"] .brand-titles,
+    html[data-preview="device"] .brand > p {
+      display: none;
+    }
+    html[data-preview="device"] aside {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      max-width: none;
+      height: auto;
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      gap: 0;
+    }
+    html[data-preview="device"] .proto-chrome {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: auto;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-height: min(72vh, 560px);
+      padding: 8px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+      background: var(--surface);
+      border: 0;
+      border-top: 1px solid var(--primary-4);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -8px 32px rgba(1, 30, 57, 0.16);
+      transform: translate3d(0, 110%, 0);
+      transition: transform 280ms cubic-bezier(0.05, 0.7, 0.1, 1);
+      pointer-events: none;
+      overflow: auto;
+    }
+    html[data-preview="device"] .proto-chrome::before {
+      content: "";
+      display: block;
+      width: 36px;
+      height: 4px;
+      margin: 4px auto 12px;
+      border-radius: 4px;
+      background: var(--on);
+      opacity: 0.28;
+      flex: none;
+    }
+    html[data-preview="device"].toolbar-open .proto-chrome {
+      transform: none;
+      pointer-events: auto;
+    }
+    html[data-preview="device"] .proto-chrome .toolbar {
+      flex-direction: column;
+      gap: 16px;
+      padding: 0;
+    }
+    html[data-preview="device"] .proto-chrome .toolbar-group {
+      flex: none;
+      width: 100%;
+      gap: 6px;
+    }
+    html[data-preview="device"] .proto-chrome .toolbar-group h3 {
+      display: block;
+      margin: 0;
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+      color: var(--on);
+    }
+    html[data-preview="device"] .proto-chrome .seg {
+      width: 100%;
+    }
+    html[data-preview="device"] .proto-chrome .seg button {
+      flex: 1;
+      text-align: center;
+    }
+    html[data-preview="device"] .toolbar-scrim {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 39;
+      border: 0;
+      background: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+    html[data-preview="device"].toolbar-open .toolbar-scrim {
+      display: block;
+    }
+    html[data-preview="device"].toolbar-open .toolbar-fab {
+      display: none;
+    }
+    .toolbar-fab,
+    .toolbar-scrim { display: none; }
+    html[data-preview="device"] .toolbar-fab {
+      display: grid;
+      place-items: center;
+      position: fixed;
+      right: max(16px, env(safe-area-inset-right, 0px));
+      bottom: max(20px, env(safe-area-inset-bottom, 0px));
+      z-index: 42;
+      width: 56px;
+      height: 56px;
+      padding: 0;
+      border: 0;
+      border-radius: 16px;
+      background: var(--on);
+      color: var(--surface);
+      box-shadow: 0 4px 16px rgba(1, 30, 57, 0.28);
+      cursor: pointer;
+    }
+    html[data-preview="device"] .toolbar-fab .material-symbols-outlined {
+      font-size: 24px;
+      line-height: 24px;
+    }
+    html[data-preview="device"]:not([data-phone-screen="hub"]) .preview-switch,
+    html[data-preview="device"]:not([data-phone-screen="hub"]) .nav-toggle {
+      display: none !important;
+    }
+    html[data-preview="device"] .phone-screen {
+      padding-top: 0;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    html[data-preview="device"] .appbar {
+      padding-top: calc(8px + env(safe-area-inset-top, 0px));
+    }
+    html[data-preview="device"] .appbar.row {
+      padding-top: calc(8px + env(safe-area-inset-top, 0px));
+    }
+    html[data-preview="device"] .appbar.large {
+      padding-top: calc(8px + env(safe-area-inset-top, 0px));
+    }
+    html[data-preview="device"] .phone,
+    html[data-preview="device"] .phone.product-phone {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      border-radius: 0;
+      background: var(--surface);
+      box-shadow: none;
+      min-height: 0;
+    }
+    html[data-preview="device"] .phone::before,
+    html[data-preview="device"] .phone::after,
+    html[data-preview="device"] .phone-stage::before,
+    html[data-preview="device"] .phone-stage::after {
+      content: none;
+      display: none;
+    }
+    html[data-preview="device"] .status {
+      display: none;
+    }
+    html[data-preview="device"] .phone-stage {
+      flex: 1 1 auto;
+      height: auto;
+      min-height: 0;
+      border-radius: 0;
+    }
+    html[data-preview="device"] .phone.product-phone .phone-stage > .phone-screen {
+      border-radius: 0;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <button type="button" class="nav-scrim" id="nav-scrim" aria-label="Close components"></button>
+  <nav class="comp-nav" id="comp-nav" aria-label="Components">
+    <div class="comp-nav-bar">
+      <span class="comp-nav-title" data-i18n="nav.title">Components</span>
+      <button type="button" class="nav-close" id="nav-close" aria-label="Close">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+    <ul class="comp-nav-list">
+      <li><a href="button.html" data-comp="button" data-i18n="nav.button">Button</a></li>
+      <li><a href="addressbar.html" data-comp="address-bar" data-i18n="nav.addr">Address Bar</a></li>
+      <li><a href="textfields.html" data-comp="text-field" aria-current="page" data-i18n="nav.tf">Text field</a></li>
+    </ul>
+  </nav>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="brand-top">
+          <div class="brand-lead">
+            <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="comp-nav" aria-label="Components">
+              <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+            </button>
+            <div class="brand-titles">
+              <h3>Android Component</h3>
+              <h1>Text Field</h1>
+            </div>
+          </div>
+          <div class="preview-switch">
+            <div class="seg" role="group" aria-label="Layout">
+              <button type="button" data-preview="frame" aria-pressed="true">Desktop</button>
+              <button type="button" data-preview="device" aria-pressed="false">Phone</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="proto-chrome" id="proto-chrome">
+      <div class="toolbar">
+        <div class="toolbar-group">
+          <h3 id="toolbar-type">Type</h3>
+          <div class="seg" role="group" aria-labelledby="toolbar-type">
+            <button type="button" data-variant="outlined" aria-pressed="true">Outlined</button>
+            <button type="button" data-variant="filled" aria-pressed="false">Filled</button>
+          </div>
+        </div>
+        <div class="toolbar-group">
+          <h3 id="toolbar-mode">Mode</h3>
+          <div class="seg" role="group" aria-labelledby="toolbar-mode">
+            <button type="button" data-theme-btn="light" aria-pressed="true">Light</button>
+            <button type="button" data-theme-btn="dark" aria-pressed="false">Dark</button>
+          </div>
+        </div>
+        <div class="toolbar-group">
+          <h3 id="toolbar-filled">Filled</h3>
+          <div class="seg" id="fill-seg" role="group" aria-labelledby="toolbar-filled">
+            <button type="button" data-fill="empty" aria-pressed="true">Empty</button>
+            <button type="button" data-fill="filled" aria-pressed="false">Filled</button>
+          </div>
+        </div>
+      </div>
+      </div>
+      <button type="button" class="toolbar-fab" id="toolbar-fab" aria-label="Prototype controls">
+        <span class="material-symbols-outlined" aria-hidden="true">tune</span>
+      </button>
+      <button type="button" class="toolbar-scrim" id="toolbar-scrim" aria-label="Close prototype controls"></button>
+
+      <div class="phone product-phone" id="proto" aria-label="Interactive prototype">
+        <div class="phone-stage">
+        <div class="phone-screen is-active" data-screen="hub">
+          <div class="status"><span class="status-time">9:41</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
+          <div class="appbar hub-head">
+            <h3 class="hub-kicker">Android Component</h3>
+            <h1>Text Field</h1>
+            <p class="hub-lead">Vyberte obrazovku, kde si můžete testovat komponentu Text Fields</p>
+          </div>
+          <h3 class="hub-section">Playground</h3>
+          <div class="hub-list">
+            <button type="button" class="hub-row" data-go="playground">
+              <span class="hub-icon" aria-hidden="true"><span class="material-symbols-outlined">science</span></span>
+              <span class="hub-copy"><strong>Playground</strong><span class="hint">Všechny typy TextField</span></span>
+              <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+            </button>
+          </div>
+          <h3 class="hub-section">Seznam Aplikace</h3>
+          <div class="hub-list">
+            <button type="button" class="hub-row" data-go="upravit">
+              <span class="hub-icon" aria-hidden="true"><span class="material-symbols-outlined">bookmark</span></span>
+              <span class="hub-copy"><strong>Upravit záložku</strong><span class="hint">Název, URL, složka</span></span>
+              <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+            </button>
+            <button type="button" class="hub-row" data-go="slozka">
+              <span class="hub-icon" aria-hidden="true"><span class="material-symbols-outlined">create_new_folder</span></span>
+              <span class="hub-copy"><strong>Vytvořit složku</strong><span class="hint">Název, složka</span></span>
+              <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+            </button>
+            <button type="button" class="hub-row" data-go="hesla">
+              <span class="hub-icon" aria-hidden="true"><span class="material-symbols-outlined">key</span></span>
+              <span class="hub-copy"><strong>Správce hesel</strong><span class="hint">Jméno a heslo</span></span>
+              <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+            </button>
+            <button type="button" class="hub-row" data-go="nazor">
+              <span class="hub-icon" aria-hidden="true"><span class="material-symbols-outlined">feedback</span></span>
+              <span class="hub-copy"><strong>Váš názor</strong><span class="hint">Zpětná vazba</span></span>
+              <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="phone-screen" data-screen="playground" hidden>
+          <div class="status"><span class="status-time">9:41</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
+          <div class="appbar row">
+            <button type="button" class="icon-btn material-symbols-outlined" data-go="hub" aria-label="Back">arrow_back</button>
+            <h2>Playground</h2>
+          </div>
+          <form class="form" id="playground" novalidate>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Text</label>
+                  <input name="play-text" data-sample="Jan Novák" />
+                </div>
+              </div>
+              <div class="support"><span>Jednořádkový, bez ikony</span></div>
+            </div>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">E-mail</label>
+                  <input name="play-email" type="email" inputmode="email" autocomplete="email" required data-sample="jan@seznam.cz" />
+                </div>
+                <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
+              </div>
+              <div class="support"><span data-msg data-idle="Povinné pole">Povinné pole</span></div>
+            </div>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">URL</label>
+                  <input name="play-url" type="text" inputmode="url" autocomplete="url" required data-maxlength="2048" data-sample="www.seznam.cz" />
+                </div>
+                <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
+              </div>
+              <div class="support"><span data-msg data-idle="Např. seznam.cz">Např. seznam.cz</span></div>
+            </div>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Heslo</label>
+                  <input name="password" type="password" autocomplete="new-password" data-sample="password12" />
+                </div>
+                <button class="icon btn trailing material-symbols-outlined" type="button" data-toggle-pass aria-label="Show password">visibility</button>
+              </div>
+              <div class="support"><span>Trailing visibility · počítadlo</span><span data-count>0/32</span></div>
+            </div>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Typ</label>
+                  <select name="play-type" data-sample="Chyba">
+                    <option value="" selected></option>
+                    <option>Chyba</option>
+                    <option>Návrh</option>
+                    <option>Jiné</option>
+                  </select>
+                </div>
+                <span class="icon trailing material-symbols-outlined" aria-hidden="true">expand_more</span>
+              </div>
+              <div class="support"><span>Dropdown</span></div>
+            </div>
+            <div class="tf filled is-pick" data-live data-pick-folder="play-folder">
+              <div class="box">
+                <div class="field">
+                  <label class="label">Složka</label>
+                  <input name="play-folder" data-sample="Oblíbené" readonly />
+                </div>
+                <span class="icon trailing material-symbols-outlined" aria-hidden="true">chevron_right</span>
+              </div>
+              <div class="support"><span>Picker, bez clear-X</span></div>
+            </div>
+            <div class="tf filled is-multiline" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Zpráva</label>
+                  <textarea name="play-msg" rows="4" data-overflow="wrap" data-sample="Aplikace občas spadne při otevírání záložek ze složky Oblíbené."></textarea>
+                </div>
+              </div>
+              <div class="support"><span>Multiline 120dp</span></div>
+            </div>
+          </form>
+          <p class="nav-hint">Leave a required e-mail or URL to see format errors. A too-long URL shows while typing.</p>
+        </div>
+
+        <div class="phone-screen" data-screen="upravit" hidden>
+          <div class="status"><span class="status-time">9:41</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
+          <div class="appbar row">
+            <button type="button" class="icon-btn material-symbols-outlined" data-go="hub" aria-label="Back">arrow_back</button>
+            <h2>Upravit</h2>
+            <button type="button" class="icon-btn material-symbols-outlined" data-submit aria-label="Uložit">check</button>
+          </div>
+          <form class="form" novalidate>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Název</label>
+                  <input name="bookmark-name" data-sample="Česká Televize" />
+                </div>
+              </div>
+              <div class="support"><span>Zadejte název</span></div>
+            </div>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">URL</label>
+                  <input name="bookmark-url" type="text" inputmode="url" autocomplete="url" required data-maxlength="2048" data-sample="www.ceskatelevize.cz" />
+                </div>
+                <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
+              </div>
+              <div class="support"><span data-msg data-idle="Např. seznam.cz">Např. seznam.cz</span></div>
+            </div>
+            <div class="tf filled is-pick" data-live data-pick-folder="bookmark-folder">
+              <div class="box">
+                <div class="field">
+                  <label class="label">Složka</label>
+                  <input name="bookmark-folder" data-sample="Oblíbené" readonly />
+                </div>
+                <span class="icon trailing material-symbols-outlined" aria-hidden="true">chevron_right</span>
+              </div>
+              <div class="support"><span>Kam uložit</span></div>
+            </div>
+          </form>
+        </div>
+
+        <div class="phone-screen" data-screen="slozka" hidden>
+          <div class="status"><span class="status-time">9:41</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
+          <div class="appbar row">
+            <button type="button" class="icon-btn material-symbols-outlined" data-go="hub" aria-label="Back">arrow_back</button>
+            <h2>Vytvořit složku</h2>
+            <button type="button" class="icon-btn material-symbols-outlined" data-submit aria-label="Uložit">check</button>
+          </div>
+          <form class="form">
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Název</label>
+                  <input name="folder-name" required data-sample="Media" />
+                </div>
+              </div>
+              <div class="support"><span data-msg data-idle="Název nové složky">Název nové složky</span></div>
+            </div>
+            <div class="tf filled is-pick" data-live data-pick-folder="folder-parent">
+              <div class="box">
+                <div class="field">
+                  <label class="label">Složka</label>
+                  <input name="folder-parent" data-sample="Oblíbené" readonly />
+                </div>
+                <span class="icon trailing material-symbols-outlined" aria-hidden="true">chevron_right</span>
+              </div>
+              <div class="support"><span>Kam uložit</span></div>
+            </div>
+          </form>
+        </div>
+
+        <div class="phone-screen" data-screen="hesla" hidden>
+          <div class="status"><span class="status-time">9:41</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
+          <div class="appbar row">
+            <button type="button" class="icon-btn material-symbols-outlined" data-go="hub" aria-label="Back">arrow_back</button>
+            <h2>Autobazar AAA AUTO</h2>
+            <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+          </div>
+          <form class="form">
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Uživatelské jméno</label>
+                  <input name="saved-user" type="text" autocomplete="username" data-sample="klara-marie-anna.bezinkova1977@seznam.cz" />
+                </div>
+              </div>
+            </div>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Heslo</label>
+                  <input name="saved-pass" type="password" data-sample="password12" />
+                </div>
+                <button class="icon btn trailing material-symbols-outlined" type="button" data-toggle-saved-pass aria-label="Show password">visibility</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="phone-screen" data-screen="nazor" hidden>
+          <div class="status"><span class="status-time">9:41</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
+          <div class="appbar row">
+            <button type="button" class="icon-btn material-symbols-outlined" data-go="hub" aria-label="Back">arrow_back</button>
+            <h2>Váš názor</h2>
+          </div>
+          <form class="form" novalidate>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Typ zpětné vazby</label>
+                  <select name="feedback-type" data-sample="Chyba">
+                    <option value="" selected></option>
+                    <option>Chyba</option>
+                    <option>Návrh</option>
+                    <option>Jiné</option>
+                  </select>
+                </div>
+                <span class="icon trailing material-symbols-outlined" aria-hidden="true">expand_more</span>
+              </div>
+              <div class="support"><span>Vyberte z nabídky</span></div>
+            </div>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Jméno</label>
+                  <input name="feedback-name" data-sample="Petra Nosková" />
+                </div>
+              </div>
+              <div class="support"><span>Vaše jméno</span></div>
+            </div>
+            <div class="tf filled" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">E-mail</label>
+                  <input name="feedback-email" type="email" inputmode="email" autocomplete="email" required data-sample="petra.noskova78@seznam.cz" />
+                </div>
+                <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
+              </div>
+              <div class="support"><span data-msg data-idle="Kontaktní e-mail">Kontaktní e-mail</span></div>
+            </div>
+            <div class="tf filled is-multiline" data-live>
+              <div class="box">
+                <div class="field">
+                  <label class="label">Váš názor</label>
+                  <textarea name="feedback-msg" rows="4" data-overflow="wrap" data-sample="Aplikace občas spadne při otevírání záložek ze složky Oblíbené. Děje se to na Androidu."></textarea>
+                </div>
+              </div>
+              <div class="support"><span>Napište nám</span></div>
+            </div>
+          </form>
+        </div>
+
+        <div class="phone-screen" data-screen="vybrat" hidden>
+          <div class="status"><span class="status-time">9:41</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
+          <div class="appbar row">
+            <button type="button" class="icon-btn material-symbols-outlined" data-picker-back aria-label="Back">arrow_back</button>
+            <h2>Choose folder</h2>
+            <button type="button" class="icon-btn material-symbols-outlined" data-picker-back aria-label="Confirm">check</button>
+          </div>
+          <div class="folder-list" id="folder-list">
+            <button type="button" class="folder-row" style="--lvl:0" data-folder="Oblíbené"><span class="material-symbols-outlined" aria-hidden="true">folder</span><span class="folder-name">Oblíbené</span><span class="material-symbols-outlined folder-check" aria-hidden="true">check</span></button>
+            <button type="button" class="folder-row" style="--lvl:0" data-folder="Práce"><span class="material-symbols-outlined" aria-hidden="true">folder</span><span class="folder-name">Práce</span><span class="material-symbols-outlined folder-check" aria-hidden="true">check</span></button>
+            <button type="button" class="folder-row" style="--lvl:0" data-folder="Zábava"><span class="material-symbols-outlined" aria-hidden="true">folder</span><span class="folder-name">Zábava</span><span class="material-symbols-outlined folder-check" aria-hidden="true">check</span></button>
+            <button type="button" class="folder-row" style="--lvl:1" data-folder="Zajímavé"><span class="material-symbols-outlined" aria-hidden="true">folder</span><span class="folder-name">Zajímavé</span><span class="material-symbols-outlined folder-check" aria-hidden="true">check</span></button>
+            <button type="button" class="folder-row" style="--lvl:2" data-folder="Horory"><span class="material-symbols-outlined" aria-hidden="true">folder</span><span class="folder-name">Horory</span><span class="material-symbols-outlined folder-check" aria-hidden="true">check</span></button>
+            <button type="button" class="folder-row" style="--lvl:2" data-folder="Filmy"><span class="material-symbols-outlined" aria-hidden="true">folder</span><span class="folder-name">Filmy</span><span class="material-symbols-outlined folder-check" aria-hidden="true">check</span></button>
+            <button type="button" class="folder-row" style="--lvl:2" data-folder="Dokumenty"><span class="material-symbols-outlined" aria-hidden="true">folder</span><span class="folder-name">Dokumenty</span><span class="material-symbols-outlined folder-check" aria-hidden="true">check</span></button>
+            <button type="button" class="folder-row" style="--lvl:0" data-folder="Hudba"><span class="material-symbols-outlined" aria-hidden="true">folder</span><span class="folder-name">Hudba</span><span class="material-symbols-outlined folder-check" aria-hidden="true">check</span></button>
+            <button type="button" class="folder-row" style="--lvl:0" data-folder="Pro děti"><span class="material-symbols-outlined" aria-hidden="true">folder</span><span class="folder-name">Pro děti</span><span class="material-symbols-outlined folder-check" aria-hidden="true">check</span></button>
+          </div>
+        </div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="spec-head">
+        <h2 data-i18n="ov.title">Overview</h2>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="false">ENG</button>
+          <button type="button" data-lang="cs" aria-pressed="true">CZ</button>
+        </div>
+      </div>
+      <p class="lead" data-i18n="ov.lead">
+        This page covers the key information about text fields in Seznam Aplikace.
+      </p>
+      <p class="lan-url" id="lan-url" hidden>
+        <span data-i18n="ov.lan">Open on the same Wi‑Fi:</span>
+        <a data-lan-page="button.html" hidden href="#"></a>
+        <a data-lan-page="addressbar.html" hidden href="#"></a>
+        <a data-lan-page="textfields.html" hidden href="#"></a>
+      </p>
+      <div class="def-head">
+        <h2 id="types" data-i18n="t1.title">1. Types</h2>
+        <div class="def-tabs" role="tablist" aria-label="Text Field type">
+          <button type="button" role="tab" id="tab-outlined" data-def="outlined" aria-selected="true" aria-controls="panel-outlined">Outlined</button>
+          <button type="button" role="tab" id="tab-filled" data-def="filled" aria-selected="false" aria-controls="panel-filled">Filled</button>
+        </div>
+      </div>
+      <p class="lead" data-i18n="t1.lead">
+        This section covers the key information about text field types.
+      </p>
+      <div class="type-board" aria-hidden="true">
+        <div class="type-example">
+          <div class="tf catalog filled has-value is-floated" data-lock-type>
+            <div class="box">
+              <div class="field">
+                <span class="label" data-i18n="t1.fieldLabel">Text field</span>
+                <input value="Filled" tabindex="-1" readonly />
+              </div>
+            </div>
+            <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
+          </div>
+          <span class="type-dot">1</span>
+        </div>
+        <div class="type-example">
+          <div class="tf catalog outlined has-value is-floated" data-lock-type>
+            <div class="box">
+              <div class="field">
+                <span class="label" data-i18n="t1.fieldLabel">Text field</span>
+                <input value="Outlined" tabindex="-1" readonly />
+              </div>
+            </div>
+            <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
+          </div>
+          <span class="type-dot">2</span>
+        </div>
+      </div>
+      <ol class="type-legend">
+        <li><span class="type-dot">1</span><span data-i18n="t1.filledName">Filled</span></li>
+        <li><span class="type-dot">2</span><span data-i18n="t1.outlinedName">Outlined</span></li>
+      </ol>
+
+      <h2 id="states" data-i18n="s2.title">2. States</h2>
+      <p class="lead" data-i18n="s2.lead">
+        This section covers the key information about text field states.
+      </p>
+
+      <div id="panel-outlined" class="def-panel" role="tabpanel" data-def-panel="outlined" aria-labelledby="tab-outlined">
+        <h3 id="outlined" data-i18n="s2.empty">Empty</h3>
+        <div class="state-board">
+          <div class="grid" id="outlined-empty"></div>
+        </div>
+        <h3 data-i18n="s2.populated">Populated</h3>
+        <div class="state-board">
+          <div class="grid" id="outlined-populated"></div>
+        </div>
+        <h3 data-i18n="s2.error">Error</h3>
+        <div class="state-board">
+          <div class="grid" id="outlined-error"></div>
+        </div>
+      </div>
+
+      <div id="panel-filled" class="def-panel" role="tabpanel" data-def-panel="filled" aria-labelledby="tab-filled" hidden>
+        <h3 id="filled" data-i18n="s2.empty">Empty</h3>
+        <div class="state-board">
+          <div class="grid" id="filled-empty"></div>
+        </div>
+        <h3 data-i18n="s2.populated">Populated</h3>
+        <div class="state-board">
+          <div class="grid" id="filled-populated"></div>
+        </div>
+        <h3 data-i18n="s2.error">Error</h3>
+        <div class="state-board">
+          <div class="grid" id="filled-error"></div>
+        </div>
+      </div>
+
+      <h2 id="errors" data-i18n="e3.title">3. Error</h2>
+      <p class="lead" data-i18n="e3.lead">
+        This section covers the key information about error states.
+      </p>
+      <ul class="spec-list">
+        <li data-i18n="e3.def1">Stays on the field. The field stays editable.</li>
+        <li data-i18n="e3.def2">Indicator, label, trailing icon, supporting text, and caret switch to Red 1.</li>
+      </ul>
+
+      <h3 data-i18n="e3.empty">Empty input</h3>
+      <ul class="spec-list">
+        <li data-i18n="e3.empty1">Shows on submit if a required value is missing.</li>
+        <li data-i18n="e3.empty2">Supporting text e.g. “URL je povinná”.</li>
+        <li data-i18n="e3.empty3">Try: Upravit · clear URL · tap check.</li>
+      </ul>
+
+      <h3 data-i18n="e3.invalid">Invalid format</h3>
+      <ul class="spec-list">
+        <li data-i18n="e3.invalid1">Shows on submit if the value is not a valid e-mail or URL (including <code>javascript:</code>).</li>
+        <li data-i18n="e3.invalid2">Supporting text: “Zadejte platný e-mail” / “Zadejte platnou URL”.</li>
+        <li data-i18n="e3.invalid3">Try: Upravit URL <code>javascript:alert(1)</code> or Playground e-mail <code>jan@</code>, then leave / save.</li>
+      </ul>
+
+      <h3 data-i18n="e3.long">Long text</h3>
+      <ul class="spec-list">
+        <li data-i18n="e3.long1">Shows while editing, as soon as the value exceeds the limit.</li>
+        <li data-i18n="e3.long2">“Text je příliš dlouhý (n/2048)”. Bookmark URL limit is 2048 characters. Not truncated.</li>
+        <li data-i18n="e3.long3">Try: Upravit · URL · paste a string longer than 2048.</li>
+      </ul>
+      <ul class="spec-list">
+        <li data-i18n="e3.after">After an empty or format error is shown, the field keeps validating as the user types so the error clears when the value is fixed. Save is the check in the app bar. Playground has no check — leaving the field is the commit.</li>
+      </ul>
+
+      <h2 id="working-with-text" data-i18n="w4.title">4. Working with text</h2>
+      <p class="lead" data-i18n="w4.lead">
+        This section covers the key information about working with text.
+      </p>
+
+      <h3 data-i18n="w4.enter">Entering text</h3>
+      <ul class="spec-list">
+        <li data-i18n="w4.enter1">While typing, the caret moves right.</li>
+        <li data-i18n="w4.enter4">Single-line fields use an ellipsis when unfocused. While focused, if the value is longer than the field, the text scrolls so the caret stays visible.</li>
+        <li data-i18n="w4.enter3"><strong>Feedback body / Password manager.</strong> When the caret reaches the end of a line, it wraps to the next line. No ellipsis.</li>
+      </ul>
+
+      <h3 data-i18n="w4.delete">Deleting text</h3>
+      <ul class="spec-list">
+        <li data-i18n="w4.delete1">While deleting, the caret moves left.</li>
+        <li data-i18n="w4.delete2">On a single-line field, when the caret is at the end, deleting scrolls the text right.</li>
+      </ul>
+
+      <h3 data-i18n="w4.paste">Pasting text</h3>
+      <ul class="spec-list">
+        <li data-i18n="w4.paste1">After paste, the caret sits at the end of the inserted string.</li>
+        <li data-i18n="w4.paste2">The caret is not jumped to the end of the whole field if the user pasted in the middle. Overflowing single-line fields scroll so that end of the paste stays visible.</li>
+      </ul>
+
+      <h3 data-i18n="w4.select">Selecting text</h3>
+      <ul class="spec-list">
+        <li data-i18n="w4.select1">Clicking into a value and selecting a portion of it sit on <strong>focused</strong> populated fields.</li>
+        <li data-i18n="w4.select2">A click or tap places the caret at that index, not only at the end.</li>
+        <li data-i18n="w4.select3">Double-click selects the word (token). Triple-click selects the entire value.</li>
+        <li data-i18n="w4.select4">Highlight and handles use Android’s default selection (Holo blue <code>#33B5E5</code>, highlight at 40%). Text stays on-surface — not inverted. Do not restyle with Primary 1 or Red 1. The caret is hidden while a range is selected.</li>
+        <li data-i18n="w4.select5">Read-only pickers have no text selection.</li>
+      </ul>
+
+      <h2 id="configuration" data-i18n="c6.title">5. Configuration</h2>
+      <p class="lead" data-i18n="c6.lead">
+        This section covers the key information about text field configuration.
+      </p>
+      <div class="config-list">
+        <div class="config-item">
+          <div class="tf catalog filled has-value is-floated">
+            <div class="box">
+              <div class="field">
+                <span class="label">Text</span>
+                <input value="Jan Novák" tabindex="-1" readonly />
+              </div>
+            </div>
+            <div class="support"><span data-i18n="c6.t1s">Single-line, no icon</span></div>
+          </div>
+          <p class="desc" data-i18n="c6.t1d"><strong>Label + value</strong>Always present.</p>
+        </div>
+        <div class="config-item">
+          <div class="tf catalog filled has-value is-floated">
+            <div class="box">
+              <div class="field">
+                <span class="label">E-mail</span>
+                <input value="jan@seznam.cz" tabindex="-1" readonly />
+              </div>
+            </div>
+            <div class="support"><span data-i18n="c6.t2s">Required field</span></div>
+          </div>
+          <p class="desc" data-i18n="c6.t2d"><strong>Supporting text</strong>Hint under the field. Error replaces it — see <a href="#errors">Error</a>.</p>
+        </div>
+        <div class="config-item">
+          <div class="tf catalog filled has-value is-floated">
+            <div class="box">
+              <div class="field">
+                <span class="label">Heslo</span>
+                <input value="••••••••••••" tabindex="-1" readonly />
+              </div>
+              <span class="icon trailing material-symbols-outlined" aria-hidden="true">visibility</span>
+            </div>
+            <div class="support"><span data-i18n="c6.t3s">At least 8 characters</span><span>12/32</span></div>
+          </div>
+          <p class="desc" data-i18n="c6.t3d"><strong>Counter + password trailing</strong>Counter sits to the right of supporting text (body-small). Trailing eye is show/hide — not a clear-X.</p>
+        </div>
+        <div class="config-item">
+          <div class="tf catalog filled has-value is-floated">
+            <div class="box">
+              <div class="field">
+                <span class="label">Složka</span>
+                <input value="Oblíbené" tabindex="-1" readonly />
+              </div>
+              <span class="icon trailing material-symbols-outlined" aria-hidden="true">chevron_right</span>
+            </div>
+            <div class="support"><span data-i18n="c6.t4s">Where to save</span></div>
+          </div>
+          <p class="desc" data-i18n="c6.t4d"><strong>Trailing picker · read-only</strong>Looks enabled, no IME. Chevron opens the folder picker. Trailing is allowed only here and on password.</p>
+        </div>
+        <div class="config-item">
+          <div class="tf catalog filled has-value is-floated">
+            <div class="box">
+              <div class="field">
+                <span class="label">Typ</span>
+                <input value="Chyba" tabindex="-1" readonly />
+              </div>
+              <span class="icon trailing material-symbols-outlined" aria-hidden="true">expand_more</span>
+            </div>
+            <div class="support"><span data-i18n="c6.t5s">Choose from the list</span></div>
+          </div>
+          <p class="desc" data-i18n="c6.t5d"><strong>Dropdown</strong>Used for feedback type. Trailing is <code>expand_more</code> — not free text.</p>
+        </div>
+        <div class="config-item is-tall">
+          <div class="tf catalog filled has-value is-floated is-multiline">
+            <div class="box">
+              <div class="field">
+                <span class="label">Zpráva</span>
+                <textarea rows="4" tabindex="-1" readonly>Aplikace občas spadne při otevírání záložek ze složky Oblíbené.</textarea>
+              </div>
+            </div>
+            <div class="support"><span data-i18n="c6.t6s">Write to us</span></div>
+          </div>
+          <p class="desc" data-i18n="c6.t6d"><strong>Multiline</strong>Feedback message.</p>
+        </div>
+      </div>
+
+      <h2 id="measurements" data-i18n="m5.title">6. Measurements</h2>
+      <p class="lead" data-i18n="m5.lead">
+        This section covers the key information about dimensions, sizes, and measurement marks.
+      </p>
+      <div class="def-panel" data-def-panel="outlined">
+        <ul class="spec-list">
+          <li data-i18n="m5.s1">Single-line box <strong>56dp</strong>. Multiline <strong>120dp</strong>.</li>
+          <li data-i18n="m5.s4">Trailing icon <strong>24dp</strong>. Gap to the value <strong>12dp</strong>.</li>
+          <li data-i18n="m5.s5">Supporting text <strong>4dp</strong> below the box.</li>
+          <li data-i18n="m5.s6">Corner radius <strong>4dp</strong>.</li>
+          <li data-i18n="m5.o1">Inset <strong>16dp</strong> left and right.</li>
+          <li data-i18n="m5.o2">Outline <strong>1dp</strong>. <strong>2dp</strong> when focused.</li>
+        </ul>
+        <div class="measure-board" aria-hidden="true">
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="md-spec">
+                <div class="md-hgt">56<i></i></div>
+                <div class="md-main">
+                  <div class="md-ruler">
+                    <span class="md-cap w16">16<i></i></span>
+                    <span class="grow"></span>
+                    <span class="md-cap w16">16<i></i></span>
+                  </div>
+                  <div class="tf catalog outlined md-draw">
+                    <div class="box">
+                      <span class="md-pad"></span>
+                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
+                      <span class="md-pad"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">1</span>
+            </div>
+            <div class="measure-card">
+              <div class="md-spec">
+                <div class="md-hgt">56<i></i></div>
+                <div class="md-main">
+                  <div class="md-ruler">
+                    <span class="md-cap w16">16<i></i></span>
+                    <span class="grow"></span>
+                    <span class="md-cap w16">16<i></i></span>
+                  </div>
+                  <div class="tf catalog outlined md-draw has-value is-floated force-focus">
+                    <div class="box">
+                      <span class="md-pad"></span>
+                      <div class="field">
+                        <span class="label" data-i18n="cat.label">Label</span>
+                        <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
+                        <input class="is-ghost" value="Input text" tabindex="-1" readonly />
+                      </div>
+                      <span class="md-pad"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">2</span>
+            </div>
+          </div>
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="md-spec is-plain">
+                <div></div>
+                <div class="md-main">
+                  <div class="tf catalog outlined md-draw has-value is-floated">
+                    <div class="box">
+                      <span class="md-pad"></span>
+                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                      <span class="md-pad"></span>
+                    </div>
+                  </div>
+                  <div class="md-bar4"></div>
+                  <div class="md-supline">
+                    <span class="md-pad"></span>
+                    <span class="md-txt" data-i18n="cat.support">Supporting text</span>
+                    <span class="md-pad"></span>
+                  </div>
+                  <div class="md-under">
+                    <span class="md-cap w16 is-up"><i></i>16</span>
+                    <span class="grow"></span>
+                    <span class="md-cap w16 is-up"><i></i>16</span>
+                  </div>
+                </div>
+                <div class="md-4"><i></i>4</div>
+              </div>
+              <span class="type-dot">3</span>
+            </div>
+            <div class="measure-card">
+              <div class="md-spec is-plain">
+                <div></div>
+                <div class="md-main">
+                  <div class="tf catalog outlined md-draw has-value is-floated">
+                    <div class="box">
+                      <span class="md-pad"></span>
+                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                      <span class="md-pad"></span>
+                    </div>
+                  </div>
+                  <div class="md-bar4"></div>
+                  <div class="md-supgrid has-count">
+                    <span class="md-pad"></span>
+                    <span class="md-txt" data-i18n="cat.support">Supporting text</span>
+                    <span class="md-pad"></span>
+                    <span class="md-count">5/20</span>
+                    <span class="md-pad"></span>
+                    <span class="md-cap w16 is-up"><i></i>16</span>
+                    <span></span>
+                    <span class="md-cap w16 is-up"><i></i>16</span>
+                    <span></span>
+                    <span class="md-cap w16 is-up"><i></i>16</span>
+                  </div>
+                </div>
+                <div class="md-4"><i></i>4</div>
+              </div>
+              <span class="type-dot">4</span>
+            </div>
+          </div>
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="md-spec is-icon">
+                <div class="md-hgt">56<i></i></div>
+                <div class="md-main">
+                  <div class="md-ruler is-icon">
+                    <div class="md-row">
+                      <span class="md-slot w16"></span>
+                      <span class="grow"></span>
+                      <span class="md-slot w12"></span>
+                      <span class="md-cap w24">24<i></i></span>
+                      <span class="md-slot w16"></span>
+                    </div>
+                    <div class="md-row">
+                      <span class="md-cap w16">16<i></i></span>
+                      <span class="grow"></span>
+                      <span class="md-cap w12">12<i></i></span>
+                      <span class="md-slot w24"></span>
+                      <span class="md-cap w16">16<i></i></span>
+                    </div>
+                  </div>
+                  <div class="tf catalog outlined md-draw">
+                    <div class="box">
+                      <span class="md-pad"></span>
+                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
+                      <span class="md-gap"></span>
+                      <span class="icon trailing material-symbols-outlined" aria-hidden="true">visibility</span>
+                      <span class="md-pad"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">5</span>
+            </div>
+            <div class="measure-card">
+              <div class="md-spec is-icon">
+                <div class="md-hgt">56<i></i></div>
+                <div class="md-main">
+                  <div class="md-ruler is-icon">
+                    <div class="md-row">
+                      <span class="md-slot w16"></span>
+                      <span class="grow"></span>
+                      <span class="md-slot w12"></span>
+                      <span class="md-cap w24">24<i></i></span>
+                      <span class="md-slot w16"></span>
+                    </div>
+                    <div class="md-row">
+                      <span class="md-cap w16">16<i></i></span>
+                      <span class="grow"></span>
+                      <span class="md-cap w12">12<i></i></span>
+                      <span class="md-slot w24"></span>
+                      <span class="md-cap w16">16<i></i></span>
+                    </div>
+                  </div>
+                  <div class="tf catalog outlined md-draw has-value is-floated force-focus">
+                    <div class="box">
+                      <span class="md-pad"></span>
+                      <div class="field">
+                        <span class="label" data-i18n="cat.label">Label</span>
+                        <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
+                        <input class="is-ghost" value="Input text" tabindex="-1" readonly />
+                      </div>
+                      <span class="md-gap"></span>
+                      <span class="icon trailing material-symbols-outlined" aria-hidden="true">visibility</span>
+                      <span class="md-pad"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">6</span>
+            </div>
+          </div>
+        </div>
+        <ol class="type-legend">
+          <li><span class="type-dot">1</span><span data-i18n="s2.empty">Empty</span></li>
+          <li><span class="type-dot">2</span><span data-i18n="cat.focused">Focused</span></li>
+          <li><span class="type-dot">3</span><span data-i18n="cat.support">Supporting text</span></li>
+          <li><span class="type-dot">4</span><span data-i18n="m5.n4">Counter</span></li>
+          <li><span class="type-dot">5</span><span data-i18n="m5.n5">Trailing</span></li>
+          <li><span class="type-dot">6</span><span data-i18n="m5.n6">Trailing focused</span></li>
+        </ol>
+      </div>
+      <div class="def-panel" data-def-panel="filled" hidden>
+        <ul class="spec-list">
+          <li data-i18n="m5.s1">Single-line box <strong>56dp</strong>. Multiline <strong>120dp</strong>.</li>
+          <li data-i18n="m5.s4">Trailing icon <strong>24dp</strong>. Gap to the value <strong>12dp</strong>.</li>
+          <li data-i18n="m5.s5">Supporting text <strong>4dp</strong> below the box.</li>
+          <li data-i18n="m5.s6">Corner radius <strong>4dp</strong>.</li>
+          <li data-i18n="m5.f1">No side inset. Text starts at the indicator.</li>
+          <li data-i18n="m5.f2">Top corners <strong>4dp</strong>, bottom square.</li>
+          <li data-i18n="m5.f3">Indicator <strong>1dp</strong>. <strong>2dp</strong> when focused.</li>
+          <li data-i18n="m5.f4">Floated stack <strong>8dp</strong> above the value, <strong>8dp</strong> below.</li>
+        </ul>
+        <div class="measure-board" aria-hidden="true">
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="md-spec">
+                <div class="md-hgt">56<i></i></div>
+                <div class="md-main">
+                  <div class="md-ruler"></div>
+                  <div class="tf catalog filled md-draw">
+                    <div class="box">
+                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">1</span>
+            </div>
+            <div class="measure-card">
+              <div class="md-spec">
+                <div class="md-hgt is-stack">
+                  <span>8<i></i></span>
+                  <span>8<i></i></span>
+                </div>
+                <div class="md-main">
+                  <div class="md-ruler"></div>
+                  <div class="tf catalog filled md-draw has-value is-floated force-focus">
+                    <div class="box">
+                      <span class="md-band top"></span>
+                      <div class="field">
+                        <span class="label" data-i18n="cat.label">Label</span>
+                        <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
+                        <input class="is-ghost" value="Input text" tabindex="-1" readonly />
+                      </div>
+                      <span class="md-band bot"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">2</span>
+            </div>
+          </div>
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="md-spec is-plain">
+                <div></div>
+                <div class="md-main">
+                  <div class="tf catalog filled md-draw has-value is-floated">
+                    <div class="box">
+                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                    </div>
+                  </div>
+                  <div class="md-bar4"></div>
+                  <div class="md-supline">
+                    <span class="md-txt" data-i18n="cat.support">Supporting text</span>
+                  </div>
+                </div>
+                <div class="md-4"><i></i>4</div>
+              </div>
+              <span class="type-dot">3</span>
+            </div>
+            <div class="measure-card">
+              <div class="md-spec is-plain">
+                <div></div>
+                <div class="md-main">
+                  <div class="tf catalog filled md-draw has-value is-floated">
+                    <div class="box">
+                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                    </div>
+                  </div>
+                  <div class="md-bar4"></div>
+                  <div class="md-supline">
+                    <span class="md-txt" data-i18n="cat.support">Supporting text</span>
+                    <span class="md-count">5/20</span>
+                  </div>
+                </div>
+                <div class="md-4"><i></i>4</div>
+              </div>
+              <span class="type-dot">4</span>
+            </div>
+          </div>
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="md-spec is-icon">
+                <div class="md-hgt">56<i></i></div>
+                <div class="md-main">
+                  <div class="md-ruler is-icon">
+                    <div class="md-row">
+                      <span class="grow"></span>
+                      <span class="md-slot w12"></span>
+                      <span class="md-cap w24">24<i></i></span>
+                    </div>
+                    <div class="md-row">
+                      <span class="grow"></span>
+                      <span class="md-cap w12">12<i></i></span>
+                      <span class="md-slot w24"></span>
+                    </div>
+                  </div>
+                  <div class="tf catalog filled md-draw">
+                    <div class="box">
+                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
+                      <span class="md-gap"></span>
+                      <span class="icon trailing material-symbols-outlined" aria-hidden="true">visibility</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">5</span>
+            </div>
+            <div class="measure-card">
+              <div class="md-spec is-icon">
+                <div class="md-hgt is-stack">
+                  <span>8<i></i></span>
+                  <span>8<i></i></span>
+                </div>
+                <div class="md-main">
+                  <div class="md-ruler is-icon">
+                    <div class="md-row">
+                      <span class="grow"></span>
+                      <span class="md-slot w12"></span>
+                      <span class="md-cap w24">24<i></i></span>
+                    </div>
+                    <div class="md-row">
+                      <span class="grow"></span>
+                      <span class="md-cap w12">12<i></i></span>
+                      <span class="md-slot w24"></span>
+                    </div>
+                  </div>
+                  <div class="tf catalog filled md-draw has-value is-floated force-focus">
+                    <div class="box">
+                      <span class="md-band top"></span>
+                      <div class="field">
+                        <span class="label" data-i18n="cat.label">Label</span>
+                        <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
+                        <input class="is-ghost" value="Input text" tabindex="-1" readonly />
+                      </div>
+                      <span class="md-gap"></span>
+                      <span class="icon trailing material-symbols-outlined" aria-hidden="true">visibility</span>
+                      <span class="md-band bot"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">6</span>
+            </div>
+          </div>
+        </div>
+        <ol class="type-legend">
+          <li><span class="type-dot">1</span><span data-i18n="s2.empty">Empty</span></li>
+          <li><span class="type-dot">2</span><span data-i18n="cat.focused">Focused</span></li>
+          <li><span class="type-dot">3</span><span data-i18n="cat.support">Supporting text</span></li>
+          <li><span class="type-dot">4</span><span data-i18n="m5.n4">Counter</span></li>
+          <li><span class="type-dot">5</span><span data-i18n="m5.n5">Trailing</span></li>
+          <li><span class="type-dot">6</span><span data-i18n="m5.n6">Trailing focused</span></li>
+        </ol>
+      </div>
+
+      <h2 id="android-mapping" data-i18n="a7.title">7. Color styles</h2>
+      <p class="lead" data-i18n="a7.lead">This section covers the key information about color styles on text fields.</p>
+      <div class="def-panel" data-def-panel="outlined">
+        <ul class="spec-list">
+          <li data-i18n="a7.c1">Surface / filled container <strong>Base 1</strong>.</li>
+          <li data-i18n="a7.c2">Input / focus <strong>Primary 1</strong>.</li>
+          <li data-i18n="a7.c3">Text selection <strong>Android default</strong>.</li>
+          <li data-i18n="a7.c4">Label / supporting <strong>Primary 2</strong>.</li>
+          <li data-i18n="a7.c5">Outline / indicator <strong>Primary 3</strong>.</li>
+          <li data-i18n="a7.c6">Error <strong>Red 1</strong>. Container tint <strong>Red 2</strong>.</li>
+          <li data-i18n="a7.c7">Disabled <strong>Primary 1 @ 38%</strong> / <strong>Primary 6</strong>.</li>
+        </ul>
+        <div class="measure-board" aria-hidden="true">
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="tf catalog outlined">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
+                </div>
+              </div>
+              <span class="type-dot">1</span>
+            </div>
+            <div class="measure-card">
+              <div class="tf catalog outlined has-value is-floated force-focus">
+                <div class="box">
+                  <div class="field">
+                    <span class="label" data-i18n="cat.label">Label</span>
+                    <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
+                    <input class="is-ghost" value="Input text" tabindex="-1" readonly />
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">2</span>
+            </div>
+          </div>
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="tf catalog outlined has-value is-floated">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                </div>
+                <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
+              </div>
+              <span class="type-dot">3</span>
+            </div>
+            <div class="measure-card">
+              <div class="tf catalog outlined has-value is-floated force-focus has-selection">
+                <div class="box">
+                  <div class="field">
+                    <span class="label" data-i18n="cat.label">Label</span>
+                    <div class="input-face" aria-hidden="true">In<span class="sel">put<span class="handle handle-start"></span><span class="handle handle-end"></span></span> text</div>
+                    <input class="is-ghost" value="Input text" tabindex="-1" readonly />
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">4</span>
+            </div>
+          </div>
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="tf catalog outlined has-value is-floated is-error">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                  <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
+                </div>
+                <div class="support"><span data-i18n="cat.errorMsg">Error message</span></div>
+              </div>
+              <span class="type-dot">5</span>
+            </div>
+            <div class="measure-card">
+              <div class="tf catalog outlined is-disabled">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
+                </div>
+              </div>
+              <span class="type-dot">6</span>
+            </div>
+          </div>
+        </div>
+        <ol class="type-legend">
+          <li><span class="type-dot">1</span><span data-i18n="a7.outline">Outline</span></li>
+          <li><span class="type-dot">2</span><span data-i18n="a7.input">Focus</span></li>
+          <li><span class="type-dot">3</span><span data-i18n="a7.label">Label</span></li>
+          <li><span class="type-dot">4</span><span data-i18n="a7.sel">Selection</span></li>
+          <li><span class="type-dot">5</span><span data-i18n="s2.error">Error</span></li>
+          <li><span class="type-dot">6</span><span data-i18n="cat.disabled">Disabled</span></li>
+        </ol>
+      </div>
+      <div class="def-panel" data-def-panel="filled" hidden>
+        <ul class="spec-list">
+          <li data-i18n="a7.c1">Surface / filled container <strong>Base 1</strong>.</li>
+          <li data-i18n="a7.c2">Input / focus <strong>Primary 1</strong>.</li>
+          <li data-i18n="a7.c3">Text selection <strong>Android default</strong>.</li>
+          <li data-i18n="a7.c4">Label / supporting <strong>Primary 2</strong>.</li>
+          <li data-i18n="a7.c5">Outline / indicator <strong>Primary 3</strong>.</li>
+          <li data-i18n="a7.c6">Error <strong>Red 1</strong>. Container tint <strong>Red 2</strong>.</li>
+          <li data-i18n="a7.c7">Disabled <strong>Primary 1 @ 38%</strong> / <strong>Primary 6</strong>.</li>
+        </ul>
+        <div class="measure-board" aria-hidden="true">
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="tf catalog filled">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
+                </div>
+              </div>
+              <span class="type-dot">1</span>
+            </div>
+            <div class="measure-card">
+              <div class="tf catalog filled has-value is-floated force-focus">
+                <div class="box">
+                  <div class="field">
+                    <span class="label" data-i18n="cat.label">Label</span>
+                    <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
+                    <input class="is-ghost" value="Input text" tabindex="-1" readonly />
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">2</span>
+            </div>
+          </div>
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="tf catalog filled has-value is-floated">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                </div>
+                <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
+              </div>
+              <span class="type-dot">3</span>
+            </div>
+            <div class="measure-card">
+              <div class="tf catalog filled has-value is-floated force-focus has-selection">
+                <div class="box">
+                  <div class="field">
+                    <span class="label" data-i18n="cat.label">Label</span>
+                    <div class="input-face" aria-hidden="true">In<span class="sel">put<span class="handle handle-start"></span><span class="handle handle-end"></span></span> text</div>
+                    <input class="is-ghost" value="Input text" tabindex="-1" readonly />
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">4</span>
+            </div>
+          </div>
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="tf catalog filled has-value is-floated is-error">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                  <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
+                </div>
+                <div class="support"><span data-i18n="cat.errorMsg">Error message</span></div>
+              </div>
+              <span class="type-dot">5</span>
+            </div>
+            <div class="measure-card">
+              <div class="tf catalog filled is-disabled">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
+                </div>
+              </div>
+              <span class="type-dot">6</span>
+            </div>
+          </div>
+        </div>
+        <ol class="type-legend">
+          <li><span class="type-dot">1</span><span data-i18n="a7.surface">Surface</span></li>
+          <li><span class="type-dot">2</span><span data-i18n="a7.input">Focus</span></li>
+          <li><span class="type-dot">3</span><span data-i18n="a7.label">Label</span></li>
+          <li><span class="type-dot">4</span><span data-i18n="a7.sel">Selection</span></li>
+          <li><span class="type-dot">5</span><span data-i18n="s2.error">Error</span></li>
+          <li><span class="type-dot">6</span><span data-i18n="cat.disabled">Disabled</span></li>
+        </ol>
+      </div>
+
+      <h2 id="typography-styles" data-i18n="ty.title">8. Typography styles</h2>
+      <p class="lead" data-i18n="ty.lead">This section covers the key information about typography styles on text fields.</p>
+      <div class="def-panel" data-def-panel="outlined">
+        <ul class="spec-list">
+          <li data-i18n="ty.s1">Label, rest <strong>Subheader Regular</strong>.</li>
+          <li data-i18n="ty.s2">Label, floated <strong>Caption Regular</strong>.</li>
+          <li data-i18n="ty.s3">Label, value <strong>Subheader Regular</strong>.</li>
+          <li data-i18n="ty.s4">Supporting text <strong>Caption Regular</strong>.</li>
+        </ul>
+        <div class="measure-board" aria-hidden="true">
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="tf catalog outlined">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
+                </div>
+              </div>
+              <span class="type-dot">1</span>
+            </div>
+            <div class="measure-card">
+              <div class="tf catalog outlined has-value is-floated force-focus">
+                <div class="box">
+                  <div class="field">
+                    <span class="label" data-i18n="cat.label">Label</span>
+                    <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
+                    <input class="is-ghost" value="Input text" tabindex="-1" readonly />
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">2</span>
+            </div>
+          </div>
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="tf catalog outlined has-value is-floated">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                </div>
+              </div>
+              <span class="type-dot">3</span>
+            </div>
+            <div class="measure-card">
+              <div class="tf catalog outlined has-value is-floated">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                </div>
+                <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
+              </div>
+              <span class="type-dot">4</span>
+            </div>
+          </div>
+        </div>
+        <ol class="type-legend">
+          <li><span class="type-dot">1</span><span data-i18n="ty.label">Label</span></li>
+          <li><span class="type-dot">2</span><span data-i18n="ty.labelF">Floated</span></li>
+          <li><span class="type-dot">3</span><span data-i18n="ty.value">Value</span></li>
+          <li><span class="type-dot">4</span><span data-i18n="ty.support">Supporting</span></li>
+        </ol>
+      </div>
+      <div class="def-panel" data-def-panel="filled" hidden>
+        <ul class="spec-list">
+          <li data-i18n="ty.s1">Label, rest <strong>Subheader Regular</strong>.</li>
+          <li data-i18n="ty.s2">Label, floated <strong>Caption Regular</strong>.</li>
+          <li data-i18n="ty.s3">Label, value <strong>Subheader Regular</strong>.</li>
+          <li data-i18n="ty.s4">Supporting text <strong>Caption Regular</strong>.</li>
+        </ul>
+        <div class="measure-board" aria-hidden="true">
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="tf catalog filled">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
+                </div>
+              </div>
+              <span class="type-dot">1</span>
+            </div>
+            <div class="measure-card">
+              <div class="tf catalog filled has-value is-floated force-focus">
+                <div class="box">
+                  <div class="field">
+                    <span class="label" data-i18n="cat.label">Label</span>
+                    <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
+                    <input class="is-ghost" value="Input text" tabindex="-1" readonly />
+                  </div>
+                </div>
+              </div>
+              <span class="type-dot">2</span>
+            </div>
+          </div>
+          <div class="measure-pair">
+            <div class="measure-card">
+              <div class="tf catalog filled has-value is-floated">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                </div>
+              </div>
+              <span class="type-dot">3</span>
+            </div>
+            <div class="measure-card">
+              <div class="tf catalog filled has-value is-floated">
+                <div class="box">
+                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                </div>
+                <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
+              </div>
+              <span class="type-dot">4</span>
+            </div>
+          </div>
+        </div>
+        <ol class="type-legend">
+          <li><span class="type-dot">1</span><span data-i18n="ty.label">Label</span></li>
+          <li><span class="type-dot">2</span><span data-i18n="ty.labelF">Floated</span></li>
+          <li><span class="type-dot">3</span><span data-i18n="ty.value">Value</span></li>
+          <li><span class="type-dot">4</span><span data-i18n="ty.support">Supporting</span></li>
+        </ol>
+      </div>
+    </main>
+  </div>
+
+  <script src="lan.js"></script>
+  <script>
+    const I18N = {
+      en: {
+        "nav.title": "Components",
+        "nav.button": "Button",
+        "nav.addr": "Address Bar",
+        "nav.tf": "Text field",
+        "ov.title": "Overview",
+        "ov.lead": "This page covers the key information about text fields in Seznam Aplikace.",
+        "ov.lan": "On the phone open as http (not https), same Wi‑Fi:",
+        "ov.web": "Open on the phone:",
+        "t1.title": "1. Types",
+        "t1.lead": "This section covers the key information about text field types.",
+        "t1.fieldLabel": "Text field",
+        "t1.filledName": "Filled",
+        "t1.outlinedName": "Outlined",
+        "s2.title": "2. States",
+        "s2.lead": "This section covers the key information about text field states.",
+        "s2.empty": "Empty",
+        "s2.populated": "Populated",
+        "s2.error": "Error",
+        "e3.title": "3. Error",
+        "e3.lead": "This section covers the key information about error states.",
+        "e3.def1": "Stays on the field. The field stays editable.",
+        "e3.def2": "Indicator, label, trailing icon, supporting text, and caret switch to Red 1.",
+        "e3.empty": "Empty input",
+        "e3.empty1": "Shows on submit if a required value is missing.",
+        "e3.empty2": "Supporting text e.g. “URL je povinná”.",
+        "e3.empty3": "Try: Upravit · clear URL · tap check.",
+        "e3.invalid": "Invalid format",
+        "e3.invalid1": "Shows on submit if the value is not a valid e-mail or URL (including <code>javascript:</code>).",
+        "e3.invalid2": "Supporting text: “Zadejte platný e-mail” / “Zadejte platnou URL”.",
+        "e3.invalid3": "Try: Upravit URL <code>javascript:alert(1)</code> or Playground e-mail <code>jan@</code>, then leave / save.",
+        "e3.long": "Long text",
+        "e3.long1": "Shows while editing, as soon as the value exceeds the limit.",
+        "e3.long2": "“Text je příliš dlouhý (n/2048)”. Bookmark URL limit is 2048 characters. Not truncated.",
+        "e3.long3": "Try: Upravit · URL · paste a string longer than 2048.",
+        "e3.after": "After an empty or format error is shown, the field keeps validating as the user types so the error clears when the value is fixed. Save is the check in the app bar. Playground has no check — leaving the field is the commit.",
+        "w4.title": "4. Working with text",
+        "w4.lead": "This section covers the key information about working with text.",
+        "w4.enter": "Entering text",
+        "w4.enter1": "While typing, the caret moves right.",
+        "w4.enter3": "<strong>Feedback body / Password manager.</strong> When the caret reaches the end of a line, it wraps to the next line. No ellipsis.",
+        "w4.enter4": "Single-line fields use an ellipsis when unfocused. While focused, if the value is longer than the field, the text scrolls so the caret stays visible.",
+        "w4.delete": "Deleting text",
+        "w4.delete1": "While deleting, the caret moves left.",
+        "w4.delete2": "On a single-line field, when the caret is at the end, deleting scrolls the text right.",
+        "w4.paste": "Pasting text",
+        "w4.paste1": "After paste, the caret sits at the end of the inserted string.",
+        "w4.paste2": "The caret is not jumped to the end of the whole field if the user pasted in the middle. Overflowing single-line fields scroll so that end of the paste stays visible.",
+        "w4.select": "Selecting text",
+        "w4.select1": "Clicking into a value and selecting a portion of it sit on <strong>focused</strong> populated fields.",
+        "w4.select2": "A click or tap places the caret at that index, not only at the end.",
+        "w4.select3": "Double-click selects the word (token). Triple-click selects the entire value.",
+        "w4.select4": "Highlight and handles use Android’s default selection (Holo blue <code>#33B5E5</code>, highlight at 40%). Text stays on-surface — not inverted. Do not restyle with Primary 1 or Red 1. The caret is hidden while a range is selected.",
+        "w4.select5": "Read-only pickers have no text selection.",
+        "m5.title": "6. Measurements",
+        "m5.lead": "This section covers the key information about dimensions, sizes, and measurement marks.",
+        "m5.s1": "Single-line box <strong>56dp</strong>. Multiline <strong>120dp</strong>.",
+        "m5.s4": "Trailing icon <strong>24dp</strong>. Gap to the value <strong>12dp</strong>.",
+        "m5.s5": "Supporting text <strong>4dp</strong> below the box.",
+        "m5.s6": "Corner radius <strong>4dp</strong>.",
+        "m5.trail": "Trailing icon",
+        "m5.n4": "Counter",
+        "m5.n5": "Trailing",
+        "m5.n6": "Trailing focused",
+        "m5.o1": "Inset <strong>16dp</strong> left and right.",
+        "m5.o2": "Outline <strong>1dp</strong>. <strong>2dp</strong> when focused.",
+        "m5.f1": "No side inset. Text starts at the indicator.",
+        "m5.f2": "Top corners <strong>4dp</strong>, bottom square.",
+        "m5.f3": "Indicator <strong>1dp</strong>. <strong>2dp</strong> when focused.",
+        "m5.f4": "Floated stack <strong>8dp</strong> above the value, <strong>8dp</strong> below.",
+        "c6.title": "5. Configuration",
+        "c6.lead": "This section covers the key information about text field configuration.",
+        "c6.t1s": "Single-line, no icon",
+        "c6.t1d": "<strong>Label + value</strong>Always present.",
+        "c6.t2s": "Required field",
+        "c6.t2d": "<strong>Supporting text</strong>Hint under the field. Error replaces it — see <a href=\"#errors\">Error</a>.",
+        "c6.t3s": "At least 8 characters",
+        "c6.t3d": "<strong>Counter + password trailing</strong>Counter sits to the right of supporting text (body-small). Trailing eye is show/hide — not a clear-X.",
+        "c6.t4s": "Where to save",
+        "c6.t4d": "<strong>Trailing picker · read-only</strong>Looks enabled, no IME. Chevron opens the folder picker. Trailing is allowed only here and on password.",
+        "c6.t5s": "Choose from the list",
+        "c6.t5d": "<strong>Dropdown</strong>Used for feedback type. Trailing is <code>expand_more</code> — not free text.",
+        "c6.t6s": "Write to us",
+        "c6.t6d": "<strong>Multiline</strong>Feedback message.",
+        "a7.title": "7. Color styles",
+        "a7.lead": "This section covers the key information about color styles on text fields.",
+        "a7.role": "Role",
+        "a7.style": "Seznam Aplikace style",
+        "a7.light": "Light",
+        "a7.dark": "Dark",
+        "a7.surface": "Surface",
+        "a7.input": "Focus",
+        "a7.sel": "Selection",
+        "a7.selL": "#33B5E5 handles · 40% fill",
+        "a7.selD": "#96E6FF handles · 40% fill",
+        "a7.label": "Label",
+        "a7.outline": "Outline",
+        "a7.errTint": "Error container tint",
+        "a7.c1": "Surface / filled container <strong>Base 1</strong>.",
+        "a7.c2": "Input / focus <strong>Primary 1</strong>.",
+        "a7.c3": "Text selection <strong>Android default</strong>.",
+        "a7.c4": "Label / supporting <strong>Primary 2</strong>.",
+        "a7.c5": "Outline / indicator <strong>Primary 3</strong>.",
+        "a7.c6": "Error <strong>Red 1</strong>. Container tint <strong>Red 2</strong>.",
+        "a7.c7": "Disabled <strong>Primary 1 @ 38%</strong> / <strong>Primary 6</strong>.",
+        "ty.title": "8. Typography styles",
+        "ty.lead": "This section covers the key information about typography styles on text fields.",
+        "ty.role": "Role",
+        "ty.size": "Size",
+        "ty.weight": "Weight",
+        "ty.s1": "Label, rest <strong>Subheader Regular</strong>.",
+        "ty.s2": "Label, floated <strong>Caption Regular</strong>.",
+        "ty.s3": "Label, value <strong>Subheader Regular</strong>.",
+        "ty.s4": "Supporting text <strong>Caption Regular</strong>.",
+        "ty.label": "Label",
+        "ty.labelF": "Floated",
+        "ty.value": "Value",
+        "ty.support": "Supporting",
+        "cat.label": "Label",
+        "cat.input": "Input text",
+        "cat.support": "Supporting text",
+        "cat.errorMsg": "Error message",
+        "cat.enabled": "Enabled",
+        "cat.focused": "Focused",
+        "cat.disabled": "Disabled",
+        "cat.caret": "Caret in text",
+        "cat.select": "Text selected",
+      },
+      cs: {
+        "nav.title": "Komponenty",
+        "nav.button": "Button",
+        "nav.addr": "Address Bar",
+        "nav.tf": "Text field",
+        "ov.title": "Přehled",
+        "ov.lead": "Na této stránce najdete důležité informace o textových polích v Seznam Aplikace.",
+        "ov.lan": "Na telefonu otevřete jako http (ne https), stejná Wi‑Fi:",
+        "ov.web": "Otevřete na telefonu:",
+        "t1.title": "1. Typy",
+        "t1.lead": "V této sekci najdete důležité informace o typech textových polí.",
+        "t1.fieldLabel": "Textové pole",
+        "t1.filledName": "Filled",
+        "t1.outlinedName": "Outlined",
+        "s2.title": "2. Stavy",
+        "s2.lead": "V této sekci najdete důležité informace o stavech textových polí.",
+        "s2.empty": "Prázdné",
+        "s2.populated": "Vyplněné",
+        "s2.error": "Chyba",
+        "e3.title": "3. Chyba",
+        "e3.lead": "V této sekci najdete důležité informace o chybových stavech.",
+        "e3.def1": "Zůstává na poli. Pole zůstává editovatelné.",
+        "e3.def2": "Indikátor, label, trailing ikona, supporting text a textový kurzor přejdou do Red 1.",
+        "e3.empty": "Prázdný vstup",
+        "e3.empty1": "Zobrazí se při odeslání, pokud chybí povinná hodnota.",
+        "e3.empty2": "Supporting text např. „URL je povinná“.",
+        "e3.empty3": "Zkuste: Upravit · vymažte URL · klepněte na check.",
+        "e3.invalid": "Neplatný formát",
+        "e3.invalid1": "Zobrazí se při odeslání, pokud hodnota není platný e-mail nebo URL (včetně <code>javascript:</code>).",
+        "e3.invalid2": "Supporting text: „Zadejte platný e-mail“ / „Zadejte platnou URL“.",
+        "e3.invalid3": "Zkuste: Upravit URL <code>javascript:alert(1)</code> nebo Playground e-mail <code>jan@</code>, pak odejděte / uložte.",
+        "e3.long": "Dlouhý text",
+        "e3.long1": "Zobrazí se během psaní, hned jak hodnota překročí limit.",
+        "e3.long2": "„Text je příliš dlouhý (n/2048)“. Limit URL záložky je 2048 znaků. Text se neořezává.",
+        "e3.long3": "Zkuste: Upravit · URL · vložte řetězec delší než 2048.",
+        "e3.after": "Po prázdné nebo formátové chybě pole dál validuje při psaní, takže chyba zmizí, jakmile je hodnota v pořádku. Uložení je check v app baru. Playground check nemá — commit je opuštění pole.",
+        "w4.title": "4. Práce s textem",
+        "w4.lead": "V této sekci najdete důležité informace o práci s textem.",
+        "w4.enter": "Zadávání textu",
+        "w4.enter1": "Při psaní se textový kurzor posouvá doprava.",
+        "w4.enter3": "<strong>Tělo zpětné vazby / Správce hesel.</strong> Když textový kurzor dojde na konec řádku, zalamuje se na další. Bez tří teček.",
+        "w4.enter4": "Jednořádková pole používají tři tečky, když nemají focus. Ve focusu, když je hodnota delší než pole, text se posune tak, aby textový kurzor zůstal vidět.",
+        "w4.delete": "Mazání textu",
+        "w4.delete1": "Při mazání se textový kurzor posouvá doleva.",
+        "w4.delete2": "U jednořádkového pole, když je textový kurzor na konci, mazání posouvá text doprava.",
+        "w4.paste": "Vkládání textu",
+        "w4.paste1": "Po vložení textový kurzor sedí na konci vloženého řetězce.",
+        "w4.paste2": "Textový kurzor neskočí na konec celého pole, pokud uživatel vložil doprostřed. Přetékající jednořádková pole se posunou tak, aby konec vložení zůstal vidět.",
+        "w4.select": "Výběr textu",
+        "w4.select1": "Kliknutí do hodnoty a výběr části sedí na <strong>focused</strong> vyplněných polích.",
+        "w4.select2": "Klik nebo klepnutí umístí textový kurzor na daný index, ne jen na konec.",
+        "w4.select3": "Dvojklik vybere slovo (token). Trojklik vybere celou hodnotu.",
+        "w4.select4": "Zvýraznění a handly používají výchozí Android výběr (Holo blue <code>#33B5E5</code>, fill 40%). Text zůstává on-surface — neinvertuje se. Nepřebarvujte Primary 1 ani Red 1. Textový kurzor je při výběru rozsahu skrytý.",
+        "w4.select5": "Read-only pickery nemají výběr textu.",
+        "m5.title": "6. Rozměry",
+        "m5.lead": "V této sekci najdete důležité informace ohledně rozměrů, velikostí a kót.",
+        "m5.s1": "Jednořádkový box <strong>56dp</strong>. Víceřádkový <strong>120dp</strong>.",
+        "m5.s4": "Trailing ikona <strong>24dp</strong>. Mezera k hodnotě <strong>12dp</strong>.",
+        "m5.s5": "Supporting text <strong>4dp</strong> pod boxem.",
+        "m5.s6": "Rohové zaoblení <strong>4dp</strong>.",
+        "m5.trail": "Trailing ikona",
+        "m5.n4": "Counter",
+        "m5.n5": "Trailing",
+        "m5.n6": "Trailing focused",
+        "m5.o1": "Odsazení <strong>16dp</strong> vlevo i vpravo.",
+        "m5.o2": "Obrys <strong>1dp</strong>. <strong>2dp</strong> ve focusu.",
+        "m5.f1": "Bez bočního odsazení. Text začíná u indikátoru.",
+        "m5.f2": "Horní rohy <strong>4dp</strong>, spodní hranaté.",
+        "m5.f3": "Indikátor <strong>1dp</strong>. <strong>2dp</strong> ve focusu.",
+        "m5.f4": "Floated stack <strong>8dp</strong> nad hodnotou, <strong>8dp</strong> pod ní.",
+        "c6.title": "5. Konfigurace",
+        "c6.lead": "V této sekci najdete důležité informace o konfiguraci textových polí.",
+        "c6.t1s": "Jednořádkové, bez ikony",
+        "c6.t1d": "<strong>Label + hodnota</strong>Vždy přítomné.",
+        "c6.t2s": "Povinné pole",
+        "c6.t2d": "<strong>Supporting text</strong>Nápověda pod polem. Chyba ji nahradí — viz <a href=\"#errors\">Chyba</a>.",
+        "c6.t3s": "Alespoň 8 znaků",
+        "c6.t3d": "<strong>Počítadlo + trailing hesla</strong>Počítadlo je vpravo od supporting textu (body-small). Trailing oko je show/hide — ne clear-X.",
+        "c6.t4s": "Kam uložit",
+        "c6.t4d": "<strong>Trailing picker · read-only</strong>Vypadá enabled, bez IME. Chevron otevře výběr složky. Trailing je povolený jen tady a u hesla.",
+        "c6.t5s": "Vyberte ze seznamu",
+        "c6.t5d": "<strong>Dropdown</strong>Pro typ zpětné vazby. Trailing je <code>expand_more</code> — ne volný text.",
+        "c6.t6s": "Napište nám",
+        "c6.t6d": "<strong>Víceřádkové</strong>Zpráva zpětné vazby.",
+        "a7.title": "7. Barevné styly",
+        "a7.lead": "V této sekci najdete důležité informace o barevných stylech textových polí.",
+        "a7.role": "Role",
+        "a7.style": "Styl Seznam Aplikace",
+        "a7.light": "Světlý",
+        "a7.dark": "Tmavý",
+        "a7.surface": "Surface",
+        "a7.input": "Focus",
+        "a7.sel": "Selection",
+        "a7.selL": "#33B5E5 handly · 40% fill",
+        "a7.selD": "#96E6FF handly · 40% fill",
+        "a7.label": "Label",
+        "a7.outline": "Outline",
+        "a7.errTint": "Tint error kontejneru",
+        "a7.c1": "Povrch / filled kontejner <strong>Base 1</strong>.",
+        "a7.c2": "Vstup / focus <strong>Primary 1</strong>.",
+        "a7.c3": "Výběr textu <strong>Android default</strong>.",
+        "a7.c4": "Label / supporting <strong>Primary 2</strong>.",
+        "a7.c5": "Obrys / indikátor <strong>Primary 3</strong>.",
+        "a7.c6": "Error <strong>Red 1</strong>. Tint kontejneru <strong>Red 2</strong>.",
+        "a7.c7": "Disabled <strong>Primary 1 @ 38%</strong> / <strong>Primary 6</strong>.",
+        "ty.title": "8. Typografické styly",
+        "ty.lead": "V této sekci najdete důležité informace o typografických stylech textových polí.",
+        "ty.role": "Role",
+        "ty.size": "Velikost",
+        "ty.weight": "Řez",
+        "ty.s1": "Label, klid <strong>Subheader Regular</strong>.",
+        "ty.s2": "Label, floated <strong>Caption Regular</strong>.",
+        "ty.s3": "Label, hodnota <strong>Subheader Regular</strong>.",
+        "ty.s4": "Supporting text <strong>Caption Regular</strong>.",
+        "ty.label": "Label",
+        "ty.labelF": "Floated",
+        "ty.value": "Value",
+        "ty.support": "Supporting",
+        "cat.label": "Label",
+        "cat.input": "Input text",
+        "cat.support": "Supporting text",
+        "cat.errorMsg": "Chybová zpráva",
+        "cat.enabled": "Enabled",
+        "cat.focused": "Focused",
+        "cat.disabled": "Disabled",
+        "cat.caret": "Textový kurzor v textu",
+        "cat.select": "Výběr textu",
+      },
+    };
+
+    let specLang = "cs";
+    let lanHref = "";
+    function t(key) {
+      return (I18N[specLang] && I18N[specLang][key]) || (I18N.en[key] || key);
+    }
+    function applySpecLang(next) {
+      specLang = next === "cs" ? "cs" : "en";
+      document.documentElement.lang = specLang === "cs" ? "cs" : "en";
+      document.querySelectorAll("[data-lang]").forEach((b) => {
+        b.setAttribute("aria-pressed", String(b.dataset.lang === specLang));
+      });
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const val = t(el.dataset.i18n);
+        if (val) el.innerHTML = val;
+      });
+      paintCatalogs();
+      paintLanUrl();
+    }
+
+    const variantBtns = document.querySelectorAll("[data-variant]");
+    const themeBtns = document.querySelectorAll("[data-theme-btn]");
+    let variant = "outlined";
+
+    function applyVariant(next) {
+      variant = next === "filled" ? "filled" : "outlined";
+      variantBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.variant === variant)));
+      document.querySelectorAll("[data-def]").forEach((b) => {
+        b.setAttribute("aria-selected", String(b.dataset.def === variant));
+      });
+      document.querySelectorAll("[data-def-panel]").forEach((p) => {
+        p.hidden = p.dataset.defPanel !== variant;
+      });
+      document.querySelectorAll("aside .tf, .config-list .tf").forEach((el) => {
+        if (el.hasAttribute("data-lock-type")) return;
+        el.classList.toggle("filled", variant === "filled");
+        el.classList.toggle("outlined", variant === "outlined");
+      });
+    }
+    variantBtns.forEach((b) => b.addEventListener("click", () => applyVariant(b.dataset.variant)));
+    document.querySelectorAll("[data-def]").forEach((b) => {
+      b.addEventListener("click", () => applyVariant(b.dataset.def));
+    });
+    themeBtns.forEach((b) => b.addEventListener("click", () => {
+      const t = b.dataset.themeBtn;
+      document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
+      themeBtns.forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.themeBtn === t)));
+      const themeColor = document.getElementById("theme-color");
+      if (themeColor) themeColor.setAttribute("content", t === "dark" ? "#121212" : "#ffffff");
+    }));
+
+    function syncValue(tf) {
+      const input = tf.querySelector("input, textarea, select");
+      if (!input) return;
+      tf.classList.toggle("has-value", input.value.length > 0);
+      const count = tf.querySelector("[data-count]");
+      if (count) count.textContent = `${input.value.length}/32`;
+    }
+
+    const proto = document.getElementById("proto");
+    const fillSeg = document.getElementById("fill-seg");
+    const fillBtns = () => document.querySelectorAll("[data-fill]");
+    const fillableScreens = new Set(["upravit", "slozka", "hesla", "nazor", "playground"]);
+    let fillMode = "empty";
+    let fillLive = false;
+
+    function setModeChrome(mode) {
+      fillMode = mode === "filled" ? "filled" : "empty";
+      fillLive = false;
+      fillBtns().forEach((b) => {
+        b.setAttribute("aria-pressed", String(b.dataset.fill === fillMode));
+      });
+    }
+
+    function enterTryIfDemo() {
+      fillLive = true;
+    }
+
+    function applyFill(mode) {
+      setModeChrome(mode);
+      const screen = proto.querySelector(".phone-screen.is-active") || proto.querySelector("[data-screen]:not([hidden])");
+      if (!screen || screen.dataset.screen === "vybrat") return;
+      if (!fillableScreens.has(screen.dataset.screen)) return;
+      screen.querySelectorAll("[data-sample]").forEach((el) => {
+        el.value = fillMode === "filled" ? el.dataset.sample : "";
+        const tf = el.closest(".tf");
+        if (tf) {
+          syncValue(tf);
+          setFieldError(tf, false);
+          refreshTextEditing(tf);
+        }
+      });
+    }
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let navLock = false;
+    const animClasses = ["enter-forward", "exit-forward", "enter-back", "exit-back", "is-animating"];
+
+    function settleScreen(el, active) {
+      animClasses.forEach((c) => el.classList.remove(c));
+      el.classList.toggle("is-active", active);
+      el.hidden = !active;
+      el.style.transform = "";
+    }
+
+    function syncPhoneChrome(id) {
+      document.documentElement.dataset.phoneScreen = id || "hub";
+      if (id !== "hub") document.documentElement.classList.remove("toolbar-open");
+    }
+
+    function showScreen(id, direction, opts) {
+      const skipFill = opts && opts.skipFill;
+      const next = proto.querySelector(`[data-screen="${id}"]`);
+      if (!next) return;
+      syncPhoneChrome(id);
+      const current = proto.querySelector(".phone-screen.is-active") || proto.querySelector("[data-screen]:not([hidden])");
+      if (current === next) {
+        if (fillableScreens.has(id) && !skipFill && !fillLive) applyFill(fillMode);
+        return;
+      }
+
+      const dir = direction || "none";
+      const animate = !reduceMotion && (dir === "forward" || dir === "back") && current;
+
+      if (navLock && dir === "back") {
+        proto.querySelectorAll("[data-screen]").forEach((el) => {
+          animClasses.forEach((c) => el.classList.remove(c));
+          el.style.transform = "";
+        });
+        navLock = false;
+      }
+
+      if (!animate) {
+        proto.querySelectorAll("[data-screen]").forEach((el) => settleScreen(el, el === next));
+        if (fillableScreens.has(id) && !skipFill && !fillLive) applyFill(fillMode);
+        return;
+      }
+      if (navLock) return;
+      navLock = true;
+
+      const enterClass = dir === "back" ? "enter-back" : "enter-forward";
+      const exitClass = dir === "back" ? "exit-back" : "exit-forward";
+      next.hidden = false;
+      next.classList.add("is-animating", enterClass);
+      current.classList.add("is-animating", exitClass);
+      current.classList.remove("is-active");
+      next.classList.add("is-active");
+      if (fillableScreens.has(id) && !skipFill && !fillLive) applyFill(fillMode);
+
+      let remaining = 2;
+      const done = (el, keep) => {
+        if (!el.classList.contains("is-animating")) return;
+        settleScreen(el, keep);
+        remaining -= 1;
+        if (remaining <= 0) navLock = false;
+      };
+      const onEnd = (el, keep) => {
+        const finish = (e) => {
+          if (e && e.target !== el) return;
+          el.removeEventListener("animationend", finish);
+          done(el, keep);
+        };
+        el.addEventListener("animationend", finish);
+        window.setTimeout(() => finish(), 360);
+      };
+      onEnd(current, false);
+      onEnd(next, true);
+    }
+
+    document.querySelectorAll("[data-go]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.dataset.setFill) applyFill(btn.dataset.setFill);
+        const id = btn.dataset.go;
+        const dir = id === "hub" ? "back" : "forward";
+        showScreen(id, dir);
+      });
+    });
+
+    document.querySelectorAll("[data-submit]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const screen = btn.closest("[data-screen]");
+        if (!screen) return;
+        if (!validateScreen(screen)) return;
+        showScreen("hub", "back");
+      });
+    });
+
+    let pickerReturn = "upravit";
+    let pickerInput = null;
+
+    function markFolder(name) {
+      proto.querySelectorAll("[data-folder]").forEach((row) => {
+        row.setAttribute("aria-pressed", String(row.dataset.folder === name));
+      });
+    }
+
+    function openFolderPicker(input) {
+      pickerInput = input;
+      const screen = input.closest("[data-screen]");
+      pickerReturn = screen ? screen.dataset.screen : "upravit";
+      markFolder(input.value || "Dokumenty");
+      showScreen("vybrat", "forward");
+    }
+
+    function closeFolderPicker(apply) {
+      if (apply && pickerInput) {
+        const selected = proto.querySelector("[data-folder][aria-pressed='true']");
+        if (selected) {
+          pickerInput.value = selected.dataset.folder;
+          const tf = pickerInput.closest(".tf");
+          if (tf) syncValue(tf);
+          enterTryIfDemo();
+        }
+      }
+      showScreen(pickerReturn, "back", { skipFill: true });
+    }
+
+    proto.querySelectorAll("[data-pick-folder]").forEach((tf) => {
+      tf.addEventListener("click", () => {
+        const input = tf.querySelector("input");
+        if (input) openFolderPicker(input);
+      });
+    });
+    proto.querySelectorAll("[data-picker-back]").forEach((btn) => {
+      btn.addEventListener("click", () => closeFolderPicker(btn.getAttribute("aria-label") === "Confirm"));
+    });
+    proto.querySelectorAll("[data-folder]").forEach((row) => {
+      row.addEventListener("click", () => {
+        markFolder(row.dataset.folder);
+        if (pickerInput) {
+          pickerInput.value = row.dataset.folder;
+          const tf = pickerInput.closest(".tf");
+          if (tf) syncValue(tf);
+          enterTryIfDemo();
+        }
+        showScreen(pickerReturn, "back", { skipFill: true });
+      });
+    });
+    fillBtns().forEach((b) => {
+      b.addEventListener("click", () => applyFill(b.dataset.fill));
+    });
+
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function isEmailInput(input) {
+      return input.type === "email" || input.name === "email";
+    }
+
+    function isUrlInput(input) {
+      return input.inputMode === "url" || input.name === "bookmark-url" || input.name === "play-url";
+    }
+
+    /* Host with a TLD. Scheme optional. Rejects javascript:, data:, and www.seznam (no TLD). */
+    function isValidHttpUrl(value) {
+      if (!value || /\s/.test(value)) return false;
+      const href = /:\/\//.test(value) ? value : `https://${value}`;
+      let parsed;
+      try {
+        parsed = new URL(href);
+      } catch {
+        return false;
+      }
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return false;
+      const host = parsed.hostname;
+      if (!host) return false;
+      if (/^(\d{1,3}\.){3}\d{1,3}$/.test(host)) {
+        return host.split(".").every((octet) => {
+          const n = Number(octet);
+          return n >= 0 && n <= 255;
+        });
+      }
+      const labels = host.split(".");
+      if (labels.length < 2) return false;
+      const tld = labels[labels.length - 1];
+      if (!/^[a-z]{2,24}$/i.test(tld)) return false;
+      if (labels.length === 2 && labels[0].toLowerCase() === "www") return false;
+      return labels.every((label) => /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i.test(label));
+    }
+
+    function idleMessage(msg) {
+      if (!msg) return "";
+      if (!msg.dataset.idle) msg.dataset.idle = msg.textContent;
+      return msg.dataset.idle;
+    }
+
+    function setFieldError(tf, on, text) {
+      tf.classList.toggle("is-error", on);
+      const msg = tf.querySelector("[data-msg]");
+      if (msg) msg.textContent = on ? text : idleMessage(msg);
+    }
+
+    function fieldLimit(input) {
+      const n = Number(input.dataset.maxlength);
+      return Number.isFinite(n) && n > 0 ? n : 0;
+    }
+
+    function validateField(tf, opts) {
+      const fromSubmit = opts && opts.fromSubmit;
+      const fromBlur = opts && opts.fromBlur;
+      const input = tf.querySelector("input, textarea, select");
+      if (!input) return true;
+      idleMessage(tf.querySelector("[data-msg]"));
+
+      const raw = input.value || "";
+      const value = raw.trim();
+      const required = input.required || input.hasAttribute("required");
+      const showCommit = fromSubmit || fromBlur || tf.classList.contains("is-error");
+      const limit = fieldLimit(input);
+
+      if (limit && raw.length > limit) {
+        setFieldError(tf, true, `Text je příliš dlouhý (${raw.length}/${limit})`);
+        return false;
+      }
+
+      if (isEmailInput(input)) {
+        if (!value) {
+          if (required && showCommit) {
+            setFieldError(tf, true, "E-mail je povinný");
+            return false;
+          }
+          setFieldError(tf, false);
+          return true;
+        }
+        if (!EMAIL_RE.test(value)) {
+          if (showCommit) {
+            setFieldError(tf, true, "Zadejte platný e-mail");
+            return false;
+          }
+          setFieldError(tf, false);
+          return true;
+        }
+        setFieldError(tf, false);
+        return true;
+      }
+
+      if (isUrlInput(input)) {
+        if (!value) {
+          if (required && showCommit) {
+            setFieldError(tf, true, "URL je povinná");
+            return false;
+          }
+          setFieldError(tf, false);
+          return true;
+        }
+        if (!isValidHttpUrl(value)) {
+          if (showCommit) {
+            setFieldError(tf, true, "Zadejte platnou URL");
+            return false;
+          }
+          setFieldError(tf, false);
+          return true;
+        }
+        setFieldError(tf, false);
+        return true;
+      }
+
+      if (required && !value && showCommit) {
+        setFieldError(tf, true, "Vyplňte pole");
+        return false;
+      }
+
+      setFieldError(tf, false);
+      return true;
+    }
+
+    function validateScreen(screen) {
+      let ok = true;
+      screen.querySelectorAll("[data-live]").forEach((tf) => {
+        if (tf.classList.contains("is-pick")) return;
+        if (!validateField(tf, { fromSubmit: true })) ok = false;
+      });
+      return ok;
+    }
+
+    function textMode(el) {
+      const own = el.getAttribute("data-overflow");
+      if (own) return own;
+      const tf = el.closest(".tf");
+      if (!tf) return "scroll";
+      const fromTf = tf.getAttribute("data-overflow");
+      if (fromTf) return fromTf;
+      if (tf.classList.contains("is-multiline") || tf.classList.contains("is-wrap")) return "wrap";
+      if (tf.classList.contains("is-pick") || el.readOnly) return "none";
+      return "scroll";
+    }
+
+    function autosizeWrap(el) {
+      if (!(el instanceof HTMLTextAreaElement)) return;
+      if (textMode(el) !== "wrap") return;
+      if (el.closest(".tf.is-multiline")) return;
+      el.style.height = "auto";
+      el.style.height = `${el.scrollHeight}px`;
+    }
+
+    function keepCaretVisible(el) {
+      if (!(el instanceof HTMLInputElement) || el.readOnly) return;
+      if (textMode(el) === "none") return;
+      if (el.selectionStart == null) return;
+      try {
+        el.setSelectionRange(el.selectionStart, el.selectionEnd);
+      } catch (_) {}
+    }
+
+    function refreshTextEditing(tf) {
+      const input = tf.querySelector("input, textarea");
+      if (!input) return;
+      if (textMode(input) === "wrap") autosizeWrap(input);
+      keepCaretVisible(input);
+    }
+
+    function bindTextEditing(tf) {
+      const input = tf.querySelector("input, textarea");
+      if (!input || input.dataset.textBound) return;
+      input.dataset.textBound = "1";
+      const mode = textMode(input);
+
+      const afterEdit = () => {
+        if (mode === "wrap") autosizeWrap(input);
+        keepCaretVisible(input);
+      };
+
+      input.addEventListener("keyup", afterEdit);
+      input.addEventListener("click", afterEdit);
+      input.addEventListener("paste", () => {
+        requestAnimationFrame(afterEdit);
+      });
+
+      if (tf.classList.contains("is-pick")) {
+        input.addEventListener("select", () => {
+          const n = input.value.length;
+          try { input.setSelectionRange(n, n); } catch (_) {}
+        });
+      }
+
+      afterEdit();
+    }
+
+    document.querySelectorAll("[data-live]").forEach((tf) => {
+      const input = tf.querySelector("input, textarea, select");
+      if (!input) return;
+      idleMessage(tf.querySelector("[data-msg]"));
+      syncValue(tf);
+      input.addEventListener("input", () => {
+        if (input.name === "password" && input.value.length > 32) {
+          input.value = input.value.slice(0, 32);
+        }
+        enterTryIfDemo();
+        syncValue(tf);
+        validateField(tf);
+        refreshTextEditing(tf);
+      });
+      input.addEventListener("change", () => {
+        enterTryIfDemo();
+        syncValue(tf);
+        validateField(tf);
+        refreshTextEditing(tf);
+      });
+      input.addEventListener("blur", () => validateField(tf, { fromBlur: true }));
+      validateField(tf);
+      bindTextEditing(tf);
+    });
+
+    document.querySelector("[data-toggle-pass]").addEventListener("click", (e) => {
+      const input = document.querySelector('input[name="password"]');
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      e.currentTarget.textContent = show ? "visibility_off" : "visibility";
+    });
+
+    document.querySelectorAll("[data-clear]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const input = btn.parentElement.querySelector("input");
+        if (input) {
+          input.value = "";
+          input.focus();
+        }
+      });
+    });
+    const savedToggle = document.querySelector("[data-toggle-saved-pass]");
+    if (savedToggle) {
+      savedToggle.addEventListener("click", () => {
+        const input = document.querySelector('input[name="saved-pass"]');
+        input.type = input.type === "password" ? "text" : "password";
+      });
+    }
+
+    function fieldHTML({ style, state, populated, error, label, value, support, leading, trailing, disabled, prefix, count }) {
+      const edit = state === "caret" || state === "select";
+      const focused = state === "focused" || edit;
+      const classes = [
+        "tf", "catalog", style,
+        populated || focused ? "is-floated has-value" : "",
+        focused ? "force-focus" : "",
+        state === "select" ? "has-selection" : "",
+        error ? "is-error" : "",
+        disabled ? "is-disabled" : "",
+      ].filter(Boolean).join(" ");
+      const display = populated ? (value || "Input text") : "";
+      let fieldInner;
+      if (state === "caret" && populated) {
+        fieldInner = `<div class="input-face" aria-hidden="true">Inp<span class="caret"></span>ut text</div>
+              <input class="is-ghost" value="${display}" tabindex="-1" readonly />`;
+      } else if (state === "select" && populated) {
+        fieldInner = `<div class="input-face" aria-hidden="true">In<span class="sel">put<span class="handle handle-start"></span><span class="handle handle-end"></span></span> text</div>
+              <input class="is-ghost" value="${display}" tabindex="-1" readonly />`;
+      } else if (focused && populated) {
+        fieldInner = `<div class="input-face" aria-hidden="true">${display}<span class="caret"></span></div>
+              <input class="is-ghost" value="${display}" tabindex="-1" readonly />`;
+      } else {
+        fieldInner = `<input value="${display}" tabindex="-1" readonly />`;
+      }
+      return `
+        <div class="${classes}">
+          <div class="box">
+            ${leading ? `<span class="icon material-symbols-outlined">${leading}</span>` : ""}
+            ${prefix ? `<span class="prefix">${prefix}</span>` : ""}
+            <div class="field">
+              <span class="label">${label || "Label"}</span>
+              ${fieldInner}
+            </div>
+            ${trailing ? `<span class="icon trailing material-symbols-outlined">${trailing}</span>` : ""}
+          </div>
+          <div class="support"><span>${support || ""}</span>${count ? `<span>${count}</span>` : ""}</div>
+        </div>`;
+    }
+
+    function cell(title, opts) {
+      return `<div class="cell">
+        <div class="meta">${title}</div>
+        ${fieldHTML(opts)}
+      </div>`;
+    }
+
+    function catalogRows(populated) {
+      const interaction = [
+        [t("cat.enabled"), "enabled"],
+        [t("cat.focused"), "focused"],
+        [t("cat.disabled"), "disabled"],
+      ];
+      const editing = [
+        [t("cat.caret"), "caret"],
+        [t("cat.select"), "select"],
+      ];
+      return populated ? interaction.concat(editing) : interaction;
+    }
+
+    function paint(id, style, populated, error) {
+      const root = document.getElementById(id);
+      if (!root) return;
+      root.innerHTML = catalogRows(populated).map(([title, state]) => {
+        const disabled = state === "disabled";
+        return cell(title, {
+          style,
+          state: disabled ? "enabled" : state,
+          populated,
+          error,
+          disabled,
+          label: t("cat.label"),
+          value: populated ? t("cat.input") : "",
+          support: error ? t("cat.errorMsg") : t("cat.support"),
+          trailing: error ? "error" : "",
+        });
+      }).join("");
+    }
+
+    function paintCatalogs() {
+      paint("filled-empty", "filled", false, false);
+      paint("filled-populated", "filled", true, false);
+      paint("filled-error", "filled", true, true);
+      paint("outlined-empty", "outlined", false, false);
+      paint("outlined-populated", "outlined", true, false);
+      paint("outlined-error", "outlined", true, true);
+    }
+
+    paintCatalogs();
+
+    applyVariant("outlined");
+
+    const previewBtns = document.querySelectorAll("button[data-preview]");
+
+    function setPreviewChrome(mode) {
+      const next = mode === "device" || mode === "phone" ? "device" : "frame";
+      document.documentElement.setAttribute("data-preview", next);
+      if (next !== "device") document.documentElement.classList.remove("toolbar-open");
+      if (next === "device") document.documentElement.classList.remove("nav-open");
+      previewBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.preview === next)));
+      return next;
+    }
+
+    function applyPreview(mode) {
+      const next = setPreviewChrome(mode);
+      const nextParams = new URLSearchParams(location.search);
+      nextParams.set("preview", next);
+      const search = nextParams.toString();
+      history.replaceState(null, "", `${location.pathname}${search ? `?${search}` : ""}${location.hash}`);
+    }
+
+    previewBtns.forEach((b) => b.addEventListener("click", () => applyPreview(b.dataset.preview)));
+    setPreviewChrome(document.documentElement.getAttribute("data-preview") || "frame");
+
+    (function bindComponentNav() {
+      const root = document.documentElement;
+      const toggle = document.getElementById("nav-toggle");
+      const closeBtn = document.getElementById("nav-close");
+      const scrim = document.getElementById("nav-scrim");
+      const nav = document.getElementById("comp-nav");
+      function setOpen(open) {
+        root.classList.toggle("nav-open", open);
+        if (toggle) toggle.setAttribute("aria-expanded", String(open));
+      }
+      if (toggle) toggle.addEventListener("click", () => {
+        setOpen(!root.classList.contains("nav-open"));
+      });
+      if (closeBtn) closeBtn.addEventListener("click", () => setOpen(false));
+      if (scrim) scrim.addEventListener("click", () => setOpen(false));
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") setOpen(false);
+      });
+      if (nav) {
+        nav.querySelectorAll("a[data-comp]:not([aria-disabled='true'])").forEach((link) => {
+          const raw = link.getAttribute("href");
+          if (!raw || raw === "#") return;
+          const url = new URL(raw, location.href);
+          const preview = new URLSearchParams(location.search).get("preview") || root.getAttribute("data-preview");
+          if (preview === "device" || preview === "phone" || preview === "frame") {
+            url.searchParams.set("preview", preview === "phone" ? "device" : preview);
+          }
+          link.setAttribute("href", url.pathname.split("/").pop() + url.search + url.hash);
+        });
+        nav.addEventListener("click", (e) => {
+          const link = e.target.closest("a[data-comp]");
+          if (!link) return;
+          if (link.getAttribute("aria-disabled") === "true") {
+            e.preventDefault();
+            return;
+          }
+          if (link.getAttribute("aria-current") === "page") {
+            e.preventDefault();
+            setOpen(false);
+          }
+        });
+      }
+    })();
+
+    (function bindDeviceToolbar() {
+      const root = document.documentElement;
+      const fab = document.getElementById("toolbar-fab");
+      const scrim = document.getElementById("toolbar-scrim");
+
+      function isDevice() {
+        return root.getAttribute("data-preview") === "device";
+      }
+      function openToolbar() {
+        if (!isDevice()) return;
+        root.classList.add("toolbar-open");
+      }
+      function closeToolbar() {
+        root.classList.remove("toolbar-open");
+      }
+
+      fab.addEventListener("click", openToolbar);
+      scrim.addEventListener("click", closeToolbar);
+    })();
+
+    function isHttpUrl(url) {
+      return /^https?:\/\//i.test(url);
+    }
+    function isPublicHttps() {
+      if (location.protocol !== "https:") return false;
+      const h = location.hostname;
+      if (h === "localhost" || h === "127.0.0.1") return false;
+      if (/^\d+\.\d+\.\d+\.\d+$/.test(h)) return false;
+      return true;
+    }
+    function pickLanBase(urls) {
+      if (!urls || !urls.length) return "";
+      return urls.find((u) => /https?:\/\/\d+\.\d+\.\d+\.\d+/.test(u)) || urls.find((u) => u.includes(".local")) || urls[0];
+    }
+    function paintLanUrl() {
+      const el = document.getElementById("lan-url");
+      if (!el || !lanHref || !isHttpUrl(lanHref)) return;
+      const base = String(lanHref).replace(/\/?$/, "/");
+      el.hidden = false;
+      el.querySelectorAll("[data-lan-page]").forEach((a) => {
+        const href = base + a.dataset.lanPage;
+        a.hidden = false;
+        a.href = href;
+        a.textContent = href;
+      });
+    }
+    (function showLanUrl() {
+      function setUrl(url) {
+        if (!isHttpUrl(url)) return;
+        lanHref = url;
+        paintLanUrl();
+      }
+      if (isPublicHttps()) {
+        const label = document.querySelector("#lan-url [data-i18n]");
+        if (label) label.setAttribute("data-i18n", "ov.web");
+        setUrl(location.origin + "/");
+        return;
+      }
+      const baked = window.LAN && pickLanBase(window.LAN.urls);
+      if (baked) setUrl(baked);
+      const endpoints = [];
+      if (location.protocol === "http:" || location.protocol === "https:") {
+        endpoints.push(`${location.protocol}//${location.host}/__lan.json`);
+      }
+      endpoints.push("http://127.0.0.1:8765/__lan.json");
+      function tryNext(i) {
+        if (i >= endpoints.length) return;
+        fetch(endpoints[i], { cache: "no-store" })
+          .then((r) => (r.ok ? r.json() : null))
+          .then((data) => {
+            const base = data && pickLanBase(data.urls);
+            if (base) setUrl(base);
+            else tryNext(i + 1);
+          })
+          .catch(() => tryNext(i + 1));
+      }
+      tryNext(0);
+    })();
+
+    document.querySelectorAll("[data-lang]").forEach((b) => {
+      b.addEventListener("click", () => applySpecLang(b.dataset.lang));
+    });
+
+    const params = new URLSearchParams(location.search);
+    const fillParam = params.get("fill");
+    if (fillParam === "filled" || fillParam === "empty") fillMode = fillParam;
+    let startScreen = params.get("screen");
+    if (startScreen === "profil") startScreen = "playground";
+    if (startScreen) {
+      setModeChrome(fillMode);
+      showScreen(startScreen);
+    } else applyFill(fillMode);
+    applySpecLang("cs");
+  </script>
+</body>
+</html>
