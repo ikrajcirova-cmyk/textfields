@@ -208,7 +208,10 @@ class Handler(SimpleHTTPRequestHandler):
         ctype = headers.get("Content-Type", headers.get("content-type", ""))
         location = headers.get("Location", headers.get("location"))
         if location:
-            headers["Location"] = rewrite_site_url(location, site)
+            if location.startswith("/") and not location.startswith("//"):
+                headers["Location"] = site["base"].rstrip("/") + location
+            else:
+                headers["Location"] = rewrite_site_url(location, site)
         if "text/html" in ctype:
             charset = "utf-8"
             match = re.search(r"charset=([\w-]+)", ctype, re.I)

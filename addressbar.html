@@ -411,34 +411,6 @@
       border: 0;
       background: var(--surface);
     }
-    .browser-dock { flex: none; background: var(--surface); }
-    .browser-bar {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 6px 12px;
-    }
-    .browser-slot {
-      display: grid;
-      place-items: center;
-      padding: 10px 14px;
-      border-radius: 16px;
-      color: var(--on);
-    }
-    .browser-slot .material-symbols-outlined { font-size: 24px; }
-    .browser-s {
-      width: 80px;
-      height: 44px;
-      border-radius: 16px;
-      background: var(--red-2);
-      display: grid;
-      place-items: center;
-      color: var(--red-1);
-      font-size: 22px;
-      font-weight: 700;
-      line-height: 1;
-    }
-
     main { padding: 32px 40px 80px; overflow: auto; }
     main h2 {
       margin: 40px 0 8px;
@@ -867,16 +839,7 @@
             <div class="status"><span class="status-time">4:19</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
             <div id="novinky-addr" data-address-bar data-variant="url" data-host="novinky.cz" data-live></div>
             <div class="webview-slot">
-              <iframe class="webview" id="novinky-web" title="www.novinky.cz" src="about:blank"></iframe>
-            </div>
-            <div class="browser-dock">
-              <div class="browser-bar">
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">mail</span></span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">podcasts</span></span>
-                <span class="browser-s" aria-hidden="true">S</span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">photo_library</span></span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">menu</span></span>
-              </div>
+              <iframe class="webview" id="novinky-web" title="www.novinky.cz" src="/webview/"></iframe>
             </div>
           </div>
 
@@ -884,16 +847,7 @@
             <div class="status"><span class="status-time">4:19</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
             <div id="guardian-addr" data-address-bar data-variant="slovnik" data-host="theguardian.com" data-live></div>
             <div class="webview-slot">
-              <iframe class="webview" id="guardian-web" title="www.theguardian.com" src="about:blank"></iframe>
-            </div>
-            <div class="browser-dock">
-              <div class="browser-bar">
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">mail</span></span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">podcasts</span></span>
-                <span class="browser-s" aria-hidden="true">S</span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">photo_library</span></span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">menu</span></span>
-              </div>
+              <iframe class="webview" id="guardian-web" title="www.theguardian.com" src="/guardian/"></iframe>
             </div>
           </div>
 
@@ -901,16 +855,7 @@
             <div class="status"><span class="status-time">4:19</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
             <div id="warning-addr" data-address-bar data-variant="warning" data-host="fiobanka.prihlaste.cz" data-live></div>
             <div class="webview-slot">
-              <iframe class="webview" id="warning-web" title="fiobanka.prihlaste.cz" src="about:blank"></iframe>
-            </div>
-            <div class="browser-dock">
-              <div class="browser-bar">
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">mail</span></span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">podcasts</span></span>
-                <span class="browser-s" aria-hidden="true">S</span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">photo_library</span></span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">menu</span></span>
-              </div>
+              <iframe class="webview" id="warning-web" title="fiobanka.prihlaste.cz" src="/fio.html"></iframe>
             </div>
           </div>
 
@@ -918,16 +863,7 @@
             <div class="status"><span class="status-time">4:19</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
             <div id="both-addr" data-address-bar data-variant="both" data-host="bbc.com" data-live></div>
             <div class="webview-slot">
-              <iframe class="webview" id="both-web" title="www.bbc.com" src="about:blank"></iframe>
-            </div>
-            <div class="browser-dock">
-              <div class="browser-bar">
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">mail</span></span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">podcasts</span></span>
-                <span class="browser-s" aria-hidden="true">S</span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">photo_library</span></span>
-                <span class="browser-slot" aria-hidden="true"><span class="material-symbols-outlined">menu</span></span>
-              </div>
+              <iframe class="webview" id="both-web" title="www.bbc.com" src="/bbc/"></iframe>
             </div>
           </div>
         </div>
@@ -1289,7 +1225,7 @@
     function webviewSrc(path) {
       const origin = location.protocol === "http:" || location.protocol === "https:"
         ? location.origin
-        : "http://127.0.0.1:8765";
+        : "https://textfields.vercel.app";
       return origin + path;
     }
     function ensureWeb(id, reload) {
@@ -1393,6 +1329,7 @@
         ensureWeb(screen.dataset.screen, true);
       });
     });
+    Object.keys(WEB).forEach((id) => ensureWeb(id));
 
     (function bindComponentNav() {
       const root = document.documentElement;
