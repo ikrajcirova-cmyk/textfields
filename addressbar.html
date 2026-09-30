@@ -88,7 +88,7 @@
       top: 0;
       height: 100vh;
       width: max-content;
-      padding: 24px 20px 32px;
+      padding: 12px 16px 32px;
       border-right: 1px solid var(--primary-4);
       background: var(--surface);
       overflow: auto;
@@ -112,9 +112,9 @@
     }
     .brand-lead {
       display: grid;
-      grid-template-columns: 40px auto;
+      grid-template-columns: 24px auto;
       align-items: center;
-      column-gap: 4px;
+      column-gap: 8px;
       row-gap: 0;
       min-width: 0;
       flex: 1;
@@ -129,8 +129,9 @@
     .brand-titles h1 {
       grid-column: 1 / -1;
       grid-row: 2;
+      margin-left: 0;
     }
-    .brand .preview-switch { flex: none; }
+    .brand .preview-switch { flex: none; flex-shrink: 0; margin-left: auto; }
     .brand .preview-switch .seg { width: auto; }
     .brand .preview-switch .seg button {
       flex: none;
@@ -162,7 +163,7 @@
       cursor: pointer;
       flex: none;
     }
-    .nav-toggle { margin: 0; grid-column: 1; grid-row: 1; }
+    .nav-toggle { width: 24px; margin: 0; grid-column: 1; grid-row: 1; }
     .nav-toggle:active, .nav-close:active { background: var(--primary-6-pressed); }
     .nav-scrim {
       display: none;
@@ -595,8 +596,8 @@
       display: flex;
       position: absolute;
       top: calc(24px + env(safe-area-inset-top, 0px));
-      left: calc(24px + env(safe-area-inset-left, 0px));
-      right: calc(24px + env(safe-area-inset-right, 0px));
+      left: max(12px, env(safe-area-inset-left, 0px));
+      right: max(16px, env(safe-area-inset-right, 0px));
       z-index: 30;
       width: auto;
       min-width: 0;
@@ -604,57 +605,54 @@
       gap: 0;
     }
     html[data-preview="device"] .preview-switch {
-      padding: 4px;
+      padding: 0;
+      margin: 0;
     }
     html[data-preview="device"] .brand-top {
       width: 100%;
+      min-width: 0;
       justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
     }
-    html[data-preview="device"] .brand-lead {
+    html[data-preview="device"][data-phone-screen="hub"] .brand-lead {
       display: grid;
-      grid-template-columns: 40px auto;
+      grid-template-columns: 24px auto;
       align-items: center;
-      column-gap: 4px;
-      row-gap: 0;
-      flex: none;
-      width: auto;
+      column-gap: 8px;
       background: var(--surface);
       border-radius: 16px;
       padding: 0 12px 8px 0;
     }
-    html[data-preview="device"] .nav-toggle {
+    html[data-preview="device"][data-phone-screen="hub"] .nav-toggle {
       display: grid;
       grid-column: 1;
       grid-row: 1;
       margin: 0;
       background: transparent;
     }
-    html[data-preview="device"] .brand-titles {
+    html[data-preview="device"][data-phone-screen="hub"] .brand-titles {
       display: contents;
     }
-    html[data-preview="device"] .brand-titles h3 {
+    html[data-preview="device"][data-phone-screen="hub"] .brand-titles h3 {
       grid-column: 2;
       grid-row: 1;
-      margin: 0;
-      font-size: 16px;
-      line-height: 22px;
-      font-weight: 600;
     }
-    html[data-preview="device"] .brand-titles h1 {
+    html[data-preview="device"][data-phone-screen="hub"] .brand-titles h1 {
       grid-column: 1 / -1;
       grid-row: 2;
       display: block;
-      margin: 0;
-      font-size: 32px;
-      line-height: 40px;
-      font-weight: 700;
     }
-    html[data-preview="device"] .hub-head,
-    html[data-preview="device"] .appbar.hub-head {
-      padding: calc(108px + env(safe-area-inset-top, 0px)) 16px 16px;
+    html[data-preview="device"][data-phone-screen="hub"] .hub-kicker,
+    html[data-preview="device"][data-phone-screen="hub"] .hub-head > h1 {
+      display: none;
     }
-    html[data-preview="device"] .hub-kicker,
-    html[data-preview="device"] .hub-head > h1 {
+    html[data-preview="device"][data-phone-screen="hub"] .hub-head,
+    html[data-preview="device"][data-phone-screen="hub"] .appbar.hub-head {
+      padding-top: calc(108px + env(safe-area-inset-top, 0px));
+      padding-left: 12px;
+    }
+    html[data-preview="device"]:not([data-phone-screen="hub"]) .brand {
       display: none;
     }
     html[data-preview="device"]:not([data-phone-screen="hub"]) .toolbar-fab {
@@ -703,7 +701,8 @@
       background: rgba(0, 0, 0, 0.4);
     }
     html[data-preview="device"].toolbar-open .toolbar-scrim { display: block; }
-    html[data-preview="device"].toolbar-open .toolbar-fab { display: none; }
+    html[data-preview="device"].toolbar-open .toolbar-fab,
+    html[data-preview="device"].keyboard-open .toolbar-fab { display: none !important; }
     .toolbar-fab, .toolbar-scrim { display: none; }
     html[data-preview="device"] .toolbar-fab {
       display: grid;
@@ -1394,10 +1393,34 @@
       const root = document.documentElement;
       const fab = document.getElementById("toolbar-fab");
       const scrim = document.getElementById("toolbar-scrim");
+      function isDevice() {
+        return root.getAttribute("data-preview") === "device";
+      }
+      function isField(el) {
+        return !!(el && el.closest && el.closest("input, textarea, select, [contenteditable='true']"));
+      }
+      function syncKeyboard() {
+        if (!isDevice()) {
+          root.classList.remove("keyboard-open");
+          return;
+        }
+        const focused = isField(document.activeElement);
+        const vv = window.visualViewport;
+        const shrunk = vv ? (window.innerHeight - vv.height) > 80 : false;
+        root.classList.toggle("keyboard-open", focused || shrunk);
+      }
       fab.addEventListener("click", () => {
-        if (root.getAttribute("data-preview") === "device") root.classList.add("toolbar-open");
+        if (isDevice()) root.classList.add("toolbar-open");
       });
       scrim.addEventListener("click", () => root.classList.remove("toolbar-open"));
+      document.addEventListener("focusin", syncKeyboard);
+      document.addEventListener("focusout", () => setTimeout(syncKeyboard, 80));
+      window.addEventListener("resize", syncKeyboard);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", syncKeyboard);
+        window.visualViewport.addEventListener("scroll", syncKeyboard);
+      }
+      syncKeyboard();
     })();
 
     (function showCatalogUrl() {
