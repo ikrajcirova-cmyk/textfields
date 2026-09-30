@@ -298,27 +298,32 @@ def inject_scroll_bridge(html: str) -> str:
     }
     return t;
   }
-  var downAt=0;
-  function send(n){
+  var lastY=y();
+  function send(n,dir){
     var v=n==null?y():n;
-    if(v===0&&Date.now()-downAt<280) return;
-    try{ parent.postMessage({type:"addr-scroll",y:v},"*"); }catch(e){}
+    if(!dir){
+      if(v>lastY+2) dir="down";
+      else if(v<lastY-2) dir="up";
+    }
+    if(v<=0) dir="up";
+    lastY=v;
+    try{ parent.postMessage({type:"addr-scroll",y:v,dir:dir||""},"*"); }catch(e){}
   }
   unlock();
   window.addEventListener("scroll",function(){ send(); },{passive:true,capture:true});
   document.addEventListener("scroll",function(){ send(); },{passive:true,capture:true});
   document.addEventListener("wheel",function(e){
-    if(e.deltaY>0){ downAt=Date.now(); send(Math.max(1,y())); }
-    else send(y());
+    if(e.deltaY>0) send(Math.max(1,y()),"down");
+    else if(e.deltaY<0) send(y(),"up");
   },{passive:true});
   document.addEventListener("touchstart",function(e){ window.__addrTY=e.touches&&e.touches[0]?e.touches[0].clientY:0; },{passive:true});
   document.addEventListener("touchmove",function(e){
     var cy=e.touches&&e.touches[0]?e.touches[0].clientY:0;
-    if((window.__addrTY-cy)>1){ downAt=Date.now(); send(Math.max(1,y())); }
-    else send(y());
+    if((window.__addrTY-cy)>2) send(Math.max(1,y()),"down");
+    else if((cy-window.__addrTY)>2) send(y(),"up");
     window.__addrTY=cy;
   },{passive:true});
-  send();
+  send(0,"up");
 })();
 </script>"""
     if re.search(r"</body>", html, re.I):
