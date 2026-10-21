@@ -845,7 +845,7 @@
       color: var(--on-var);
     }
     .md-supgrid.has-count .md-cap { justify-self: center; }
-    .tf.md-draw.filled .box { overflow: hidden; }
+    .tf.md-draw.outlined .box { overflow: hidden; }
     [data-theme="dark"] .measure-board,
     [data-theme="dark"] .md-spec {
       --md-ink: #f48fb1;
@@ -1013,18 +1013,6 @@
       padding: 0 16px;
       min-width: 0;
     }
-    .tf.filled .box {
-      background: var(--container);
-      border-radius: var(--radius) var(--radius) 0 0;
-      padding: 0;
-    }
-    .tf.filled .box::after {
-      content: "";
-      position: absolute;
-      left: 0; right: 0; bottom: 0;
-      height: 1px;
-      background: var(--indicator);
-    }
     .tf.outlined .box {
       background: transparent;
       border-radius: var(--radius);
@@ -1115,13 +1103,6 @@
     .tf.is-multiline.outlined.has-value .label {
       top: 2px;
     }
-    .tf.is-multiline.filled.is-floated .label,
-    .tf.is-multiline.filled:focus-within .label,
-    .tf.is-multiline.filled.has-value .label {
-      background: var(--container);
-      padding-left: 16px;
-      padding-right: 16px;
-    }
     .tf.is-multiline textarea {
       display: block;
       height: 100%;
@@ -1129,10 +1110,6 @@
       max-height: 100%;
       padding: 36px 0 0;
       overflow: auto;
-    }
-    .tf.is-multiline.filled textarea {
-      padding-left: 16px;
-      padding-right: 16px;
     }
     .tf.is-multiline:not(:focus-within):not(.has-value):not(.is-floated) textarea {
       padding-top: 0;
@@ -1210,7 +1187,7 @@
       font-family: "Material Symbols Outlined";
     }
     .tf .support {
-      display: flex;
+      display: none;
       justify-content: space-between;
       gap: 12px;
       min-height: 16px;
@@ -1220,9 +1197,8 @@
       letter-spacing: 0.4px;
       color: var(--on-var);
     }
-    .tf.filled .support {
-      padding-left: 0;
-      padding-right: 0;
+    .tf.is-error .support {
+      display: flex;
     }
 
     /* Floated label: focus or populated */
@@ -1241,11 +1217,6 @@
     }
 
     /* Focus — skip when error so Red 1 stays visible while typing */
-    .tf.filled:focus-within:not(.is-disabled):not(.is-error) .box::after,
-    .tf.filled.force-focus:not(.is-disabled):not(.is-error) .box::after {
-      height: 2px;
-      background: var(--focus);
-    }
     .tf.outlined:focus-within:not(.is-disabled):not(.is-error) .box,
     .tf.outlined.force-focus:not(.is-disabled):not(.is-error) .box {
       box-shadow: inset 0 0 0 2px var(--focus);
@@ -1256,9 +1227,6 @@
     }
 
     /* Error — including error + focused */
-    .tf.is-error.filled .box::after,
-    .tf.is-error.filled:focus-within .box::after,
-    .tf.is-error.filled.force-focus .box::after { height: 2px; background: var(--error); }
     .tf.is-error.outlined .box,
     .tf.is-error.outlined:focus-within .box,
     .tf.is-error.outlined.force-focus .box { box-shadow: inset 0 0 0 2px var(--error); }
@@ -1271,8 +1239,6 @@
 
     /* Disabled */
     .tf.is-disabled { pointer-events: none; }
-    .tf.is-disabled.filled .box { background: var(--disabled-container); }
-    .tf.is-disabled.filled .box::after { background: var(--disabled-on); }
     .tf.is-disabled.outlined .box { box-shadow: inset 0 0 0 1px var(--primary-4); }
     .tf.is-disabled input,
     .tf.is-disabled .label,
@@ -2043,13 +2009,6 @@
       <div class="proto-chrome" id="proto-chrome">
       <div class="toolbar">
         <div class="toolbar-group">
-          <h3 id="toolbar-type">Type</h3>
-          <div class="seg" role="group" aria-labelledby="toolbar-type">
-            <button type="button" data-variant="outlined" aria-pressed="true">Outlined</button>
-            <button type="button" data-variant="filled" aria-pressed="false">Filled</button>
-          </div>
-        </div>
-        <div class="toolbar-group">
           <h3 id="toolbar-mode">Mode</h3>
           <div class="seg" role="group" aria-labelledby="toolbar-mode">
             <button type="button" data-theme-btn="light" aria-pressed="true">Light</button>
@@ -2057,10 +2016,10 @@
           </div>
         </div>
         <div class="toolbar-group">
-          <h3 id="toolbar-filled">Filled</h3>
-          <div class="seg" id="fill-seg" role="group" aria-labelledby="toolbar-filled">
+          <h3 id="toolbar-sample" data-i18n="proto.sample">Sample</h3>
+          <div class="seg" id="fill-seg" role="group" aria-labelledby="toolbar-sample">
             <button type="button" data-fill="empty" aria-pressed="true">Empty</button>
-            <button type="button" data-fill="filled" aria-pressed="false">Filled</button>
+            <button type="button" data-fill="populated" aria-pressed="false" data-i18n="s2.populated">Populated</button>
           </div>
         </div>
       </div>
@@ -2083,7 +2042,7 @@
           <div class="hub-list">
             <button type="button" class="hub-row" data-go="playground">
               <span class="hub-icon" aria-hidden="true"><span class="material-symbols-outlined">science</span></span>
-              <span class="hub-copy"><strong>Playground</strong><span class="hint">Všechny typy TextField</span></span>
+              <span class="hub-copy"><strong>Playground</strong><span class="hint">Outlined TextField</span></span>
               <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
             </button>
           </div>
@@ -2119,7 +2078,7 @@
             <h2>Playground</h2>
           </div>
           <form class="form" id="playground" novalidate>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Text</label>
@@ -2128,7 +2087,7 @@
               </div>
               <div class="support"><span>Jednořádkový, bez ikony</span></div>
             </div>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">E-mail</label>
@@ -2138,7 +2097,7 @@
               </div>
               <div class="support"><span data-msg data-idle="Povinné pole">Povinné pole</span></div>
             </div>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">URL</label>
@@ -2148,7 +2107,7 @@
               </div>
               <div class="support"><span data-msg data-idle="Např. seznam.cz">Např. seznam.cz</span></div>
             </div>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Heslo</label>
@@ -2158,7 +2117,7 @@
               </div>
               <div class="support"><span>Trailing visibility · počítadlo</span><span data-count>0/32</span></div>
             </div>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Typ</label>
@@ -2173,7 +2132,7 @@
               </div>
               <div class="support"><span>Dropdown</span></div>
             </div>
-            <div class="tf filled is-pick" data-live data-pick-folder="play-folder">
+            <div class="tf outlined is-pick" data-live data-pick-folder="play-folder">
               <div class="box">
                 <div class="field">
                   <label class="label">Složka</label>
@@ -2183,7 +2142,7 @@
               </div>
               <div class="support"><span>Picker, bez clear-X</span></div>
             </div>
-            <div class="tf filled is-multiline" data-live>
+            <div class="tf outlined is-multiline" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Zpráva</label>
@@ -2204,7 +2163,7 @@
             <button type="button" class="icon-btn material-symbols-outlined" data-submit aria-label="Uložit">check</button>
           </div>
           <form class="form" novalidate>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Název</label>
@@ -2213,7 +2172,7 @@
               </div>
               <div class="support"><span>Zadejte název</span></div>
             </div>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">URL</label>
@@ -2223,7 +2182,7 @@
               </div>
               <div class="support"><span data-msg data-idle="Např. seznam.cz">Např. seznam.cz</span></div>
             </div>
-            <div class="tf filled is-pick" data-live data-pick-folder="bookmark-folder">
+            <div class="tf outlined is-pick" data-live data-pick-folder="bookmark-folder">
               <div class="box">
                 <div class="field">
                   <label class="label">Složka</label>
@@ -2244,7 +2203,7 @@
             <button type="button" class="icon-btn material-symbols-outlined" data-submit aria-label="Uložit">check</button>
           </div>
           <form class="form">
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Název</label>
@@ -2253,7 +2212,7 @@
               </div>
               <div class="support"><span data-msg data-idle="Název nové složky">Název nové složky</span></div>
             </div>
-            <div class="tf filled is-pick" data-live data-pick-folder="folder-parent">
+            <div class="tf outlined is-pick" data-live data-pick-folder="folder-parent">
               <div class="box">
                 <div class="field">
                   <label class="label">Složka</label>
@@ -2274,7 +2233,7 @@
             <span class="material-symbols-outlined" aria-hidden="true">delete</span>
           </div>
           <form class="form">
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Uživatelské jméno</label>
@@ -2282,7 +2241,7 @@
                 </div>
               </div>
             </div>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Heslo</label>
@@ -2301,7 +2260,7 @@
             <h2>Váš názor</h2>
           </div>
           <form class="form" novalidate>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Typ zpětné vazby</label>
@@ -2316,7 +2275,7 @@
               </div>
               <div class="support"><span>Vyberte z nabídky</span></div>
             </div>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Jméno</label>
@@ -2325,7 +2284,7 @@
               </div>
               <div class="support"><span>Vaše jméno</span></div>
             </div>
-            <div class="tf filled" data-live>
+            <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">E-mail</label>
@@ -2335,7 +2294,7 @@
               </div>
               <div class="support"><span data-msg data-idle="Kontaktní e-mail">Kontaktní e-mail</span></div>
             </div>
-            <div class="tf filled is-multiline" data-live>
+            <div class="tf outlined is-multiline" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">Váš názor</label>
@@ -2385,53 +2344,12 @@
         <span data-i18n="ov.web">Otevřete na telefonu:</span>
         <a data-lan-page="textfields.html" hidden href="#"></a>
       </p>
-      <div class="def-head">
-        <h2 id="types" data-i18n="t1.title">1. Types</h2>
-        <div class="def-tabs" role="tablist" aria-label="Text Field type">
-          <button type="button" role="tab" id="tab-outlined" data-def="outlined" aria-selected="true" aria-controls="panel-outlined">Outlined</button>
-          <button type="button" role="tab" id="tab-filled" data-def="filled" aria-selected="false" aria-controls="panel-filled">Filled</button>
-        </div>
-      </div>
-      <p class="lead" data-i18n="t1.lead">
-        This section covers the key information about text field types.
-      </p>
-      <div class="type-board" aria-hidden="true">
-        <div class="type-example">
-          <div class="tf catalog filled has-value is-floated" data-lock-type>
-            <div class="box">
-              <div class="field">
-                <span class="label" data-i18n="t1.fieldLabel">Text field</span>
-                <input value="Filled" tabindex="-1" readonly />
-              </div>
-            </div>
-            <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
-          </div>
-          <span class="type-dot">1</span>
-        </div>
-        <div class="type-example">
-          <div class="tf catalog outlined has-value is-floated" data-lock-type>
-            <div class="box">
-              <div class="field">
-                <span class="label" data-i18n="t1.fieldLabel">Text field</span>
-                <input value="Outlined" tabindex="-1" readonly />
-              </div>
-            </div>
-            <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
-          </div>
-          <span class="type-dot">2</span>
-        </div>
-      </div>
-      <ol class="type-legend">
-        <li><span class="type-dot">1</span><span data-i18n="t1.filledName">Filled</span></li>
-        <li><span class="type-dot">2</span><span data-i18n="t1.outlinedName">Outlined</span></li>
-      </ol>
-
-      <h2 id="states" data-i18n="s2.title">2. States</h2>
+      <h2 id="states" data-i18n="s2.title">1. States</h2>
       <p class="lead" data-i18n="s2.lead">
         This section covers the key information about text field states.
       </p>
 
-      <div id="panel-outlined" class="def-panel" role="tabpanel" data-def-panel="outlined" aria-labelledby="tab-outlined">
+      <div id="panel-outlined" class="def-panel">
         <h3 id="outlined" data-i18n="s2.empty">Empty</h3>
         <div class="state-board">
           <div class="grid" id="outlined-empty"></div>
@@ -2446,22 +2364,7 @@
         </div>
       </div>
 
-      <div id="panel-filled" class="def-panel" role="tabpanel" data-def-panel="filled" aria-labelledby="tab-filled" hidden>
-        <h3 id="filled" data-i18n="s2.empty">Empty</h3>
-        <div class="state-board">
-          <div class="grid" id="filled-empty"></div>
-        </div>
-        <h3 data-i18n="s2.populated">Populated</h3>
-        <div class="state-board">
-          <div class="grid" id="filled-populated"></div>
-        </div>
-        <h3 data-i18n="s2.error">Error</h3>
-        <div class="state-board">
-          <div class="grid" id="filled-error"></div>
-        </div>
-      </div>
-
-      <h2 id="errors" data-i18n="e3.title">3. Error</h2>
+      <h2 id="errors" data-i18n="e3.title">2. Error</h2>
       <p class="lead" data-i18n="e3.lead">
         This section covers the key information about error states.
       </p>
@@ -2494,7 +2397,7 @@
         <li data-i18n="e3.after">After an empty or format error is shown, the field keeps validating as the user types so the error clears when the value is fixed. Save is the check in the app bar. Playground has no check — leaving the field is the commit.</li>
       </ul>
 
-      <h2 id="working-with-text" data-i18n="w4.title">4. Working with text</h2>
+      <h2 id="working-with-text" data-i18n="w4.title">3. Working with text</h2>
       <p class="lead" data-i18n="w4.lead">
         This section covers the key information about working with text.
       </p>
@@ -2527,13 +2430,13 @@
         <li data-i18n="w4.select5">Read-only pickers have no text selection.</li>
       </ul>
 
-      <h2 id="configuration" data-i18n="c6.title">5. Configuration</h2>
+      <h2 id="configuration" data-i18n="c6.title">4. Configuration</h2>
       <p class="lead" data-i18n="c6.lead">
         This section covers the key information about text field configuration.
       </p>
       <div class="config-list">
         <div class="config-item">
-          <div class="tf catalog filled has-value is-floated">
+          <div class="tf catalog outlined has-value is-floated">
             <div class="box">
               <div class="field">
                 <span class="label">Text</span>
@@ -2545,19 +2448,20 @@
           <p class="desc" data-i18n="c6.t1d"><strong>Label + value</strong>Always present.</p>
         </div>
         <div class="config-item">
-          <div class="tf catalog filled has-value is-floated">
+          <div class="tf catalog outlined has-value is-floated is-error">
             <div class="box">
               <div class="field">
                 <span class="label">E-mail</span>
-                <input value="jan@seznam.cz" tabindex="-1" readonly />
+                <input value="jan@" tabindex="-1" readonly />
               </div>
+              <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
             </div>
-            <div class="support"><span data-i18n="c6.t2s">Required field</span></div>
+            <div class="support"><span data-i18n="cat.errorMsg">Error message</span></div>
           </div>
           <p class="desc" data-i18n="c6.t2d"><strong>Supporting text</strong>Hint under the field. Error replaces it — see <a href="#errors">Error</a>.</p>
         </div>
         <div class="config-item">
-          <div class="tf catalog filled has-value is-floated">
+          <div class="tf catalog outlined has-value is-floated">
             <div class="box">
               <div class="field">
                 <span class="label">Heslo</span>
@@ -2565,12 +2469,11 @@
               </div>
               <span class="icon trailing material-symbols-outlined" aria-hidden="true">visibility</span>
             </div>
-            <div class="support"><span data-i18n="c6.t3s">At least 8 characters</span><span>12/32</span></div>
           </div>
           <p class="desc" data-i18n="c6.t3d"><strong>Counter + password trailing</strong>Counter sits to the right of supporting text (body-small). Trailing eye is show/hide — not a clear-X.</p>
         </div>
         <div class="config-item">
-          <div class="tf catalog filled has-value is-floated">
+          <div class="tf catalog outlined has-value is-floated">
             <div class="box">
               <div class="field">
                 <span class="label">Složka</span>
@@ -2583,7 +2486,7 @@
           <p class="desc" data-i18n="c6.t4d"><strong>Trailing picker · read-only</strong>Looks enabled, no IME. Chevron opens the folder picker. Trailing is allowed only here and on password.</p>
         </div>
         <div class="config-item">
-          <div class="tf catalog filled has-value is-floated">
+          <div class="tf catalog outlined has-value is-floated">
             <div class="box">
               <div class="field">
                 <span class="label">Typ</span>
@@ -2596,7 +2499,7 @@
           <p class="desc" data-i18n="c6.t5d"><strong>Dropdown</strong>Used for feedback type. Trailing is <code>expand_more</code> — not free text.</p>
         </div>
         <div class="config-item is-tall">
-          <div class="tf catalog filled has-value is-floated is-multiline">
+          <div class="tf catalog outlined has-value is-floated is-multiline">
             <div class="box">
               <div class="field">
                 <span class="label">Zpráva</span>
@@ -2609,11 +2512,11 @@
         </div>
       </div>
 
-      <h2 id="measurements" data-i18n="m5.title">6. Measurements</h2>
+      <h2 id="measurements" data-i18n="m5.title">5. Measurements</h2>
       <p class="lead" data-i18n="m5.lead">
         This section covers the key information about dimensions, sizes, and measurement marks.
       </p>
-      <div class="def-panel" data-def-panel="outlined">
+      <div class="def-panel">
         <ul class="spec-list">
           <li data-i18n="m5.s1">Single-line box <strong>56dp</strong>. Multiline <strong>120dp</strong>.</li>
           <li data-i18n="m5.s4">Trailing icon <strong>24dp</strong>. Gap to the value <strong>12dp</strong>.</li>
@@ -2684,7 +2587,7 @@
                   <div class="md-bar4"></div>
                   <div class="md-supline">
                     <span class="md-pad"></span>
-                    <span class="md-txt" data-i18n="cat.support">Supporting text</span>
+                    <span class="md-txt" data-i18n="cat.errorMsg">Error message</span>
                     <span class="md-pad"></span>
                   </div>
                   <div class="md-under">
@@ -2711,7 +2614,7 @@
                   <div class="md-bar4"></div>
                   <div class="md-supgrid has-count">
                     <span class="md-pad"></span>
-                    <span class="md-txt" data-i18n="cat.support">Supporting text</span>
+                    <span class="md-txt" data-i18n="cat.errorMsg">Error message</span>
                     <span class="md-pad"></span>
                     <span class="md-count">5/20</span>
                     <span class="md-pad"></span>
@@ -2803,183 +2706,19 @@
         <ol class="type-legend">
           <li><span class="type-dot">1</span><span data-i18n="s2.empty">Empty</span></li>
           <li><span class="type-dot">2</span><span data-i18n="cat.focused">Focused</span></li>
-          <li><span class="type-dot">3</span><span data-i18n="cat.support">Supporting text</span></li>
+          <li><span class="type-dot">3</span><span data-i18n="cat.errorMsg">Error message</span></li>
           <li><span class="type-dot">4</span><span data-i18n="m5.n4">Counter</span></li>
           <li><span class="type-dot">5</span><span data-i18n="m5.n5">Trailing</span></li>
           <li><span class="type-dot">6</span><span data-i18n="m5.n6">Trailing focused</span></li>
         </ol>
       </div>
-      <div class="def-panel" data-def-panel="filled" hidden>
-        <ul class="spec-list">
-          <li data-i18n="m5.s1">Single-line box <strong>56dp</strong>. Multiline <strong>120dp</strong>.</li>
-          <li data-i18n="m5.s4">Trailing icon <strong>24dp</strong>. Gap to the value <strong>12dp</strong>.</li>
-          <li data-i18n="m5.s5">Supporting text <strong>4dp</strong> below the box.</li>
-          <li data-i18n="m5.s6">Corner radius <strong>4dp</strong>.</li>
-          <li data-i18n="m5.f1">No side inset. Text starts at the indicator.</li>
-          <li data-i18n="m5.f2">Top corners <strong>4dp</strong>, bottom square.</li>
-          <li data-i18n="m5.f3">Indicator <strong>1dp</strong>. <strong>2dp</strong> when focused.</li>
-          <li data-i18n="m5.f4">Floated stack <strong>8dp</strong> above the value, <strong>8dp</strong> below.</li>
-        </ul>
-        <div class="measure-board" aria-hidden="true">
-          <div class="measure-pair">
-            <div class="measure-card">
-              <div class="md-spec">
-                <div class="md-hgt">56<i></i></div>
-                <div class="md-main">
-                  <div class="md-ruler"></div>
-                  <div class="tf catalog filled md-draw">
-                    <div class="box">
-                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="type-dot">1</span>
-            </div>
-            <div class="measure-card">
-              <div class="md-spec">
-                <div class="md-hgt is-stack">
-                  <span>8<i></i></span>
-                  <span>8<i></i></span>
-                </div>
-                <div class="md-main">
-                  <div class="md-ruler"></div>
-                  <div class="tf catalog filled md-draw has-value is-floated force-focus">
-                    <div class="box">
-                      <span class="md-band top"></span>
-                      <div class="field">
-                        <span class="label" data-i18n="cat.label">Label</span>
-                        <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
-                        <input class="is-ghost" value="Input text" tabindex="-1" readonly />
-                      </div>
-                      <span class="md-band bot"></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="type-dot">2</span>
-            </div>
-          </div>
-          <div class="measure-pair">
-            <div class="measure-card">
-              <div class="md-spec is-plain">
-                <div></div>
-                <div class="md-main">
-                  <div class="tf catalog filled md-draw has-value is-floated">
-                    <div class="box">
-                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
-                    </div>
-                  </div>
-                  <div class="md-bar4"></div>
-                  <div class="md-supline">
-                    <span class="md-txt" data-i18n="cat.support">Supporting text</span>
-                  </div>
-                </div>
-                <div class="md-4"><i></i>4</div>
-              </div>
-              <span class="type-dot">3</span>
-            </div>
-            <div class="measure-card">
-              <div class="md-spec is-plain">
-                <div></div>
-                <div class="md-main">
-                  <div class="tf catalog filled md-draw has-value is-floated">
-                    <div class="box">
-                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
-                    </div>
-                  </div>
-                  <div class="md-bar4"></div>
-                  <div class="md-supline">
-                    <span class="md-txt" data-i18n="cat.support">Supporting text</span>
-                    <span class="md-count">5/20</span>
-                  </div>
-                </div>
-                <div class="md-4"><i></i>4</div>
-              </div>
-              <span class="type-dot">4</span>
-            </div>
-          </div>
-          <div class="measure-pair">
-            <div class="measure-card">
-              <div class="md-spec is-icon">
-                <div class="md-hgt">56<i></i></div>
-                <div class="md-main">
-                  <div class="md-ruler is-icon">
-                    <div class="md-row">
-                      <span class="grow"></span>
-                      <span class="md-slot w12"></span>
-                      <span class="md-cap w24">24<i></i></span>
-                    </div>
-                    <div class="md-row">
-                      <span class="grow"></span>
-                      <span class="md-cap w12">12<i></i></span>
-                      <span class="md-slot w24"></span>
-                    </div>
-                  </div>
-                  <div class="tf catalog filled md-draw">
-                    <div class="box">
-                      <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
-                      <span class="md-gap"></span>
-                      <span class="icon trailing material-symbols-outlined" aria-hidden="true">visibility</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="type-dot">5</span>
-            </div>
-            <div class="measure-card">
-              <div class="md-spec is-icon">
-                <div class="md-hgt is-stack">
-                  <span>8<i></i></span>
-                  <span>8<i></i></span>
-                </div>
-                <div class="md-main">
-                  <div class="md-ruler is-icon">
-                    <div class="md-row">
-                      <span class="grow"></span>
-                      <span class="md-slot w12"></span>
-                      <span class="md-cap w24">24<i></i></span>
-                    </div>
-                    <div class="md-row">
-                      <span class="grow"></span>
-                      <span class="md-cap w12">12<i></i></span>
-                      <span class="md-slot w24"></span>
-                    </div>
-                  </div>
-                  <div class="tf catalog filled md-draw has-value is-floated force-focus">
-                    <div class="box">
-                      <span class="md-band top"></span>
-                      <div class="field">
-                        <span class="label" data-i18n="cat.label">Label</span>
-                        <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
-                        <input class="is-ghost" value="Input text" tabindex="-1" readonly />
-                      </div>
-                      <span class="md-gap"></span>
-                      <span class="icon trailing material-symbols-outlined" aria-hidden="true">visibility</span>
-                      <span class="md-band bot"></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <span class="type-dot">6</span>
-            </div>
-          </div>
-        </div>
-        <ol class="type-legend">
-          <li><span class="type-dot">1</span><span data-i18n="s2.empty">Empty</span></li>
-          <li><span class="type-dot">2</span><span data-i18n="cat.focused">Focused</span></li>
-          <li><span class="type-dot">3</span><span data-i18n="cat.support">Supporting text</span></li>
-          <li><span class="type-dot">4</span><span data-i18n="m5.n4">Counter</span></li>
-          <li><span class="type-dot">5</span><span data-i18n="m5.n5">Trailing</span></li>
-          <li><span class="type-dot">6</span><span data-i18n="m5.n6">Trailing focused</span></li>
-        </ol>
-      </div>
+      
 
-      <h2 id="android-mapping" data-i18n="a7.title">7. Color styles</h2>
+      <h2 id="android-mapping" data-i18n="a7.title">6. Color styles</h2>
       <p class="lead" data-i18n="a7.lead">This section covers the key information about color styles on text fields.</p>
-      <div class="def-panel" data-def-panel="outlined">
+      <div class="def-panel">
         <ul class="spec-list">
-          <li data-i18n="a7.c1">Surface / filled container <strong>Base 1</strong>.</li>
+          <li data-i18n="a7.c1">Field surface <strong>Base 1</strong> inside the outline.</li>
           <li data-i18n="a7.c2">Input / focus <strong>Primary 1</strong>.</li>
           <li data-i18n="a7.c3">Text selection <strong>Android default</strong>.</li>
           <li data-i18n="a7.c4">Label / supporting <strong>Primary 2</strong>.</li>
@@ -3016,7 +2755,6 @@
                 <div class="box">
                   <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
                 </div>
-                <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
               </div>
               <span class="type-dot">3</span>
             </div>
@@ -3063,96 +2801,11 @@
           <li><span class="type-dot">6</span><span data-i18n="cat.disabled">Disabled</span></li>
         </ol>
       </div>
-      <div class="def-panel" data-def-panel="filled" hidden>
-        <ul class="spec-list">
-          <li data-i18n="a7.c1">Surface / filled container <strong>Base 1</strong>.</li>
-          <li data-i18n="a7.c2">Input / focus <strong>Primary 1</strong>.</li>
-          <li data-i18n="a7.c3">Text selection <strong>Android default</strong>.</li>
-          <li data-i18n="a7.c4">Label / supporting <strong>Primary 2</strong>.</li>
-          <li data-i18n="a7.c5">Outline / indicator <strong>Primary 3</strong>.</li>
-          <li data-i18n="a7.c6">Error <strong>Red 1</strong>. Container tint <strong>Red 2</strong>.</li>
-          <li data-i18n="a7.c7">Disabled <strong>Primary 1 @ 38%</strong> / <strong>Primary 6</strong>.</li>
-        </ul>
-        <div class="measure-board" aria-hidden="true">
-          <div class="measure-pair">
-            <div class="measure-card">
-              <div class="tf catalog filled">
-                <div class="box">
-                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
-                </div>
-              </div>
-              <span class="type-dot">1</span>
-            </div>
-            <div class="measure-card">
-              <div class="tf catalog filled has-value is-floated force-focus">
-                <div class="box">
-                  <div class="field">
-                    <span class="label" data-i18n="cat.label">Label</span>
-                    <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
-                    <input class="is-ghost" value="Input text" tabindex="-1" readonly />
-                  </div>
-                </div>
-              </div>
-              <span class="type-dot">2</span>
-            </div>
-          </div>
-          <div class="measure-pair">
-            <div class="measure-card">
-              <div class="tf catalog filled has-value is-floated">
-                <div class="box">
-                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
-                </div>
-                <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
-              </div>
-              <span class="type-dot">3</span>
-            </div>
-            <div class="measure-card">
-              <div class="tf catalog filled has-value is-floated force-focus has-selection">
-                <div class="box">
-                  <div class="field">
-                    <span class="label" data-i18n="cat.label">Label</span>
-                    <div class="input-face" aria-hidden="true">In<span class="sel">put<span class="handle handle-start"></span><span class="handle handle-end"></span></span> text</div>
-                    <input class="is-ghost" value="Input text" tabindex="-1" readonly />
-                  </div>
-                </div>
-              </div>
-              <span class="type-dot">4</span>
-            </div>
-          </div>
-          <div class="measure-pair">
-            <div class="measure-card">
-              <div class="tf catalog filled has-value is-floated is-error">
-                <div class="box">
-                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
-                  <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
-                </div>
-                <div class="support"><span data-i18n="cat.errorMsg">Error message</span></div>
-              </div>
-              <span class="type-dot">5</span>
-            </div>
-            <div class="measure-card">
-              <div class="tf catalog filled is-disabled">
-                <div class="box">
-                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
-                </div>
-              </div>
-              <span class="type-dot">6</span>
-            </div>
-          </div>
-        </div>
-        <ol class="type-legend">
-          <li><span class="type-dot">1</span><span data-i18n="a7.surface">Surface</span></li>
-          <li><span class="type-dot">2</span><span data-i18n="a7.input">Focus</span></li>
-          <li><span class="type-dot">3</span><span data-i18n="a7.label">Label</span></li>
-          <li><span class="type-dot">4</span><span data-i18n="a7.sel">Selection</span></li>
-          <li><span class="type-dot">5</span><span data-i18n="s2.error">Error</span></li>
-          <li><span class="type-dot">6</span><span data-i18n="cat.disabled">Disabled</span></li>
-        </ol>
-      </div>
+      
 
-      <h2 id="typography-styles" data-i18n="ty.title">8. Typography styles</h2>
+      <h2 id="typography-styles" data-i18n="ty.title">7. Typography styles</h2>
       <p class="lead" data-i18n="ty.lead">This section covers the key information about typography styles on text fields.</p>
-      <div class="def-panel" data-def-panel="outlined">
+      <div class="def-panel">
         <ul class="spec-list">
           <li data-i18n="ty.s1">Label, rest <strong>Subheader Regular</strong>.</li>
           <li data-i18n="ty.s2">Label, floated <strong>Caption Regular</strong>.</li>
@@ -3192,11 +2845,12 @@
               <span class="type-dot">3</span>
             </div>
             <div class="measure-card">
-              <div class="tf catalog outlined has-value is-floated">
+              <div class="tf catalog outlined has-value is-floated is-error">
                 <div class="box">
                   <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
+                  <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
                 </div>
-                <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
+                <div class="support"><span data-i18n="cat.errorMsg">Error message</span></div>
               </div>
               <span class="type-dot">4</span>
             </div>
@@ -3209,63 +2863,7 @@
           <li><span class="type-dot">4</span><span data-i18n="ty.support">Supporting</span></li>
         </ol>
       </div>
-      <div class="def-panel" data-def-panel="filled" hidden>
-        <ul class="spec-list">
-          <li data-i18n="ty.s1">Label, rest <strong>Subheader Regular</strong>.</li>
-          <li data-i18n="ty.s2">Label, floated <strong>Caption Regular</strong>.</li>
-          <li data-i18n="ty.s3">Label, value <strong>Subheader Regular</strong>.</li>
-          <li data-i18n="ty.s4">Supporting text <strong>Caption Regular</strong>.</li>
-        </ul>
-        <div class="measure-board" aria-hidden="true">
-          <div class="measure-pair">
-            <div class="measure-card">
-              <div class="tf catalog filled">
-                <div class="box">
-                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input tabindex="-1" readonly /></div>
-                </div>
-              </div>
-              <span class="type-dot">1</span>
-            </div>
-            <div class="measure-card">
-              <div class="tf catalog filled has-value is-floated force-focus">
-                <div class="box">
-                  <div class="field">
-                    <span class="label" data-i18n="cat.label">Label</span>
-                    <div class="input-face" aria-hidden="true">Input text<span class="caret"></span></div>
-                    <input class="is-ghost" value="Input text" tabindex="-1" readonly />
-                  </div>
-                </div>
-              </div>
-              <span class="type-dot">2</span>
-            </div>
-          </div>
-          <div class="measure-pair">
-            <div class="measure-card">
-              <div class="tf catalog filled has-value is-floated">
-                <div class="box">
-                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
-                </div>
-              </div>
-              <span class="type-dot">3</span>
-            </div>
-            <div class="measure-card">
-              <div class="tf catalog filled has-value is-floated">
-                <div class="box">
-                  <div class="field"><span class="label" data-i18n="cat.label">Label</span><input value="Input text" tabindex="-1" readonly /></div>
-                </div>
-                <div class="support"><span data-i18n="cat.support">Supporting text</span></div>
-              </div>
-              <span class="type-dot">4</span>
-            </div>
-          </div>
-        </div>
-        <ol class="type-legend">
-          <li><span class="type-dot">1</span><span data-i18n="ty.label">Label</span></li>
-          <li><span class="type-dot">2</span><span data-i18n="ty.labelF">Floated</span></li>
-          <li><span class="type-dot">3</span><span data-i18n="ty.value">Value</span></li>
-          <li><span class="type-dot">4</span><span data-i18n="ty.support">Supporting</span></li>
-        </ol>
-      </div>
+      
     </main>
   </div>
 
@@ -3277,21 +2875,17 @@
         "nav.button": "Button",
         "nav.addr": "Address Bar",
         "nav.tf": "Text field",
+        "proto.sample": "Sample",
         "ov.title": "Overview",
         "ov.lead": "This page covers the key information about text fields in Seznam Aplikace.",
         "ov.lan": "Open on the phone:",
         "ov.web": "Open on the phone:",
-        "t1.title": "1. Types",
-        "t1.lead": "This section covers the key information about text field types.",
-        "t1.fieldLabel": "Text field",
-        "t1.filledName": "Filled",
-        "t1.outlinedName": "Outlined",
-        "s2.title": "2. States",
+        "s2.title": "1. States",
         "s2.lead": "This section covers the key information about text field states.",
         "s2.empty": "Empty",
         "s2.populated": "Populated",
         "s2.error": "Error",
-        "e3.title": "3. Error",
+        "e3.title": "2. Error",
         "e3.lead": "This section covers the key information about error states.",
         "e3.def1": "Stays on the field. The field stays editable.",
         "e3.def2": "Indicator, label, trailing icon, supporting text, and caret switch to Red 1.",
@@ -3308,7 +2902,7 @@
         "e3.long2": "“Text je příliš dlouhý (n/2048)”. Bookmark URL limit is 2048 characters. Not truncated.",
         "e3.long3": "Try: Upravit · URL · paste a string longer than 2048.",
         "e3.after": "After an empty or format error is shown, the field keeps validating as the user types so the error clears when the value is fixed. Save is the check in the app bar. Playground has no check — leaving the field is the commit.",
-        "w4.title": "4. Working with text",
+        "w4.title": "3. Working with text",
         "w4.lead": "This section covers the key information about working with text.",
         "w4.enter": "Entering text",
         "w4.enter1": "While typing, the caret moves right.",
@@ -3326,11 +2920,11 @@
         "w4.select3": "Double-click selects the word (token). Triple-click selects the entire value.",
         "w4.select4": "Highlight and handles use Android’s default selection (Holo blue <code>#33B5E5</code>, highlight at 40%). Text stays on-surface — not inverted. Do not restyle with Primary 1 or Red 1. The caret is hidden while a range is selected.",
         "w4.select5": "Read-only pickers have no text selection.",
-        "m5.title": "6. Measurements",
+        "m5.title": "5. Measurements",
         "m5.lead": "This section covers the key information about dimensions, sizes, and measurement marks.",
         "m5.s1": "Single-line box <strong>56dp</strong>. Multiline <strong>120dp</strong>.",
         "m5.s4": "Trailing icon <strong>24dp</strong>. Gap to the value <strong>12dp</strong>.",
-        "m5.s5": "Supporting text <strong>4dp</strong> below the box.",
+        "m5.s5": "Error message <strong>4dp</strong> below the box when the field is in error.",
         "m5.s6": "Corner radius <strong>4dp</strong>.",
         "m5.trail": "Trailing icon",
         "m5.n4": "Counter",
@@ -3338,25 +2932,21 @@
         "m5.n6": "Trailing focused",
         "m5.o1": "Inset <strong>16dp</strong> left and right.",
         "m5.o2": "Outline <strong>1dp</strong>. <strong>2dp</strong> when focused.",
-        "m5.f1": "No side inset. Text starts at the indicator.",
-        "m5.f2": "Top corners <strong>4dp</strong>, bottom square.",
-        "m5.f3": "Indicator <strong>1dp</strong>. <strong>2dp</strong> when focused.",
-        "m5.f4": "Floated stack <strong>8dp</strong> above the value, <strong>8dp</strong> below.",
-        "c6.title": "5. Configuration",
+        "c6.title": "4. Configuration",
         "c6.lead": "This section covers the key information about text field configuration.",
         "c6.t1s": "Single-line, no icon",
         "c6.t1d": "<strong>Label + value</strong>Always present.",
         "c6.t2s": "Required field",
-        "c6.t2d": "<strong>Supporting text</strong>Hint under the field. Error replaces it — see <a href=\"#errors\">Error</a>.",
+        "c6.t2d": "<strong>Error message</strong>Supporting text is used only for errors — see <a href=\"#errors\">Error</a>.",
         "c6.t3s": "At least 8 characters",
-        "c6.t3d": "<strong>Counter + password trailing</strong>Counter sits to the right of supporting text (body-small). Trailing eye is show/hide — not a clear-X.",
+        "c6.t3d": "<strong>Password trailing</strong>Trailing eye is show/hide — not a clear-X. Character-count supporting text is not used yet.",
         "c6.t4s": "Where to save",
         "c6.t4d": "<strong>Trailing picker · read-only</strong>Looks enabled, no IME. Chevron opens the folder picker. Trailing is allowed only here and on password.",
         "c6.t5s": "Choose from the list",
         "c6.t5d": "<strong>Dropdown</strong>Used for feedback type. Trailing is <code>expand_more</code> — not free text.",
         "c6.t6s": "Write to us",
         "c6.t6d": "<strong>Multiline</strong>Feedback message.",
-        "a7.title": "7. Color styles",
+        "a7.title": "6. Color styles",
         "a7.lead": "This section covers the key information about color styles on text fields.",
         "a7.role": "Role",
         "a7.style": "Seznam Aplikace style",
@@ -3370,14 +2960,14 @@
         "a7.label": "Label",
         "a7.outline": "Outline",
         "a7.errTint": "Error container tint",
-        "a7.c1": "Surface / filled container <strong>Base 1</strong>.",
+        "a7.c1": "Field surface <strong>Base 1</strong> inside the outline.",
         "a7.c2": "Input / focus <strong>Primary 1</strong>.",
         "a7.c3": "Text selection <strong>Android default</strong>.",
-        "a7.c4": "Label / supporting <strong>Primary 2</strong>.",
+        "a7.c4": "Label <strong>Primary 2</strong>. Error message <strong>Red 1</strong>.",
         "a7.c5": "Outline / indicator <strong>Primary 3</strong>.",
         "a7.c6": "Error <strong>Red 1</strong>. Container tint <strong>Red 2</strong>.",
         "a7.c7": "Disabled <strong>Primary 1 @ 38%</strong> / <strong>Primary 6</strong>.",
-        "ty.title": "8. Typography styles",
+        "ty.title": "7. Typography styles",
         "ty.lead": "This section covers the key information about typography styles on text fields.",
         "ty.role": "Role",
         "ty.size": "Size",
@@ -3385,11 +2975,11 @@
         "ty.s1": "Label, rest <strong>Subheader Regular</strong>.",
         "ty.s2": "Label, floated <strong>Caption Regular</strong>.",
         "ty.s3": "Label, value <strong>Subheader Regular</strong>.",
-        "ty.s4": "Supporting text <strong>Caption Regular</strong>.",
+        "ty.s4": "Error message <strong>Caption Regular</strong>.",
         "ty.label": "Label",
         "ty.labelF": "Floated",
         "ty.value": "Value",
-        "ty.support": "Supporting",
+        "ty.support": "Error message",
         "cat.label": "Label",
         "cat.input": "Input text",
         "cat.support": "Supporting text",
@@ -3405,21 +2995,17 @@
         "nav.button": "Button",
         "nav.addr": "Address Bar",
         "nav.tf": "Text field",
+        "proto.sample": "Ukázka",
         "ov.title": "Přehled",
         "ov.lead": "Na této stránce najdete důležité informace o textových polích v Seznam Aplikace.",
         "ov.lan": "Otevřete na telefonu:",
         "ov.web": "Otevřete na telefonu:",
-        "t1.title": "1. Typy",
-        "t1.lead": "V této sekci najdete důležité informace o typech textových polí.",
-        "t1.fieldLabel": "Textové pole",
-        "t1.filledName": "Filled",
-        "t1.outlinedName": "Outlined",
-        "s2.title": "2. Stavy",
+        "s2.title": "1. Stavy",
         "s2.lead": "V této sekci najdete důležité informace o stavech textových polí.",
         "s2.empty": "Prázdné",
         "s2.populated": "Vyplněné",
         "s2.error": "Chyba",
-        "e3.title": "3. Chyba",
+        "e3.title": "2. Chyba",
         "e3.lead": "V této sekci najdete důležité informace o chybových stavech.",
         "e3.def1": "Zůstává na poli. Pole zůstává editovatelné.",
         "e3.def2": "Indikátor, label, trailing ikona, supporting text a textový kurzor přejdou do Red 1.",
@@ -3436,7 +3022,7 @@
         "e3.long2": "„Text je příliš dlouhý (n/2048)“. Limit URL záložky je 2048 znaků. Text se neořezává.",
         "e3.long3": "Zkuste: Upravit · URL · vložte řetězec delší než 2048.",
         "e3.after": "Po prázdné nebo formátové chybě pole dál validuje při psaní, takže chyba zmizí, jakmile je hodnota v pořádku. Uložení je check v app baru. Playground check nemá — commit je opuštění pole.",
-        "w4.title": "4. Práce s textem",
+        "w4.title": "3. Práce s textem",
         "w4.lead": "V této sekci najdete důležité informace o práci s textem.",
         "w4.enter": "Zadávání textu",
         "w4.enter1": "Při psaní se textový kurzor posouvá doprava.",
@@ -3454,11 +3040,11 @@
         "w4.select3": "Dvojklik vybere slovo (token). Trojklik vybere celou hodnotu.",
         "w4.select4": "Zvýraznění a handly používají výchozí Android výběr (Holo blue <code>#33B5E5</code>, fill 40%). Text zůstává on-surface — neinvertuje se. Nepřebarvujte Primary 1 ani Red 1. Textový kurzor je při výběru rozsahu skrytý.",
         "w4.select5": "Read-only pickery nemají výběr textu.",
-        "m5.title": "6. Rozměry",
+        "m5.title": "5. Rozměry",
         "m5.lead": "V této sekci najdete důležité informace ohledně rozměrů, velikostí a kót.",
         "m5.s1": "Jednořádkový box <strong>56dp</strong>. Víceřádkový <strong>120dp</strong>.",
         "m5.s4": "Trailing ikona <strong>24dp</strong>. Mezera k hodnotě <strong>12dp</strong>.",
-        "m5.s5": "Supporting text <strong>4dp</strong> pod boxem.",
+        "m5.s5": "Chybová hláška <strong>4dp</strong> pod boxem, jen v error stavu.",
         "m5.s6": "Rohové zaoblení <strong>4dp</strong>.",
         "m5.trail": "Trailing ikona",
         "m5.n4": "Counter",
@@ -3466,25 +3052,21 @@
         "m5.n6": "Trailing focused",
         "m5.o1": "Odsazení <strong>16dp</strong> vlevo i vpravo.",
         "m5.o2": "Obrys <strong>1dp</strong>. <strong>2dp</strong> ve focusu.",
-        "m5.f1": "Bez bočního odsazení. Text začíná u indikátoru.",
-        "m5.f2": "Horní rohy <strong>4dp</strong>, spodní hranaté.",
-        "m5.f3": "Indikátor <strong>1dp</strong>. <strong>2dp</strong> ve focusu.",
-        "m5.f4": "Floated stack <strong>8dp</strong> nad hodnotou, <strong>8dp</strong> pod ní.",
-        "c6.title": "5. Konfigurace",
+        "c6.title": "4. Konfigurace",
         "c6.lead": "V této sekci najdete důležité informace o konfiguraci textových polí.",
         "c6.t1s": "Jednořádkové, bez ikony",
         "c6.t1d": "<strong>Label + hodnota</strong>Vždy přítomné.",
         "c6.t2s": "Povinné pole",
-        "c6.t2d": "<strong>Supporting text</strong>Nápověda pod polem. Chyba ji nahradí — viz <a href=\"#errors\">Chyba</a>.",
+        "c6.t2d": "<strong>Chybová hláška</strong>Supporting text je jen pro chyby — viz <a href=\"#errors\">Chyba</a>.",
         "c6.t3s": "Alespoň 8 znaků",
-        "c6.t3d": "<strong>Počítadlo + trailing hesla</strong>Počítadlo je vpravo od supporting textu (body-small). Trailing oko je show/hide — ne clear-X.",
+        "c6.t3d": "<strong>Trailing hesla</strong>Trailing oko je show/hide — ne clear-X. Supporting text s počítadlem znaků zatím nepoužíváme.",
         "c6.t4s": "Kam uložit",
         "c6.t4d": "<strong>Trailing picker · read-only</strong>Vypadá enabled, bez IME. Chevron otevře výběr složky. Trailing je povolený jen tady a u hesla.",
         "c6.t5s": "Vyberte ze seznamu",
         "c6.t5d": "<strong>Dropdown</strong>Pro typ zpětné vazby. Trailing je <code>expand_more</code> — ne volný text.",
         "c6.t6s": "Napište nám",
         "c6.t6d": "<strong>Víceřádkové</strong>Zpráva zpětné vazby.",
-        "a7.title": "7. Barevné styly",
+        "a7.title": "6. Barevné styly",
         "a7.lead": "V této sekci najdete důležité informace o barevných stylech textových polí.",
         "a7.role": "Role",
         "a7.style": "Styl Seznam Aplikace",
@@ -3498,14 +3080,14 @@
         "a7.label": "Label",
         "a7.outline": "Outline",
         "a7.errTint": "Tint error kontejneru",
-        "a7.c1": "Povrch / filled kontejner <strong>Base 1</strong>.",
+        "a7.c1": "Povrch pole <strong>Base 1</strong> uvnitř obrysu.",
         "a7.c2": "Vstup / focus <strong>Primary 1</strong>.",
         "a7.c3": "Výběr textu <strong>Android default</strong>.",
-        "a7.c4": "Label / supporting <strong>Primary 2</strong>.",
+        "a7.c4": "Label <strong>Primary 2</strong>. Error message <strong>Red 1</strong>.",
         "a7.c5": "Obrys / indikátor <strong>Primary 3</strong>.",
         "a7.c6": "Error <strong>Red 1</strong>. Tint kontejneru <strong>Red 2</strong>.",
         "a7.c7": "Disabled <strong>Primary 1 @ 38%</strong> / <strong>Primary 6</strong>.",
-        "ty.title": "8. Typografické styly",
+        "ty.title": "7. Typografické styly",
         "ty.lead": "V této sekci najdete důležité informace o typografických stylech textových polí.",
         "ty.role": "Role",
         "ty.size": "Velikost",
@@ -3513,11 +3095,11 @@
         "ty.s1": "Label, klid <strong>Subheader Regular</strong>.",
         "ty.s2": "Label, floated <strong>Caption Regular</strong>.",
         "ty.s3": "Label, hodnota <strong>Subheader Regular</strong>.",
-        "ty.s4": "Supporting text <strong>Caption Regular</strong>.",
+        "ty.s4": "Error message <strong>Caption Regular</strong>.",
         "ty.label": "Label",
         "ty.labelF": "Floated",
         "ty.value": "Value",
-        "ty.support": "Supporting",
+        "ty.support": "Error message",
         "cat.label": "Label",
         "cat.input": "Input text",
         "cat.support": "Supporting text",
@@ -3548,29 +3130,7 @@
       paintLanUrl();
     }
 
-    const variantBtns = document.querySelectorAll("[data-variant]");
     const themeBtns = document.querySelectorAll("[data-theme-btn]");
-    let variant = "outlined";
-
-    function applyVariant(next) {
-      variant = next === "filled" ? "filled" : "outlined";
-      variantBtns.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.variant === variant)));
-      document.querySelectorAll("[data-def]").forEach((b) => {
-        b.setAttribute("aria-selected", String(b.dataset.def === variant));
-      });
-      document.querySelectorAll("[data-def-panel]").forEach((p) => {
-        p.hidden = p.dataset.defPanel !== variant;
-      });
-      document.querySelectorAll("aside .tf, .config-list .tf").forEach((el) => {
-        if (el.hasAttribute("data-lock-type")) return;
-        el.classList.toggle("filled", variant === "filled");
-        el.classList.toggle("outlined", variant === "outlined");
-      });
-    }
-    variantBtns.forEach((b) => b.addEventListener("click", () => applyVariant(b.dataset.variant)));
-    document.querySelectorAll("[data-def]").forEach((b) => {
-      b.addEventListener("click", () => applyVariant(b.dataset.def));
-    });
     themeBtns.forEach((b) => b.addEventListener("click", () => {
       const t = b.dataset.themeBtn;
       document.documentElement.setAttribute("data-theme", t === "dark" ? "dark" : "light");
@@ -3595,7 +3155,7 @@
     let fillLive = false;
 
     function setModeChrome(mode) {
-      fillMode = mode === "filled" ? "filled" : "empty";
+      fillMode = mode === "populated" || mode === "filled" ? "populated" : "empty";
       fillLive = false;
       fillBtns().forEach((b) => {
         b.setAttribute("aria-pressed", String(b.dataset.fill === fillMode));
@@ -3612,7 +3172,7 @@
       if (!screen || screen.dataset.screen === "vybrat") return;
       if (!fillableScreens.has(screen.dataset.screen)) return;
       screen.querySelectorAll("[data-sample]").forEach((el) => {
-        el.value = fillMode === "filled" ? el.dataset.sample : "";
+        el.value = fillMode === "populated" ? el.dataset.sample : "";
         const tf = el.closest(".tf");
         if (tf) {
           syncValue(tf);
@@ -4050,7 +3610,7 @@
             </div>
             ${trailing ? `<span class="icon trailing material-symbols-outlined">${trailing}</span>` : ""}
           </div>
-          <div class="support"><span>${support || ""}</span>${count ? `<span>${count}</span>` : ""}</div>
+          ${error ? `<div class="support"><span>${support || ""}</span></div>` : ""}
         </div>`;
     }
 
@@ -4087,16 +3647,13 @@
           disabled,
           label: t("cat.label"),
           value: populated ? t("cat.input") : "",
-          support: error ? t("cat.errorMsg") : t("cat.support"),
+          support: error ? t("cat.errorMsg") : "",
           trailing: error ? "error" : "",
         });
       }).join("");
     }
 
     function paintCatalogs() {
-      paint("filled-empty", "filled", false, false);
-      paint("filled-populated", "filled", true, false);
-      paint("filled-error", "filled", true, true);
       paint("outlined-empty", "outlined", false, false);
       paint("outlined-populated", "outlined", true, false);
       paint("outlined-error", "outlined", true, true);
@@ -4104,7 +3661,6 @@
 
     paintCatalogs();
 
-    applyVariant("outlined");
 
     const previewBtns = document.querySelectorAll("button[data-preview]");
 
@@ -4235,7 +3791,7 @@
 
     const params = new URLSearchParams(location.search);
     const fillParam = params.get("fill");
-    if (fillParam === "filled" || fillParam === "empty") fillMode = fillParam;
+    if (fillParam === "populated" || fillParam === "filled" || fillParam === "empty") fillMode = fillParam === "filled" ? "populated" : fillParam;
     let startScreen = params.get("screen");
     if (startScreen === "profil") startScreen = "playground";
     if (startScreen) {
