@@ -281,16 +281,18 @@
       margin-left: 0;
     }
     .brand .preview-switch {
-      flex: none;
-      flex-shrink: 0;
+      flex: 1;
+      min-width: 0;
+      max-width: 280px;
       margin-left: auto;
     }
     .brand .preview-switch .seg {
-      width: auto;
+      width: 100%;
     }
     .brand .preview-switch .seg button {
-      flex: none;
-      padding: 6px 12px;
+      flex: 1;
+      min-width: 0;
+      padding: 6px 10px;
     }
     .brand .kicker,
     .brand h3 {
@@ -321,10 +323,14 @@
     }
     html[data-preview="device"] .lan-url { display: none !important; }
 
+    .proto-chrome {
+      width: 100%;
+      min-width: 0;
+    }
     .toolbar {
       display: flex;
       flex-direction: row;
-      align-items: stretch;
+      align-items: center;
       flex-wrap: nowrap;
       gap: 8px;
       width: 100%;
@@ -333,23 +339,35 @@
     }
     .toolbar-group {
       display: flex;
+      min-width: 0;
+      flex-direction: row;
+      align-items: center;
+    }
+    .toolbar-group:nth-child(1) {
+      flex: 2 1 0;
+    }
+    .toolbar-group:nth-child(2) {
+      flex: 3 1 0;
+    }
+    .toolbar-group .seg {
       flex: 1;
       min-width: 0;
-      flex-direction: column;
-      align-items: stretch;
+      width: 100%;
     }
-    .toolbar-group h3 { display: none; }
     .seg {
       display: flex;
       width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
       background: var(--chip);
       border-radius: 999px;
       padding: 3px;
       gap: 2px;
-      overflow: visible;
     }
     .seg button {
-      flex: 1;
+      flex: 1 1 0;
+      min-width: 0;
+      box-sizing: border-box;
       font-family: inherit;
       font-size: 12px;
       line-height: 16px;
@@ -361,8 +379,6 @@
       border-radius: 999px;
       cursor: pointer;
       white-space: nowrap;
-      overflow: visible;
-      text-overflow: unset;
       text-align: center;
     }
     .seg button[aria-pressed="true"] {
@@ -1856,29 +1872,16 @@
       pointer-events: auto;
     }
     html[data-preview="device"] .proto-chrome .toolbar {
-      flex-direction: column;
-      gap: 16px;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 8px;
       padding: 0;
     }
-    html[data-preview="device"] .proto-chrome .toolbar-group {
-      flex: none;
-      width: 100%;
-      gap: 6px;
+    html[data-preview="device"] .proto-chrome .toolbar-group:nth-child(1) {
+      flex: 2 1 0;
     }
-    html[data-preview="device"] .proto-chrome .toolbar-group h3 {
-      display: block;
-      margin: 0;
-      font-size: 16px;
-      line-height: 22px;
-      font-weight: 600;
-      color: var(--on);
-    }
-    html[data-preview="device"] .proto-chrome .seg {
-      width: 100%;
-    }
-    html[data-preview="device"] .proto-chrome .seg button {
-      flex: 1;
-      text-align: center;
+    html[data-preview="device"] .proto-chrome .toolbar-group:nth-child(2) {
+      flex: 3 1 0;
     }
     html[data-preview="device"] .toolbar-scrim {
       display: none;
@@ -2009,17 +2012,16 @@
       <div class="proto-chrome" id="proto-chrome">
       <div class="toolbar">
         <div class="toolbar-group">
-          <h3 id="toolbar-mode">Mode</h3>
-          <div class="seg" role="group" aria-labelledby="toolbar-mode">
+          <div class="seg" role="group" aria-label="Theme">
             <button type="button" data-theme-btn="light" aria-pressed="true">Light</button>
             <button type="button" data-theme-btn="dark" aria-pressed="false">Dark</button>
           </div>
         </div>
         <div class="toolbar-group">
-          <h3 id="toolbar-sample" data-i18n="proto.sample">Sample</h3>
-          <div class="seg" id="fill-seg" role="group" aria-labelledby="toolbar-sample">
-            <button type="button" data-fill="empty" aria-pressed="true">Empty</button>
+          <div class="seg" id="fill-seg" role="group" aria-label="Sample data">
+            <button type="button" data-fill="empty" aria-pressed="true" data-i18n="proto.empty">Empty</button>
             <button type="button" data-fill="populated" aria-pressed="false" data-i18n="s2.populated">Populated</button>
+            <button type="button" data-fill="error" aria-pressed="false" data-i18n="s2.error">Error</button>
           </div>
         </div>
       </div>
@@ -2091,7 +2093,7 @@
               <div class="box">
                 <div class="field">
                   <label class="label">E-mail</label>
-                  <input name="play-email" type="email" inputmode="email" autocomplete="email" required data-sample="jan@seznam.cz" />
+                  <input name="play-email" type="email" inputmode="email" autocomplete="email" required data-sample="jan@seznam.cz" data-error-value="jan@" />
                 </div>
                 <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
               </div>
@@ -2101,7 +2103,7 @@
               <div class="box">
                 <div class="field">
                   <label class="label">URL</label>
-                  <input name="play-url" type="text" inputmode="url" autocomplete="url" required data-maxlength="2048" data-sample="www.seznam.cz" />
+                  <input name="play-url" type="text" inputmode="url" autocomplete="url" required data-maxlength="2048" data-sample="www.seznam.cz" data-error-value="www.broken" />
                 </div>
                 <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
               </div>
@@ -2167,16 +2169,17 @@
               <div class="box">
                 <div class="field">
                   <label class="label">Název</label>
-                  <input name="bookmark-name" data-sample="Česká Televize" />
+                  <input name="bookmark-name" data-sample="Česká Televize" data-error-value="" data-error-msg="Název nesmí být prázdny" />
                 </div>
+                <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
               </div>
-              <div class="support"><span>Zadejte název</span></div>
+              <div class="support"><span data-msg data-idle="Zadejte název">Zadejte název</span></div>
             </div>
             <div class="tf outlined" data-live>
               <div class="box">
                 <div class="field">
                   <label class="label">URL</label>
-                  <input name="bookmark-url" type="text" inputmode="url" autocomplete="url" required data-maxlength="2048" data-sample="www.ceskatelevize.cz" />
+                  <input name="bookmark-url" type="text" inputmode="url" autocomplete="url" required data-maxlength="2048" data-sample="www.ceskatelevize.cz" data-error-value="www.broken" />
                 </div>
                 <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
               </div>
@@ -2207,8 +2210,9 @@
               <div class="box">
                 <div class="field">
                   <label class="label">Název</label>
-                  <input name="folder-name" required data-sample="Media" />
+                  <input name="folder-name" required data-sample="Media" data-error-value="" />
                 </div>
+                <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
               </div>
               <div class="support"><span data-msg data-idle="Název nové složky">Název nové složky</span></div>
             </div>
@@ -2288,7 +2292,7 @@
               <div class="box">
                 <div class="field">
                   <label class="label">E-mail</label>
-                  <input name="feedback-email" type="email" inputmode="email" autocomplete="email" required data-sample="petra.noskova78@seznam.cz" />
+                  <input name="feedback-email" type="email" inputmode="email" autocomplete="email" required data-sample="petra.noskova78@seznam.cz" data-error-value="jan@" />
                 </div>
                 <span class="icon trailing error-icon material-symbols-outlined" aria-hidden="true">error</span>
               </div>
@@ -2384,7 +2388,7 @@
       <ul class="spec-list">
         <li data-i18n="e3.invalid1">Shows on submit if the value is not a valid e-mail or URL (including <code>javascript:</code>).</li>
         <li data-i18n="e3.invalid2">Supporting text: “Zadejte platný e-mail” / “Zadejte platnou URL”.</li>
-        <li data-i18n="e3.invalid3">Try: Upravit URL <code>javascript:alert(1)</code> or Playground e-mail <code>jan@</code>, then leave / save.</li>
+        <li data-i18n="e3.invalid3">Try: Upravit URL <code>www.broken</code> or Playground e-mail <code>jan@</code>, then leave / save.</li>
       </ul>
 
       <h3 data-i18n="e3.long">Long text</h3>
@@ -2875,7 +2879,9 @@
         "nav.button": "Button",
         "nav.addr": "Address Bar",
         "nav.tf": "Text field",
+        "proto.mode": "Mode",
         "proto.sample": "Sample",
+        "proto.empty": "Empty",
         "ov.title": "Overview",
         "ov.lead": "This page covers the key information about text fields in Seznam Aplikace.",
         "ov.lan": "Open on the phone:",
@@ -2896,7 +2902,7 @@
         "e3.invalid": "Invalid format",
         "e3.invalid1": "Shows on submit if the value is not a valid e-mail or URL (including <code>javascript:</code>).",
         "e3.invalid2": "Supporting text: “Zadejte platný e-mail” / “Zadejte platnou URL”.",
-        "e3.invalid3": "Try: Upravit URL <code>javascript:alert(1)</code> or Playground e-mail <code>jan@</code>, then leave / save.",
+        "e3.invalid3": "Try: Upravit URL <code>www.broken</code> or Playground e-mail <code>jan@</code>, then leave / save.",
         "e3.long": "Long text",
         "e3.long1": "Shows while editing, as soon as the value exceeds the limit.",
         "e3.long2": "“Text je příliš dlouhý (n/2048)”. Bookmark URL limit is 2048 characters. Not truncated.",
@@ -2995,7 +3001,9 @@
         "nav.button": "Button",
         "nav.addr": "Address Bar",
         "nav.tf": "Text field",
+        "proto.mode": "Režim",
         "proto.sample": "Ukázka",
+        "proto.empty": "Prázdné",
         "ov.title": "Přehled",
         "ov.lead": "Na této stránce najdete důležité informace o textových polích v Seznam Aplikace.",
         "ov.lan": "Otevřete na telefonu:",
@@ -3016,7 +3024,7 @@
         "e3.invalid": "Neplatný formát",
         "e3.invalid1": "Zobrazí se při odeslání, pokud hodnota není platný e-mail nebo URL (včetně <code>javascript:</code>).",
         "e3.invalid2": "Supporting text: „Zadejte platný e-mail“ / „Zadejte platnou URL“.",
-        "e3.invalid3": "Zkuste: Upravit URL <code>javascript:alert(1)</code> nebo Playground e-mail <code>jan@</code>, pak odejděte / uložte.",
+        "e3.invalid3": "Zkuste: Upravit URL <code>www.broken</code> nebo Playground e-mail <code>jan@</code>, pak odejděte / uložte.",
         "e3.long": "Dlouhý text",
         "e3.long1": "Zobrazí se během psaní, hned jak hodnota překročí limit.",
         "e3.long2": "„Text je příliš dlouhý (n/2048)“. Limit URL záložky je 2048 znaků. Text se neořezává.",
@@ -3154,8 +3162,14 @@
     let fillMode = "empty";
     let fillLive = false;
 
+    function normalizeFillMode(mode) {
+      if (mode === "filled") return "populated";
+      if (mode === "populated" || mode === "error" || mode === "empty") return mode;
+      return "empty";
+    }
+
     function setModeChrome(mode) {
-      fillMode = mode === "populated" || mode === "filled" ? "populated" : "empty";
+      fillMode = normalizeFillMode(mode);
       fillLive = false;
       fillBtns().forEach((b) => {
         b.setAttribute("aria-pressed", String(b.dataset.fill === fillMode));
@@ -3172,12 +3186,37 @@
       if (!screen || screen.dataset.screen === "vybrat") return;
       if (!fillableScreens.has(screen.dataset.screen)) return;
       screen.querySelectorAll("[data-sample]").forEach((el) => {
-        el.value = fillMode === "populated" ? el.dataset.sample : "";
         const tf = el.closest(".tf");
-        if (tf) {
-          syncValue(tf);
-          setFieldError(tf, false);
-          refreshTextEditing(tf);
+        if (fillMode === "populated") {
+          el.value = el.dataset.sample || "";
+          if (tf) {
+            syncValue(tf);
+            setFieldError(tf, false);
+            refreshTextEditing(tf);
+          }
+          return;
+        }
+        if (fillMode === "empty") {
+          el.value = "";
+          if (tf) {
+            syncValue(tf);
+            setFieldError(tf, false);
+            refreshTextEditing(tf);
+          }
+          return;
+        }
+        if (fillMode === "error") {
+          const demo = el.dataset.errorValue;
+          el.value = demo !== undefined ? demo : (el.dataset.sample || "");
+          if (tf) {
+            syncValue(tf);
+            if (el.dataset.errorMsg) {
+              setFieldError(tf, true, el.dataset.errorMsg);
+            } else {
+              validateField(tf, { fromSubmit: true });
+            }
+            refreshTextEditing(tf);
+          }
         }
       });
     }
@@ -3340,6 +3379,10 @@
       return input.inputMode === "url" || input.name === "bookmark-url" || input.name === "play-url";
     }
 
+    function isNameInput(input) {
+      return input.name === "bookmark-name" || input.name === "folder-name";
+    }
+
     /* Host with a TLD. Scheme optional. Rejects javascript:, data:, and www.seznam (no TLD). */
     function isValidHttpUrl(value) {
       if (!value || /\s/.test(value)) return false;
@@ -3442,6 +3485,11 @@
         }
         setFieldError(tf, false);
         return true;
+      }
+
+      if (isNameInput(input) && !value && showCommit) {
+        setFieldError(tf, true, "Název nesmí být prázdny");
+        return false;
       }
 
       if (required && !value && showCommit) {
@@ -3791,7 +3839,9 @@
 
     const params = new URLSearchParams(location.search);
     const fillParam = params.get("fill");
-    if (fillParam === "populated" || fillParam === "filled" || fillParam === "empty") fillMode = fillParam === "filled" ? "populated" : fillParam;
+    if (fillParam === "populated" || fillParam === "filled" || fillParam === "empty" || fillParam === "error") {
+      fillMode = fillParam === "filled" ? "populated" : fillParam;
+    }
     let startScreen = params.get("screen");
     if (startScreen === "profil") startScreen = "playground";
     if (startScreen) {
