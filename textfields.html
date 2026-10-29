@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs" data-preview="frame" data-phone-screen="hub">
+<html lang="cs" data-preview="frame" data-phone-screen="hub" data-platform="android">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -10,12 +10,17 @@
   <title>Text Fields — MD3 Expressive · Seznam Aplikace</title>
   <script>
     (function () {
-      var p = new URLSearchParams(location.search).get("preview");
+      var q = new URLSearchParams(location.search);
+      var p = q.get("preview");
       var mode = "frame";
       if (p === "device" || p === "phone") mode = "device";
       else if (p === "frame") mode = "frame";
       else if (window.matchMedia("(max-width: 700px) and (pointer: coarse)").matches) mode = "device";
       document.documentElement.setAttribute("data-preview", mode);
+      var plat = q.get("platform");
+      if (plat === "ios" || plat === "android") {
+        document.documentElement.setAttribute("data-platform", plat);
+      }
     })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -331,7 +336,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       gap: 8px;
       width: 100%;
       max-width: none;
@@ -343,10 +348,13 @@
       flex-direction: row;
       align-items: center;
     }
-    .toolbar-group:nth-child(1) {
+    .toolbar-group.platform-group {
+      flex: 1 0 100%;
+    }
+    .toolbar-group.theme-group {
       flex: 2 1 0;
     }
-    .toolbar-group:nth-child(2) {
+    .toolbar-group.fill-group {
       flex: 3 1 0;
     }
     .toolbar-group .seg {
@@ -1267,7 +1275,15 @@
     .tf.catalog textarea,
     .tf.catalog select { pointer-events: none; caret-color: transparent; }
     .tf.catalog.force-focus input { caret-color: var(--cursor); }
-    .tf.is-error { --cursor: var(--error); }
+    .tf.is-error:focus-within input:not([readonly]),
+    .tf.is-error:focus-within textarea:not([readonly]),
+    .tf.is-error.force-focus input.is-ghost,
+    .tf.is-error.force-focus .caret {
+      caret-color: var(--cursor);
+    }
+    .tf.is-error.force-focus .caret {
+      background: var(--cursor);
+    }
 
     .caret {
       display: none;
@@ -1278,7 +1294,7 @@
       flex: none;
       animation: blink 1s steps(1) infinite;
     }
-    .tf.catalog.force-focus.has-value .caret { display: inline-block; }
+    .tf.catalog.force-focus .caret { display: inline-block; }
     .tf.catalog.has-selection .caret { display: none; }
     @keyframes blink { 50% { opacity: 0; } }
 
@@ -1873,14 +1889,18 @@
     }
     html[data-preview="device"] .proto-chrome .toolbar {
       flex-direction: row;
+      flex-wrap: wrap;
       align-items: stretch;
       gap: 8px;
       padding: 0;
     }
-    html[data-preview="device"] .proto-chrome .toolbar-group:nth-child(1) {
+    html[data-preview="device"] .proto-chrome .toolbar-group.platform-group {
+      flex: 1 0 100%;
+    }
+    html[data-preview="device"] .proto-chrome .toolbar-group.theme-group {
       flex: 2 1 0;
     }
-    html[data-preview="device"] .proto-chrome .toolbar-group:nth-child(2) {
+    html[data-preview="device"] .proto-chrome .toolbar-group.fill-group {
       flex: 3 1 0;
     }
     html[data-preview="device"] .toolbar-scrim {
@@ -1970,6 +1990,501 @@
       border-radius: 0;
       overflow: auto;
     }
+
+    /* iOS text fields and text views — Apple HIG */
+    html[data-platform="ios"] {
+      --ios-label: #000000; /* Labels/Primary */
+      --ios-secondary: rgba(60, 60, 67, 0.6); /* Labels/Secondary */
+      --ios-tertiary: rgba(60, 60, 67, 0.3); /* Labels/Tertiary */
+      --ios-blue: #0088ff; /* Accents/Blue */
+      --ios-red: #ff383c; /* Accents/Red */
+      --ios-fill: #ffffff; /* Backgrounds (Grouped)/Secondary */
+      --ios-grouped: #F2F2F7; /* Backgrounds (Grouped)/Primary */
+      --ios-separator: #e6e6e6; /* Separators/Vibrant */
+      --ios-clear: rgba(60, 60, 67, 0.3);
+      --ios-clear-x: transparent;
+      --cursor: #0088ff;
+      --android-sel: rgba(0, 136, 255, 0.28);
+      --android-handle: #0088ff;
+    }
+    html[data-platform="ios"][data-theme="dark"] {
+      --ios-label: #ffffff; /* Labels/Primary */
+      --ios-secondary: rgba(235, 235, 245, 0.6); /* Labels/Secondary */
+      --ios-tertiary: rgba(235, 235, 245, 0.3); /* Labels/Tertiary */
+      --ios-blue: #0091ff; /* Accents/Blue */
+      --ios-red: #ff4245; /* Accents/Red */
+      --ios-fill: #1c1c1e; /* Backgrounds (Grouped)/Secondary */
+      --ios-grouped: #000000; /* Backgrounds (Grouped)/Primary */
+      --ios-separator: #1a1a1a; /* Separators/Vibrant */
+      --ios-clear: rgba(235, 235, 245, 0.3);
+      --ios-clear-x: transparent;
+      --cursor: #0091ff;
+      --android-sel: rgba(0, 145, 255, 0.35);
+      --android-handle: #0091ff;
+    }
+    html:not([data-platform="ios"]) .spec-ios { display: none !important; }
+    html[data-platform="ios"] .spec-android { display: none !important; }
+    html[data-platform="ios"] .phone-screen,
+    html[data-platform="ios"] .spec-ios,
+    html[data-platform="ios"] .tf {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
+    }
+    html[data-platform="ios"] .phone-stage,
+    html[data-platform="ios"] .phone.product-phone .phone-stage > .phone-screen {
+      background: var(--ios-grouped);
+      color: var(--ios-label);
+    }
+    html[data-platform="ios"] .phone-stage::before {
+      top: 11px;
+      width: 96px;
+      height: 28px;
+      margin-left: -48px;
+      border-radius: 16px;
+      background: #000;
+      box-shadow: none;
+    }
+    html[data-platform="ios"] .status {
+      height: 54px;
+      padding: 16px 24px 0;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+    html[data-platform="ios"] .hub-head { padding: 4px 16px 8px; }
+    html[data-platform="ios"] .hub-kicker {
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 600;
+      letter-spacing: -0.08px;
+      color: var(--ios-secondary);
+    }
+    html[data-platform="ios"] .hub-head h1,
+    html[data-platform="ios"] .appbar h1 {
+      font-size: 34px;
+      line-height: 41px;
+      font-weight: 700;
+      letter-spacing: 0.37px;
+    }
+    html[data-platform="ios"] .hub-lead {
+      margin-top: 6px;
+      font-size: 15px;
+      line-height: 20px;
+      letter-spacing: -0.24px;
+      color: var(--ios-secondary);
+    }
+    html[data-platform="ios"] .hub-section {
+      margin: 0;
+      padding: 18px 32px 6px;
+      font-size: 13px;
+      line-height: 18px;
+      font-weight: 400;
+      letter-spacing: -0.08px;
+      text-transform: uppercase;
+      color: var(--ios-secondary);
+    }
+    html[data-platform="ios"] .hub-list {
+      gap: 0;
+      margin: 0 16px 8px;
+      padding: 0;
+      background: var(--ios-fill);
+      border-radius: 26px;
+      overflow: hidden;
+    }
+    html[data-platform="ios"] .hub-list:last-child { padding-bottom: 0; margin-bottom: 28px; }
+    html[data-platform="ios"] .hub-row {
+      min-height: 52px;
+      padding: 10px 16px;
+      gap: 12px;
+      border-radius: 0;
+      background: transparent;
+      border-bottom: 0.5px solid var(--ios-separator);
+    }
+    html[data-platform="ios"] .hub-row:last-child { border-bottom: 0; }
+    html[data-platform="ios"] .hub-row:hover { background: rgba(120, 120, 128, 0.08); }
+    html[data-platform="ios"] .hub-row .hub-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 0;
+      background: transparent;
+      color: var(--ios-blue);
+    }
+    html[data-platform="ios"] .hub-row strong {
+      font-size: 17px;
+      line-height: 20px;
+      font-weight: 400;
+      letter-spacing: -0.43px;
+    }
+    html[data-platform="ios"] .hub-row .hint {
+      font-size: 13px;
+      line-height: 18px;
+      color: var(--ios-secondary);
+    }
+    html[data-platform="ios"] .hub-row > .material-symbols-outlined,
+    html[data-platform="ios"] .hub-row > .ios-symbol-host {
+      width: 24px;
+      height: 24px;
+      margin-left: auto;
+      display: grid;
+      place-items: center;
+      color: var(--ios-tertiary);
+    }
+    html[data-platform="ios"] .hub-row > .ios-symbol-host svg { width: 8px; height: 13px; display: block; }
+    html[data-platform="ios"] .hub-icon .ios-symbol-host {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      color: var(--ios-blue);
+    }
+    html[data-platform="ios"] .hub-icon .ios-symbol-host svg { width: 22px; height: 22px; display: block; }
+    html[data-platform="ios"] .appbar.row {
+      min-height: 54px;
+      padding: 0 16px 10px;
+      justify-content: space-between;
+      align-items: flex-start;
+      background: transparent;
+    }
+    html[data-platform="ios"] .appbar.row h2 {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 8px;
+      height: 28px;
+      margin: 0;
+      padding: 0 96px;
+      text-align: center;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 700;
+      letter-spacing: 0.38px;
+      color: #011e39;
+      pointer-events: none;
+    }
+    html[data-platform="ios"] .appbar.row .icon-btn:not(.ios-bar-label),
+    html[data-platform="ios"] .appbar.row > .ios-symbol-host {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border-radius: 1000px;
+      display: grid;
+      place-items: center;
+      color: #011e39;
+      background: #ffffff;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.12);
+    }
+    html[data-platform="ios"] .appbar.row .icon-btn svg,
+    html[data-platform="ios"] .appbar.row > .ios-symbol-host svg {
+      display: block;
+      width: 24px;
+      height: 24px;
+    }
+    html[data-platform="ios"] .appbar.row .icon-btn::before,
+    html[data-platform="ios"] .appbar.row > .material-symbols-outlined::before { display: none; }
+    html[data-platform="ios"] .appbar.row > .material-symbols-outlined:not(.icon-btn) {
+      font-size: 17px;
+    }
+    html[data-platform="ios"] .appbar.row .icon-btn.ios-bar-label {
+      width: auto;
+      min-width: 44px;
+      height: 44px;
+      padding: 0 14px;
+      border-radius: 1000px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      font-size: 17px;
+      font-weight: 400;
+      letter-spacing: -0.43px;
+      color: #ffffff;
+      background: var(--ios-blue);
+      background-blend-mode: normal;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.12);
+    }
+    html[data-platform="ios"][data-theme="dark"] .appbar.row h2 { color: #ffffff; }
+    html[data-platform="ios"][data-theme="dark"] .appbar.row .icon-btn:not(.ios-bar-label),
+    html[data-platform="ios"][data-theme="dark"] .appbar.row > .ios-symbol-host {
+      color: #f5f5f5;
+      background: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.35), 0 1px 8px rgba(0, 0, 0, 0.28);
+    }
+    html[data-platform="ios"] .form {
+      gap: 0;
+      padding: 12px 16px 28px;
+    }
+    html[data-platform="ios"] .nav-hint {
+      margin-bottom: 36px;
+      font-size: 13px;
+      line-height: 18px;
+      letter-spacing: -0.08px;
+      color: var(--ios-secondary);
+    }
+    html[data-platform="ios"] .folder-list {
+      margin: 8px 16px 28px;
+      padding: 0;
+      background: var(--ios-fill);
+      border-radius: 26px;
+      overflow: hidden;
+    }
+    html[data-platform="ios"] .folder-row {
+      min-height: 52px;
+      font-size: 17px;
+      line-height: 20px;
+      font-weight: 400;
+      letter-spacing: -0.43px;
+      border-bottom: 0.5px solid var(--ios-separator);
+    }
+    html[data-platform="ios"] .folder-row:last-child { border-bottom: 0; }
+    html[data-platform="ios"] .folder-row:hover { background: rgba(120, 120, 128, 0.08); }
+    html[data-platform="ios"] .folder-row .material-symbols-outlined,
+    html[data-platform="ios"] .folder-row .ios-symbol-host {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      color: var(--ios-blue);
+    }
+    html[data-platform="ios"] .folder-row .ios-symbol-host svg { width: 22px; height: 22px; display: block; }
+    html[data-platform="ios"] .folder-row[aria-pressed="true"] .folder-check { color: var(--ios-blue); }
+    html[data-platform="ios"] .state-board,
+    html[data-platform="ios"] .spec-ios .measure-board {
+      background: var(--ios-grouped);
+    }
+    html[data-platform="ios"] .spec-ios .config-item > .tf {
+      background: var(--ios-grouped);
+      border-radius: 28px;
+      padding: 24px 16px;
+    }
+
+    html[data-platform="ios"] .tf.is-disabled .label,
+    html[data-platform="ios"] .tf.is-disabled input,
+    html[data-platform="ios"] .tf.is-disabled textarea,
+    html[data-platform="ios"] .tf.is-disabled select { color: var(--ios-tertiary) !important; }
+    html:not([data-platform="ios"]) .tf input::placeholder,
+    html:not([data-platform="ios"]) .tf textarea::placeholder { color: transparent; }
+    html[data-platform="ios"] .tf input::selection,
+    html[data-platform="ios"] .tf textarea::selection {
+      background: var(--android-sel);
+      color: var(--ios-label);
+    }
+    html[data-platform="ios"] .tf .icon.btn.trailing { color: var(--ios-blue); }
+    html[data-platform="ios"] .tf .error-icon,
+    html[data-platform="ios"] .tf.is-error .error-icon { display: none !important; }
+    html[data-platform="ios"] .tf .support,
+    html[data-platform="ios"] .tf.is-error .support {
+      padding: 4px 16px 0 !important;
+      font-size: 13px !important;
+      line-height: 18px !important;
+      letter-spacing: -0.08px !important;
+      font-weight: 400 !important;
+      color: var(--ios-red) !important;
+    }
+    html[data-platform="ios"] .tf input.is-ghost {
+      color: transparent !important;
+      caret-color: transparent;
+    }
+    .ios-clear { display: none; }
+    html[data-platform="ios"] .tf .ios-clear {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      bottom: auto;
+      z-index: 2;
+      display: none;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: none;
+      color: var(--ios-tertiary);
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    html[data-platform="ios"] .tf:is(:focus-within, .force-focus).has-value .ios-clear {
+      display: grid;
+    }
+
+    /* iOS 27 grouped text field — 52pt row, 26pt card, no floating label */
+    html[data-platform="ios"] .tf:not(.is-multiline) .box,
+    html[data-platform="ios"] .tf.outlined:not(.is-multiline) .box,
+    html[data-platform="ios"] .tf.outlined:not(.is-multiline):focus-within .box,
+    html[data-platform="ios"] .tf.outlined:not(.is-multiline).force-focus .box,
+    html[data-platform="ios"] .tf.is-error.outlined:not(.is-multiline) .box,
+    html[data-platform="ios"] .tf.is-disabled.outlined:not(.is-multiline) .box {
+      height: 52px !important;
+      min-height: 52px;
+      flex-direction: row;
+      align-items: center;
+      gap: 0;
+      padding: 0 16px !important;
+      background: var(--ios-fill) !important;
+      box-shadow: none !important;
+      border-radius: 0;
+      overflow: hidden;
+    }
+    html[data-platform="ios"] .form .tf:not(.is-multiline):not(.is-pick):first-child .box,
+    html[data-platform="ios"] .form .tf.is-multiline + .tf:not(.is-multiline):not(.is-pick) .box,
+    html[data-platform="ios"] .form .tf.is-pick + .tf:not(.is-multiline):not(.is-pick) .box {
+      border-top-left-radius: 26px;
+      border-top-right-radius: 26px;
+    }
+    html[data-platform="ios"] .form .tf:not(.is-multiline):not(.is-pick):last-child .box,
+    html[data-platform="ios"] .form .tf:not(.is-multiline):not(.is-pick):has(+ .tf.is-multiline) .box,
+    html[data-platform="ios"] .form .tf:not(.is-multiline):not(.is-pick):has(+ .tf.is-pick) .box {
+      border-bottom-left-radius: 26px;
+      border-bottom-right-radius: 26px;
+    }
+    html[data-platform="ios"] .form .tf.is-pick {
+      margin-top: 16px;
+    }
+    html[data-platform="ios"] .form .tf.is-pick:first-child {
+      margin-top: 0;
+    }
+    html[data-platform="ios"] .form .tf.is-pick + .tf:not(.is-multiline):not(.is-pick) {
+      margin-top: 16px;
+    }
+    html[data-platform="ios"] .form .tf.is-pick .box {
+      border-radius: 26px !important;
+    }
+    html[data-platform="ios"] .tf.catalog:not(.is-multiline) .box {
+      border-radius: 26px !important;
+    }
+    html[data-platform="ios"] .form .tf.is-error:not(.is-multiline):not(.is-pick):has(+ .tf:not(.is-multiline):not(.is-pick)) .support {
+      background: var(--ios-fill);
+      padding: 0 16px 8px !important;
+    }
+    html[data-platform="ios"] .form .tf:not(.is-multiline):not(.is-pick) + .tf:not(.is-multiline):not(.is-pick) .box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 16px;
+      right: 16px;
+      height: 1px;
+      background: var(--ios-separator);
+    }
+    html[data-platform="ios"] .tf:not(.is-multiline) .field {
+      flex-direction: row;
+      align-items: center;
+      height: 52px !important;
+      gap: 0;
+    }
+    html[data-platform="ios"] .tf:not(.is-multiline) .label {
+      display: none !important;
+    }
+    html[data-platform="ios"] .tf:not(.is-multiline):not(.has-value):has(select) .label {
+      display: flex !important;
+      position: absolute !important;
+      inset: 0 36px 0 0 !important;
+      top: 0 !important;
+      transform: none !important;
+      align-items: center;
+      height: 52px !important;
+      padding: 0 !important;
+      font-size: 17px !important;
+      font-weight: 400;
+      line-height: 20px !important;
+      letter-spacing: -0.43px;
+      color: var(--ios-tertiary) !important;
+    }
+    html[data-platform="ios"] .tf:not(.is-multiline) input,
+    html[data-platform="ios"] .tf:not(.is-multiline) select,
+    html[data-platform="ios"] .tf:not(.is-multiline):not(.is-floated):not(:focus-within):not(.has-value) input,
+    html[data-platform="ios"] .tf:not(.is-multiline):not(.is-floated):not(:focus-within):not(.has-value) select {
+      height: 52px !important;
+      padding: 0 28px 0 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      font-size: 17px !important;
+      font-weight: 400 !important;
+      line-height: 52px !important;
+      letter-spacing: -0.43px;
+      color: var(--ios-label);
+      caret-color: var(--ios-blue);
+    }
+    html[data-platform="ios"] .tf:not(.is-multiline) input::placeholder,
+    html[data-platform="ios"] .tf.is-multiline textarea::placeholder {
+      color: var(--ios-tertiary);
+      font-weight: 400;
+      opacity: 1;
+    }
+    html[data-platform="ios"] .tf:not(.is-multiline) .icon.trailing {
+      position: absolute;
+      top: 0;
+      right: 16px;
+      bottom: 0;
+      width: 22px;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      line-height: 1;
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      color: var(--ios-tertiary);
+      transform: none;
+    }
+    html[data-platform="ios"] .tf:not(.is-multiline) .icon.btn.trailing { color: var(--ios-blue); }
+    html[data-platform="ios"] .icon.trailing.ios-symbol-host svg { display: block; }
+    html[data-platform="ios"] .icon.trailing.ios-symbol-host svg.ios-chevron { width: 9px; height: 14px; }
+    html[data-platform="ios"] .icon.trailing.ios-symbol-host svg.ios-eye { width: 22px; height: 22px; }
+    html[data-platform="ios"] .tf:not(.is-multiline) .input-face {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 28px;
+      height: auto;
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: -0.43px;
+    }
+    html[data-platform="ios"] .tf .caret {
+      width: 2px;
+      height: 22px;
+      margin: 0 0 0 1px;
+      border-radius: 10px;
+      background: var(--ios-blue);
+    }
+    html[data-platform="ios"] .tf.is-multiline .box,
+    html[data-platform="ios"] .tf.is-multiline.outlined .box,
+    html[data-platform="ios"] .tf.is-multiline.outlined:focus-within .box,
+    html[data-platform="ios"] .tf.is-multiline.outlined.force-focus .box {
+      height: auto !important;
+      min-height: 0;
+      padding: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      border-radius: 26px;
+      overflow: visible;
+    }
+    html[data-platform="ios"] .form .tf.is-multiline {
+      margin-top: 16px;
+    }
+    html[data-platform="ios"] .tf.is-multiline .label {
+      display: none !important;
+    }
+    html[data-platform="ios"] .tf.is-multiline textarea,
+    html[data-platform="ios"] .tf.is-multiline:not(:focus-within):not(.has-value):not(.is-floated) textarea {
+      height: 120px !important;
+      padding: 16px !important;
+      background: var(--ios-fill) !important;
+      box-shadow: none !important;
+      border-radius: 26px !important;
+      font-size: 17px !important;
+      font-weight: 400 !important;
+      line-height: 20px !important;
+      letter-spacing: -0.43px;
+    }
+    html[data-platform="ios"] .tf.is-error .support {
+      padding: 4px 16px 8px !important;
+    }
+    html[data-platform="ios"] .tf .ios-clear[hidden] { display: none !important; }
+    html[data-platform="ios"] .tf .ios-clear:active { opacity: 0.6; }
   </style>
 </head>
 <body>
@@ -1996,8 +2511,8 @@
               <span class="material-symbols-outlined" aria-hidden="true">menu</span>
             </button>
             <div class="brand-titles">
-              <h3>Android Component</h3>
-              <h1>Text Field</h1>
+              <h3 data-copy-android="Android Component" data-copy-ios="iOS Component">Android Component</h3>
+              <h1 data-copy-android="Text Field" data-copy-ios="Text Fields">Text Field</h1>
             </div>
           </div>
           <div class="preview-switch">
@@ -2011,13 +2526,19 @@
 
       <div class="proto-chrome" id="proto-chrome">
       <div class="toolbar">
-        <div class="toolbar-group">
+        <div class="toolbar-group platform-group">
+          <div class="seg" id="platform-seg" role="group" aria-label="Platform">
+            <button type="button" data-platform-btn="android" aria-pressed="true">Android</button>
+            <button type="button" data-platform-btn="ios" aria-pressed="false">iOS</button>
+          </div>
+        </div>
+        <div class="toolbar-group theme-group">
           <div class="seg" role="group" aria-label="Theme">
             <button type="button" data-theme-btn="light" aria-pressed="true">Light</button>
             <button type="button" data-theme-btn="dark" aria-pressed="false">Dark</button>
           </div>
         </div>
-        <div class="toolbar-group">
+        <div class="toolbar-group fill-group">
           <div class="seg" id="fill-seg" role="group" aria-label="Sample data">
             <button type="button" data-fill="empty" aria-pressed="true" data-i18n="proto.empty">Empty</button>
             <button type="button" data-fill="populated" aria-pressed="false" data-i18n="s2.populated">Populated</button>
@@ -2036,15 +2557,15 @@
         <div class="phone-screen is-active" data-screen="hub">
           <div class="status"><span class="status-time">9:41</span><span class="status-icons" aria-hidden="true"><span class="material-symbols-outlined">wifi</span><span class="material-symbols-outlined">signal_cellular_alt</span><span class="status-battery"></span></span></div>
           <div class="appbar hub-head">
-            <h3 class="hub-kicker">Android Component</h3>
-            <h1>Text Field</h1>
-            <p class="hub-lead">Vyberte obrazovku, kde si můžete testovat komponentu Text Fields</p>
+            <h3 class="hub-kicker" data-copy-android="Android Component" data-copy-ios="iOS Component">Android Component</h3>
+            <h1 data-copy-android="Text Field" data-copy-ios="Text Fields">Text Field</h1>
+            <p class="hub-lead" data-copy-android="Vyberte obrazovku, kde si můžete testovat komponentu Text Fields" data-copy-ios="Vyberte obrazovku a vyzkoušejte text field a text view.">Vyberte obrazovku, kde si můžete testovat komponentu Text Fields</p>
           </div>
           <h3 class="hub-section">Playground</h3>
           <div class="hub-list">
             <button type="button" class="hub-row" data-go="playground">
               <span class="hub-icon" aria-hidden="true"><span class="material-symbols-outlined">science</span></span>
-              <span class="hub-copy"><strong>Playground</strong><span class="hint">Outlined TextField</span></span>
+              <span class="hub-copy"><strong>Playground</strong><span class="hint" data-copy-android="Outlined TextField" data-copy-ios="Text field · Text view">Outlined TextField</span></span>
               <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
             </button>
           </div>
@@ -2148,13 +2669,13 @@
               <div class="box">
                 <div class="field">
                   <label class="label">Zpráva</label>
-                  <textarea name="play-msg" rows="1" data-overflow="wrap" data-sample="Aplikace občas spadne při otevírání záložek ze složky Oblíbené."></textarea>
+                  <textarea name="play-msg" rows="1" data-overflow="wrap" data-ios-prompt="Napište zprávu" data-sample="Aplikace občas spadne při otevírání záložek ze složky Oblíbené."></textarea>
                 </div>
               </div>
               <div class="support"><span>Multiline 120dp</span></div>
             </div>
           </form>
-          <p class="nav-hint">Leave a required e-mail or URL to see format errors. A too-long URL shows while typing.</p>
+          <p class="nav-hint" data-copy-android="Leave a required e-mail or URL to see format errors. A too-long URL shows while typing." data-copy-ios="Odejděte z pole a uvidíte chybu formátu. Při psaní Clear button smaže text field. Zpráva je text view.">Leave a required e-mail or URL to see format errors. A too-long URL shows while typing.</p>
         </div>
 
         <div class="phone-screen" data-screen="upravit" hidden>
@@ -2162,7 +2683,7 @@
           <div class="appbar row">
             <button type="button" class="icon-btn material-symbols-outlined" data-go="hub" aria-label="Back">arrow_back</button>
             <h2>Upravit</h2>
-            <button type="button" class="icon-btn material-symbols-outlined" data-submit aria-label="Uložit">check</button>
+            <button type="button" class="icon-btn material-symbols-outlined" data-submit data-ios-label="Uložit" aria-label="Uložit">check</button>
           </div>
           <form class="form" novalidate>
             <div class="tf outlined" data-live>
@@ -2203,7 +2724,7 @@
           <div class="appbar row">
             <button type="button" class="icon-btn material-symbols-outlined" data-go="hub" aria-label="Back">arrow_back</button>
             <h2>Vytvořit složku</h2>
-            <button type="button" class="icon-btn material-symbols-outlined" data-submit aria-label="Uložit">check</button>
+            <button type="button" class="icon-btn material-symbols-outlined" data-submit data-ios-label="Uložit" aria-label="Uložit">check</button>
           </div>
           <form class="form">
             <div class="tf outlined" data-live>
@@ -2302,7 +2823,7 @@
               <div class="box">
                 <div class="field">
                   <label class="label">Váš názor</label>
-                  <textarea name="feedback-msg" rows="1" data-overflow="wrap" data-sample="Aplikace občas spadne při otevírání záložek ze složky Oblíbené. Děje se to na Androidu."></textarea>
+                  <textarea name="feedback-msg" rows="1" data-overflow="wrap" data-ios-prompt="Napište nám" data-sample="Aplikace občas spadne při otevírání záložek ze složky Oblíbené. Děje se to na Androidu."></textarea>
                 </div>
               </div>
               <div class="support"><span>Napište nám</span></div>
@@ -2315,7 +2836,7 @@
           <div class="appbar row">
             <button type="button" class="icon-btn material-symbols-outlined" data-picker-back aria-label="Back">arrow_back</button>
             <h2>Choose folder</h2>
-            <button type="button" class="icon-btn material-symbols-outlined" data-picker-back aria-label="Confirm">check</button>
+            <button type="button" class="icon-btn material-symbols-outlined" data-picker-back data-ios-label="Hotovo" aria-label="Confirm">check</button>
           </div>
           <div class="folder-list" id="folder-list">
             <button type="button" class="folder-row" style="--lvl:0" data-folder="Oblíbené"><span class="material-symbols-outlined" aria-hidden="true">folder</span><span class="folder-name">Oblíbené</span><span class="material-symbols-outlined folder-check" aria-hidden="true">check</span></button>
@@ -2335,19 +2856,24 @@
 
     <main>
       <div class="spec-head">
-        <h2 data-i18n="ov.title">Overview</h2>
+        <h2 class="spec-android" data-i18n="ov.title">Overview</h2>
+        <h2 class="spec-ios" data-i18n="ios.ov.title">Overview</h2>
         <div class="lang-switch" role="group" aria-label="Language">
           <button type="button" data-lang="en" aria-pressed="false">ENG</button>
           <button type="button" data-lang="cs" aria-pressed="true">CZ</button>
         </div>
       </div>
-      <p class="lead" data-i18n="ov.lead">
+      <p class="lead spec-android" data-i18n="ov.lead">
+        This page covers the key information about text fields in Seznam Aplikace.
+      </p>
+      <p class="lead spec-ios" data-i18n="ios.ov.lead">
         This page covers the key information about text fields in Seznam Aplikace.
       </p>
       <p class="lan-url" id="lan-url" hidden>
         <span data-i18n="ov.web">Otevřete na telefonu:</span>
         <a data-lan-page="textfields.html" hidden href="#"></a>
       </p>
+      <div class="spec-android">
       <h2 id="states" data-i18n="s2.title">1. States</h2>
       <p class="lead" data-i18n="s2.lead">
         This section covers the key information about text field states.
@@ -2374,7 +2900,7 @@
       </p>
       <ul class="spec-list">
         <li data-i18n="e3.def1">Stays on the field. The field stays editable.</li>
-        <li data-i18n="e3.def2">Indicator, label, trailing icon, supporting text, and caret switch to Red 1.</li>
+        <li data-i18n="e3.def2">Indicator, label, trailing icon, and supporting text switch to Red 1. The caret keeps the default color.</li>
       </ul>
 
       <h3 data-i18n="e3.empty">Empty input</h3>
@@ -2867,7 +3393,193 @@
           <li><span class="type-dot">4</span><span data-i18n="ty.support">Supporting</span></li>
         </ol>
       </div>
-      
+      </div>
+
+      <div class="spec-ios">
+        <h2 id="ios-states" data-i18n="ios.s2.title">1. States</h2>
+        <p class="lead" data-i18n="ios.s2.lead">This section covers the key information about text field states.</p>
+        <h3 data-i18n="s2.empty">Empty</h3>
+        <div class="state-board"><div class="grid" id="ios-empty"></div></div>
+        <h3 data-i18n="s2.populated">Populated</h3>
+        <div class="state-board"><div class="grid" id="ios-populated"></div></div>
+        <h3 data-i18n="s2.error">Error</h3>
+        <div class="state-board"><div class="grid" id="ios-error"></div></div>
+
+        <h2 id="ios-errors" data-i18n="ios.e3.title">2. Error</h2>
+        <p class="lead" data-i18n="ios.e3.lead">This section covers the key information about error states.</p>
+        <ul class="spec-list">
+          <li data-i18n="ios.e3.def1">Stays on the field. The field stays editable.</li>
+          <li data-i18n="ios.e3.def2">The row keeps the grouped fill. The error is a red footnote. There is no error icon in the row.</li>
+        </ul>
+        <h3 data-i18n="e3.empty">Empty input</h3>
+        <ul class="spec-list">
+          <li data-i18n="ios.e3.empty1">Shows on submit if a required value is missing.</li>
+          <li data-i18n="ios.e3.empty2">Footnote e.g. “URL je povinná”.</li>
+          <li data-i18n="ios.e3.empty3">Try: Upravit · clear URL · tap Uložit.</li>
+        </ul>
+        <h3 data-i18n="e3.invalid">Invalid format</h3>
+        <ul class="spec-list">
+          <li data-i18n="ios.e3.invalid1">Shows on submit if the value is not a valid e-mail or URL (including <code>javascript:</code>).</li>
+          <li data-i18n="ios.e3.invalid2">Footnote: “Zadejte platný e-mail” / “Zadejte platnou URL”.</li>
+          <li data-i18n="ios.e3.invalid3">Try: Upravit URL <code>www.broken</code> or Playground e-mail <code>jan@</code>, then leave / save.</li>
+        </ul>
+        <h3 data-i18n="e3.long">Long text</h3>
+        <ul class="spec-list">
+          <li data-i18n="ios.e3.long1">Shows while editing, as soon as the value exceeds the limit.</li>
+          <li data-i18n="ios.e3.long2">“Text je příliš dlouhý (n/2048)”. Bookmark URL limit is 2048 characters. Not truncated.</li>
+          <li data-i18n="ios.e3.long3">Try: Upravit · URL · paste a string longer than 2048.</li>
+        </ul>
+        <ul class="spec-list">
+          <li data-i18n="ios.e3.after">After an empty or format error is shown, the field keeps validating as the user types so the error clears when the value is fixed. Save is Uložit in the toolbar. Playground has no save — leaving the field is the commit.</li>
+        </ul>
+
+        <h2 id="ios-working-with-text" data-i18n="ios.w4.title">3. Working with text</h2>
+        <p class="lead" data-i18n="ios.w4.lead">This section covers the key information about working with text.</p>
+        <h3 data-i18n="w4.enter">Entering text</h3>
+        <ul class="spec-list">
+          <li data-i18n="ios.w4.enter1">While typing, the caret moves right. The caret is 2×22pt, accent blue.</li>
+          <li data-i18n="ios.w4.enter4">Single-line fields use an ellipsis when unfocused. While focused, if the value is longer than the row, the text scrolls so the caret stays visible.</li>
+          <li data-i18n="ios.w4.enter3"><strong>Text view.</strong> When the caret reaches the end of a line, it wraps to the next line. No ellipsis.</li>
+        </ul>
+        <h3 data-i18n="w4.delete">Deleting text</h3>
+        <ul class="spec-list">
+          <li data-i18n="ios.w4.delete1">While deleting, the caret moves left.</li>
+          <li data-i18n="ios.w4.delete2">On a single-line field, when the caret is at the end, deleting scrolls the text right.</li>
+          <li data-i18n="ios.w4.clear">While typing, Clear (<code>xmark.circle.fill</code>) erases the row. It hides when the field is left. A secure field, a dropdown, and the folder picker do not show Clear.</li>
+        </ul>
+        <h3 data-i18n="w4.paste">Pasting text</h3>
+        <ul class="spec-list">
+          <li data-i18n="ios.w4.paste1">After paste, the caret sits at the end of the inserted string.</li>
+          <li data-i18n="ios.w4.paste2">The caret is not jumped to the end of the whole field if the user pasted in the middle. Overflowing single-line fields scroll so that end of the paste stays visible.</li>
+        </ul>
+        <h3 data-i18n="w4.select">Selecting text</h3>
+        <ul class="spec-list">
+          <li data-i18n="ios.w4.select1">Clicking into a value and selecting a portion of it sit on focused populated fields.</li>
+          <li data-i18n="ios.w4.select2">A click or tap places the caret at that index, not only at the end.</li>
+          <li data-i18n="ios.w4.select3">Double-click selects the word. Triple-click selects the entire value.</li>
+          <li data-i18n="ios.w4.select4">Highlight uses the system selection blue. Text stays the primary label. The caret is hidden while a range is selected.</li>
+          <li data-i18n="ios.w4.select5">The folder picker is read-only and has no text selection.</li>
+        </ul>
+
+        <h2 id="ios-configuration" data-i18n="ios.c6.title">4. Configuration</h2>
+        <p class="lead" data-i18n="ios.c6.lead">This section covers the key information about text field configuration.</p>
+        <div class="config-list">
+          <div class="config-item">
+            <div class="tf catalog outlined has-value is-floated">
+              <div class="box">
+                <div class="field">
+                  <span class="label">Text</span>
+                  <input value="Jan Novák" tabindex="-1" readonly />
+                </div>
+              </div>
+            </div>
+            <p class="desc" data-i18n="ios.c6.t1d"><strong>Label + value</strong>The name is the placeholder in the row. The value replaces it. There is no label above the row.</p>
+          </div>
+          <div class="config-item">
+            <div class="tf catalog outlined has-value is-floated is-error">
+              <div class="box">
+                <div class="field">
+                  <span class="label">E-mail</span>
+                  <input value="jan@" tabindex="-1" readonly />
+                </div>
+              </div>
+              <div class="support"><span data-i18n="cat.errorMsg">Error message</span></div>
+            </div>
+            <p class="desc" data-i18n="ios.c6.t2d"><strong>Supporting text</strong>Shown only as the error footnote. See <a href="#ios-errors">Error</a>.</p>
+          </div>
+          <div class="config-item">
+            <div class="tf catalog outlined has-value is-floated force-focus">
+              <div class="box">
+                <div class="field">
+                  <span class="label">E-mail</span>
+                  <div class="input-face" aria-hidden="true">jan@seznam.cz<span class="caret"></span></div>
+                  <input class="is-ghost" value="jan@seznam.cz" tabindex="-1" readonly />
+                </div>
+                <button type="button" class="ios-clear" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><circle cx="10" cy="10" r="8.25" fill="currentColor"/><path d="M7.15 7.15l5.7 5.7M12.85 7.15l-5.7 5.7" stroke="var(--ios-fill)" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+              </div>
+            </div>
+            <p class="desc" data-i18n="ios.c6.t3d"><strong>Clear button</strong>Trailing, only while typing. One tap erases the row.</p>
+          </div>
+          <div class="config-item">
+            <div class="tf catalog outlined has-value is-floated">
+              <div class="box">
+                <div class="field">
+                  <span class="label">Heslo</span>
+                  <input type="password" value="password12" tabindex="-1" readonly />
+                </div>
+                <span class="icon btn trailing material-symbols-outlined" aria-hidden="true">visibility</span>
+              </div>
+            </div>
+            <p class="desc" data-i18n="ios.c6.t4d"><strong>Secure field</strong>The value is hidden. The eye shows or hides it. A secure field does not also show Clear.</p>
+          </div>
+          <div class="config-item">
+            <div class="tf catalog outlined is-pick has-value is-floated">
+              <div class="box">
+                <div class="field">
+                  <span class="label">Složka</span>
+                  <input value="Oblíbené" tabindex="-1" readonly />
+                </div>
+                <span class="icon trailing material-symbols-outlined" aria-hidden="true">chevron_right</span>
+              </div>
+            </div>
+            <p class="desc" data-i18n="ios.c6.t5d"><strong>Folder</strong>Always its own card, separate from the group. Read-only. The chevron opens the folder picker.</p>
+          </div>
+          <div class="config-item">
+            <div class="tf catalog outlined has-value is-floated">
+              <div class="box">
+                <div class="field">
+                  <span class="label">Typ</span>
+                  <input value="Chyba" tabindex="-1" readonly />
+                </div>
+                <span class="icon trailing material-symbols-outlined" aria-hidden="true">expand_more</span>
+              </div>
+            </div>
+            <p class="desc" data-i18n="ios.c6.t6d"><strong>Dropdown</strong>Used for feedback type. Trailing is <code>expand_more</code> — not free text.</p>
+          </div>
+          <div class="config-item is-tall">
+            <div class="tf catalog outlined is-multiline has-value is-floated">
+              <div class="box">
+                <div class="field">
+                  <span class="label">Zpráva</span>
+                  <textarea rows="1" tabindex="-1" readonly>Aplikace občas spadne při otevírání záložek ze složky Oblíbené.</textarea>
+                </div>
+              </div>
+            </div>
+            <p class="desc" data-i18n="ios.c6.t7d"><strong>Text view</strong>Its own card under the group. It scrolls inside and does not use Clear.</p>
+          </div>
+        </div>
+
+        <h2 id="ios-measure" data-i18n="ios.m5.title">5. Measurements</h2>
+        <p class="lead" data-i18n="ios.m5.lead">This section covers the key information about dimensions, sizes, and measurement marks.</p>
+        <ul class="spec-list">
+          <li data-i18n="ios.m5.s1">Row <strong>52pt</strong>. Text view <strong>120pt</strong>.</li>
+          <li data-i18n="ios.m5.s2">Card corner radius <strong>26pt</strong>. Horizontal inset <strong>16pt</strong>.</li>
+          <li data-i18n="ios.m5.s3">Separator <strong>1pt</strong>, inset 16pt, between rows in a group. Not on the first row, and not on the folder card.</li>
+          <li data-i18n="ios.m5.s4">Clear <strong>20pt</strong>, trailing, only while typing.</li>
+          <li data-i18n="ios.m5.s5">Caret <strong>2×22pt</strong>, radius 10. Space before a separate card <strong>16pt</strong>.</li>
+        </ul>
+
+        <h2 id="ios-colors" data-i18n="ios.a7.title">6. Color styles</h2>
+        <p class="lead" data-i18n="ios.a7.lead">This section covers the key information about color styles on text fields.</p>
+        <ul class="spec-list">
+          <li data-i18n="ios.a7.c1">Card fill <strong>Backgrounds (Grouped)/Secondary</strong>.</li>
+          <li data-i18n="ios.a7.c2">Placeholder <strong>Labels/Tertiary</strong>. Value <strong>Labels/Primary</strong>.</li>
+          <li data-i18n="ios.a7.c3">Separator <strong>Separators/Vibrant</strong>.</li>
+          <li data-i18n="ios.a7.c4">Caret and selection <strong>Accents/Blue</strong>.</li>
+          <li data-i18n="ios.a7.c5">Error footnote <strong>Accents/Red</strong>. The row does not turn red.</li>
+          <li data-i18n="ios.a7.c6">Disabled text <strong>Labels/Tertiary</strong>.</li>
+        </ul>
+
+        <h2 id="ios-type" data-i18n="ios.ty.title">7. Typography styles</h2>
+        <p class="lead" data-i18n="ios.ty.lead">This section covers the key information about typography styles on text fields.</p>
+        <ul class="spec-list">
+          <li data-i18n="ios.ty.s1">Placeholder and value <strong>17pt / 20pt</strong>, Regular, tracking −0.43.</li>
+          <li data-i18n="ios.ty.s2">There is no label above the row.</li>
+          <li data-i18n="ios.ty.s3">Error footnote <strong>13pt / 18pt</strong>.</li>
+          <li data-i18n="ios.ty.s4">Toolbar title <strong>20pt / 28pt</strong>, Bold, tracking 0.38. Symbol buttons are 44pt glass capsules.</li>
+        </ul>
+      </div>
+
     </main>
   </div>
 
@@ -2894,7 +3606,7 @@
         "e3.title": "2. Error",
         "e3.lead": "This section covers the key information about error states.",
         "e3.def1": "Stays on the field. The field stays editable.",
-        "e3.def2": "Indicator, label, trailing icon, supporting text, and caret switch to Red 1.",
+        "e3.def2": "Indicator, label, trailing icon, and supporting text switch to Red 1. The caret keeps the default color.",
         "e3.empty": "Empty input",
         "e3.empty1": "Shows on submit if a required value is missing.",
         "e3.empty2": "Supporting text e.g. “URL je povinná”.",
@@ -2995,6 +3707,69 @@
         "cat.disabled": "Disabled",
         "cat.caret": "Caret in text",
         "cat.select": "Text selected",
+        "ios.ov.title": "Overview",
+        "ios.ov.lead": "This page covers the key information about text fields in Seznam Aplikace.",
+        "ios.s2.title": "1. States",
+        "ios.s2.lead": "This section covers the key information about text field states.",
+        "ios.e3.title": "2. Error",
+        "ios.e3.lead": "This section covers the key information about error states.",
+        "ios.e3.def1": "Stays on the field. The field stays editable.",
+        "ios.e3.def2": "The row keeps the grouped fill. The error is a red footnote. There is no error icon in the row.",
+        "ios.e3.empty1": "Shows on submit if a required value is missing.",
+        "ios.e3.empty2": "Footnote e.g. “URL je povinná”.",
+        "ios.e3.empty3": "Try: Upravit · clear URL · tap Uložit.",
+        "ios.e3.invalid1": "Shows on submit if the value is not a valid e-mail or URL (including <code>javascript:</code>).",
+        "ios.e3.invalid2": "Footnote: “Zadejte platný e-mail” / “Zadejte platnou URL”.",
+        "ios.e3.invalid3": "Try: Upravit URL <code>www.broken</code> or Playground e-mail <code>jan@</code>, then leave / save.",
+        "ios.e3.long1": "Shows while editing, as soon as the value exceeds the limit.",
+        "ios.e3.long2": "“Text je příliš dlouhý (n/2048)”. Bookmark URL limit is 2048 characters. Not truncated.",
+        "ios.e3.long3": "Try: Upravit · URL · paste a string longer than 2048.",
+        "ios.e3.after": "After an empty or format error is shown, the field keeps validating as the user types so the error clears when the value is fixed. Save is Uložit in the toolbar. Playground has no save — leaving the field is the commit.",
+        "ios.w4.title": "3. Working with text",
+        "ios.w4.lead": "This section covers the key information about working with text.",
+        "ios.w4.enter1": "While typing, the caret moves right. The caret is 2×22pt, accent blue.",
+        "ios.w4.enter3": "<strong>Text view.</strong> When the caret reaches the end of a line, it wraps to the next line. No ellipsis.",
+        "ios.w4.enter4": "Single-line fields use an ellipsis when unfocused. While focused, if the value is longer than the row, the text scrolls so the caret stays visible.",
+        "ios.w4.delete1": "While deleting, the caret moves left.",
+        "ios.w4.delete2": "On a single-line field, when the caret is at the end, deleting scrolls the text right.",
+        "ios.w4.clear": "While typing, Clear (<code>xmark.circle.fill</code>) erases the row. It hides when the field is left. A secure field, a dropdown, and the folder picker do not show Clear.",
+        "ios.w4.paste1": "After paste, the caret sits at the end of the inserted string.",
+        "ios.w4.paste2": "The caret is not jumped to the end of the whole field if the user pasted in the middle. Overflowing single-line fields scroll so that end of the paste stays visible.",
+        "ios.w4.select1": "Clicking into a value and selecting a portion of it sit on focused populated fields.",
+        "ios.w4.select2": "A click or tap places the caret at that index, not only at the end.",
+        "ios.w4.select3": "Double-click selects the word. Triple-click selects the entire value.",
+        "ios.w4.select4": "Highlight uses the system selection blue. Text stays the primary label. The caret is hidden while a range is selected.",
+        "ios.w4.select5": "The folder picker is read-only and has no text selection.",
+        "ios.c6.title": "4. Configuration",
+        "ios.c6.lead": "This section covers the key information about text field configuration.",
+        "ios.c6.t1d": "<strong>Label + value</strong>The name is the placeholder in the row. The value replaces it. There is no label above the row.",
+        "ios.c6.t2d": "<strong>Supporting text</strong>Shown only as the error footnote. See <a href=\"#ios-errors\">Error</a>.",
+        "ios.c6.t3d": "<strong>Clear button</strong>Trailing, only while typing. One tap erases the row.",
+        "ios.c6.t4d": "<strong>Secure field</strong>The value is hidden. The eye shows or hides it. A secure field does not also show Clear.",
+        "ios.c6.t5d": "<strong>Folder</strong>Always its own card, separate from the group. Read-only. The chevron opens the folder picker.",
+        "ios.c6.t6d": "<strong>Dropdown</strong>Used for feedback type. Trailing is a chevron — not free text.",
+        "ios.c6.t7d": "<strong>Text view</strong>Its own card under the group. It scrolls inside and does not use Clear.",
+        "ios.m5.title": "5. Measurements",
+        "ios.m5.lead": "This section covers the key information about dimensions, sizes, and measurement marks.",
+        "ios.m5.s1": "Row <strong>52pt</strong>. Text view <strong>120pt</strong>.",
+        "ios.m5.s2": "Card corner radius <strong>26pt</strong>. Horizontal inset <strong>16pt</strong>.",
+        "ios.m5.s3": "Separator <strong>1pt</strong>, inset 16pt, between rows in a group. Not on the first row, and not on the folder card.",
+        "ios.m5.s4": "Clear <strong>20pt</strong>, trailing, only while typing.",
+        "ios.m5.s5": "Caret <strong>2×22pt</strong>, radius 10. Space before a separate card <strong>16pt</strong>.",
+        "ios.a7.title": "6. Color styles",
+        "ios.a7.lead": "This section covers the key information about color styles on text fields.",
+        "ios.a7.c1": "Card fill <strong>Backgrounds (Grouped)/Secondary</strong>.",
+        "ios.a7.c2": "Placeholder <strong>Labels/Tertiary</strong>. Value <strong>Labels/Primary</strong>.",
+        "ios.a7.c3": "Separator <strong>Separators/Vibrant</strong>.",
+        "ios.a7.c4": "Caret and selection <strong>Accents/Blue</strong>.",
+        "ios.a7.c5": "Error footnote <strong>Accents/Red</strong>. The row does not turn red.",
+        "ios.a7.c6": "Disabled text <strong>Labels/Tertiary</strong>.",
+        "ios.ty.title": "7. Typography styles",
+        "ios.ty.lead": "This section covers the key information about typography styles on text fields.",
+        "ios.ty.s1": "Placeholder and value <strong>17pt / 20pt</strong>, Regular, tracking −0.43.",
+        "ios.ty.s2": "There is no label above the row.",
+        "ios.ty.s3": "Error footnote <strong>13pt / 18pt</strong>.",
+        "ios.ty.s4": "Toolbar title <strong>20pt / 28pt</strong>, Bold, tracking 0.38. Symbol buttons are 44pt glass capsules.",
       },
       cs: {
         "nav.title": "Komponenty",
@@ -3016,7 +3791,7 @@
         "e3.title": "2. Chyba",
         "e3.lead": "V této sekci najdete důležité informace o chybových stavech.",
         "e3.def1": "Zůstává na poli. Pole zůstává editovatelné.",
-        "e3.def2": "Indikátor, label, trailing ikona, supporting text a textový kurzor přejdou do Red 1.",
+        "e3.def2": "Indikátor, label, trailing ikona a supporting text přejdou do Red 1. Textový kurzor zůstává výchozí barvy.",
         "e3.empty": "Prázdný vstup",
         "e3.empty1": "Zobrazí se při odeslání, pokud chybí povinná hodnota.",
         "e3.empty2": "Supporting text např. „URL je povinná“.",
@@ -3117,6 +3892,69 @@
         "cat.disabled": "Disabled",
         "cat.caret": "Textový kurzor v textu",
         "cat.select": "Výběr textu",
+        "ios.ov.title": "Přehled",
+        "ios.ov.lead": "Na této stránce najdete důležité informace o textových polích v Seznam Aplikace.",
+        "ios.s2.title": "1. Stavy",
+        "ios.s2.lead": "V této sekci najdete důležité informace o stavech textových polí.",
+        "ios.e3.title": "2. Chyba",
+        "ios.e3.lead": "V této sekci najdete důležité informace o chybových stavech.",
+        "ios.e3.def1": "Zůstává u pole. Pole zůstává editovatelné.",
+        "ios.e3.def2": "Řádek si nechává grouped výplň. Chyba je červená poznámka. V řádku není ikona chyby.",
+        "ios.e3.empty1": "Zobrazí se při uložení, když chybí povinná hodnota.",
+        "ios.e3.empty2": "Poznámka např. „URL je povinná“.",
+        "ios.e3.empty3": "Zkuste: Upravit · smažte URL · klepněte na Uložit.",
+        "ios.e3.invalid1": "Zobrazí se při uložení, když hodnota není platný e-mail nebo URL (včetně <code>javascript:</code>).",
+        "ios.e3.invalid2": "Poznámka: „Zadejte platný e-mail“ / „Zadejte platnou URL“.",
+        "ios.e3.invalid3": "Zkuste: Upravit URL <code>www.broken</code> nebo e-mail v Playground <code>jan@</code>, pak pole opusťte nebo uložte.",
+        "ios.e3.long1": "Zobrazí se při psaní, jakmile hodnota překročí limit.",
+        "ios.e3.long2": "„Text je příliš dlouhý (n/2048)“. Limit URL záložky je 2048 znaků. Text se neořízne.",
+        "ios.e3.long3": "Zkuste: Upravit · URL · vložte řetězec delší než 2048.",
+        "ios.e3.after": "Po zobrazení prázdné nebo formátové chyby se pole dál kontroluje při psaní, takže chyba zmizí, když je hodnota v pořádku. Uložení je Uložit v toolbaru. Playground uložení nemá — odevzdání je opuštění pole.",
+        "ios.w4.title": "3. Práce s textem",
+        "ios.w4.lead": "V této sekci najdete důležité informace o práci s textem.",
+        "ios.w4.enter1": "Při psaní se kurzor posouvá doprava. Kurzor má 2×22 pt a accent blue.",
+        "ios.w4.enter3": "<strong>Text view.</strong> Když kurzor dojde na konec řádku, zalomí se na další. Bez výpustky.",
+        "ios.w4.enter4": "Jednořádkové pole bez fokusu používá výpustku. Při fokusu, když je hodnota delší než řádek, se text posouvá, aby kurzor zůstal vidět.",
+        "ios.w4.delete1": "Při mazání se kurzor posouvá doleva.",
+        "ios.w4.delete2": "Na jednořádkovém poli, když je kurzor na konci, mazání posouvá text doprava.",
+        "ios.w4.clear": "Při psaní Clear (<code>xmark.circle.fill</code>) smaže řádek. Po opuštění pole zmizí. Secure field, dropdown a výběr složky Clear neukazují.",
+        "ios.w4.paste1": "Po vložení je kurzor na konci vloženého řetězce.",
+        "ios.w4.paste2": "Když uživatel vloží text doprostřed, kurzor neskočí na konec celého pole. Přetékající jednořádkové pole se posune tak, aby konec vložení zůstal vidět.",
+        "ios.w4.select1": "Klepnutí do hodnoty a výběr její části patří na fokusované vyplněné pole.",
+        "ios.w4.select2": "Klepnutí nebo klik umístí kurzor na dané místo, ne jen na konec.",
+        "ios.w4.select3": "Dvojklik vybere slovo. Trojklik vybere celou hodnotu.",
+        "ios.w4.select4": "Zvýraznění používá systémovou modrou. Text zůstává primary label. Při výběru rozsahu je kurzor skrytý.",
+        "ios.w4.select5": "Výběr složky je jen ke čtení a nemá výběr textu.",
+        "ios.c6.title": "4. Konfigurace",
+        "ios.c6.lead": "V této sekci najdete důležité informace o konfiguraci textových polí.",
+        "ios.c6.t1d": "<strong>Label + hodnota</strong>Název je placeholder v řádku. Hodnota ho nahradí. Nad řádkem není popisek.",
+        "ios.c6.t2d": "<strong>Doprovodný text</strong>Jen jako chybová poznámka. Viz <a href=\"#ios-errors\">Chyba</a>.",
+        "ios.c6.t3d": "<strong>Clear button</strong>Vpravo, jen při psaní. Jedno klepnutí smaže řádek.",
+        "ios.c6.t4d": "<strong>Secure field</strong>Hodnota je skrytá. Oko ji ukáže nebo znovu skryje. Secure field zároveň neukazuje Clear.",
+        "ios.c6.t5d": "<strong>Složka</strong>Vždy vlastní karta, oddělená od skupiny. Jen ke čtení. Chevron otevře výběr složky.",
+        "ios.c6.t6d": "<strong>Dropdown</strong>Pro typ zpětné vazby. Vpravo je chevron — ne volný text.",
+        "ios.c6.t7d": "<strong>Text view</strong>Vlastní karta pod skupinou. Posouvá se uvnitř a Clear nepoužívá.",
+        "ios.m5.title": "5. Rozměry",
+        "ios.m5.lead": "V této sekci najdete důležité informace ohledně rozměrů, velikostí a kót.",
+        "ios.m5.s1": "Řádek <strong>52 pt</strong>. Text view <strong>120 pt</strong>.",
+        "ios.m5.s2": "Roh karty <strong>26 pt</strong>. Vodorovné odsazení <strong>16 pt</strong>.",
+        "ios.m5.s3": "Oddělovač <strong>1 pt</strong>, odsazení 16 pt, mezi řádky ve skupině. Není na prvním řádku ani na kartě složky.",
+        "ios.m5.s4": "Clear <strong>20 pt</strong>, vpravo, jen při psaní.",
+        "ios.m5.s5": "Kurzor <strong>2×22 pt</strong>, roh 10. Mezera před samostatnou kartou <strong>16 pt</strong>.",
+        "ios.a7.title": "6. Barevné styly",
+        "ios.a7.lead": "V této sekci najdete důležité informace o barevných stylech textových polí.",
+        "ios.a7.c1": "Výplň karty <strong>Backgrounds (Grouped)/Secondary</strong>.",
+        "ios.a7.c2": "Placeholder <strong>Labels/Tertiary</strong>. Hodnota <strong>Labels/Primary</strong>.",
+        "ios.a7.c3": "Oddělovač <strong>Separators/Vibrant</strong>.",
+        "ios.a7.c4": "Kurzor a výběr <strong>Accents/Blue</strong>.",
+        "ios.a7.c5": "Chybová poznámka <strong>Accents/Red</strong>. Řádek nezčervená.",
+        "ios.a7.c6": "Neaktivní text <strong>Labels/Tertiary</strong>.",
+        "ios.ty.title": "7. Typografické styly",
+        "ios.ty.lead": "V této sekci najdete důležité informace o typografických stylech textových polí.",
+        "ios.ty.s1": "Placeholder a hodnota <strong>17 pt / 20 pt</strong>, Regular, tracking −0,43.",
+        "ios.ty.s2": "Nad řádkem není popisek.",
+        "ios.ty.s3": "Chybová poznámka <strong>13 pt / 18 pt</strong>.",
+        "ios.ty.s4": "Titulek toolbaru <strong>20 pt / 28 pt</strong>, Bold, tracking 0,38. Tlačítka se symbolem jsou skleněné kapsle 44 pt.",
       },
     };
 
@@ -3134,8 +3972,12 @@
         const val = t(el.dataset.i18n);
         if (val) el.innerHTML = val;
       });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const val = t(el.dataset.i18nPlaceholder);
+        if (val) el.setAttribute("placeholder", val);
+      });
       paintCatalogs();
-      paintLanUrl();
+      if (typeof paintLanUrl === "function") paintLanUrl();
     }
 
     const themeBtns = document.querySelectorAll("[data-theme-btn]");
@@ -3153,6 +3995,44 @@
       tf.classList.toggle("has-value", input.value.length > 0);
       const count = tf.querySelector("[data-count]");
       if (count) count.textContent = `${input.value.length}/32`;
+      syncIosClear(tf);
+    }
+
+    function syncIosClear(tf) {
+      if (!tf) return;
+      const btn = tf.querySelector(":scope > .box > .ios-clear, .ios-clear");
+      if (!btn || tf.classList.contains("catalog")) return;
+      const input = tf.querySelector("input");
+      const ios = document.documentElement.dataset.platform === "ios";
+      const editing = ios && input && !input.readOnly && input.value.length > 0 && document.activeElement === input;
+      btn.hidden = !editing;
+    }
+
+    const IOS_CLEAR_ICON = '<svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><circle cx="10" cy="10" r="8.25" fill="currentColor"/><path d="M7.15 7.15l5.7 5.7M12.85 7.15l-5.7 5.7" stroke="var(--ios-fill)" stroke-width="1.7" stroke-linecap="round"/></svg>';
+
+    function ensureIosClears() {
+      document.querySelectorAll(".tf[data-live]").forEach((tf) => {
+        if (tf.querySelector(".ios-clear")) return;
+        if (tf.classList.contains("is-multiline") || tf.classList.contains("is-pick")) return;
+        const input = tf.querySelector("input");
+        if (!input || input.readOnly || input.type === "password") return;
+        if (tf.querySelector("select")) return;
+        if (tf.querySelector(".icon.trailing:not(.error-icon)")) return;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "ios-clear";
+        btn.hidden = true;
+        btn.setAttribute("aria-label", "Smazat text");
+        btn.innerHTML = IOS_CLEAR_ICON;
+        btn.addEventListener("mousedown", (e) => e.preventDefault());
+        btn.addEventListener("click", () => {
+          input.value = "";
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+          input.focus();
+        });
+        const box = tf.querySelector(".box");
+        if (box) box.appendChild(btn);
+      });
     }
 
     const proto = document.getElementById("proto");
@@ -3602,7 +4482,7 @@
       const input = document.querySelector('input[name="password"]');
       const show = input.type === "password";
       input.type = show ? "text" : "password";
-      e.currentTarget.textContent = show ? "visibility_off" : "visibility";
+      setSymbolName(e.currentTarget, show ? "visibility_off" : "visibility");
     });
 
     document.querySelectorAll("[data-clear]").forEach((btn) => {
@@ -3618,7 +4498,9 @@
     if (savedToggle) {
       savedToggle.addEventListener("click", () => {
         const input = document.querySelector('input[name="saved-pass"]');
-        input.type = input.type === "password" ? "text" : "password";
+        const show = input.type === "password";
+        input.type = show ? "text" : "password";
+        setSymbolName(savedToggle, show ? "visibility_off" : "visibility");
       });
     }
 
@@ -3644,9 +4526,14 @@
       } else if (focused && populated) {
         fieldInner = `<div class="input-face" aria-hidden="true">${display}<span class="caret"></span></div>
               <input class="is-ghost" value="${display}" tabindex="-1" readonly />`;
+      } else if (focused && !populated) {
+        fieldInner = `<div class="input-face" aria-hidden="true"><span class="caret"></span></div>
+              <input class="is-ghost" value="" tabindex="-1" readonly />`;
       } else {
-        fieldInner = `<input value="${display}" tabindex="-1" readonly />`;
+        const ph = !populated ? String(label || "Label").replace(/"/g, "&quot;") : "";
+        fieldInner = `<input value="${display}" placeholder="${ph}" tabindex="-1" readonly />`;
       }
+      const showClear = populated && focused && !disabled && !trailing;
       return `
         <div class="${classes}">
           <div class="box">
@@ -3657,6 +4544,7 @@
               ${fieldInner}
             </div>
             ${trailing ? `<span class="icon trailing material-symbols-outlined">${trailing}</span>` : ""}
+            ${showClear ? `<button type="button" class="ios-clear" tabindex="-1" aria-hidden="true">${IOS_CLEAR_ICON}</button>` : ""}
           </div>
           ${error ? `<div class="support"><span>${support || ""}</span></div>` : ""}
         </div>`;
@@ -3705,7 +4593,149 @@
       paint("outlined-empty", "outlined", false, false);
       paint("outlined-populated", "outlined", true, false);
       paint("outlined-error", "outlined", true, true);
+      paint("ios-empty", "outlined", false, false);
+      paint("ios-populated", "outlined", true, false);
+      paint("ios-error", "outlined", true, true);
     }
+
+    function syncPlatformCopy() {
+      const ios = document.documentElement.dataset.platform === "ios";
+      document.querySelectorAll("[data-copy-android]").forEach((el) => {
+        el.textContent = ios ? (el.dataset.copyIos || "") : (el.dataset.copyAndroid || "");
+      });
+    }
+
+    const IOS_SYMBOLS = {
+      arrow_back: '<svg class="ios-symbol" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M14.7 5.1 8.1 12l6.6 6.9" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      delete: '<svg class="ios-symbol" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4.8 7.2h14.4M9.2 7.1V5.7c0-.6.5-1.1 1.1-1.1h3.4c.6 0 1.1.5 1.1 1.1v1.4M6.7 7.2l.7 11.1c.05.8.7 1.4 1.5 1.4h6.2c.8 0 1.45-.6 1.5-1.4l.7-11.1" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.2 10.4v5.4M13.8 10.4v5.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      chevron_right: '<svg class="ios-symbol ios-chevron" viewBox="0 0 8 13" width="8" height="13" aria-hidden="true"><path d="M1.3 1.2 6.5 6.5 1.3 11.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      expand_more: '<svg class="ios-symbol ios-chevron" viewBox="0 0 13 8" width="13" height="8" aria-hidden="true"><path d="M1.2 1.3 6.5 6.5 11.8 1.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      visibility: '<svg class="ios-symbol ios-eye" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M2.4 12S5.8 6.8 12 6.8 21.6 12 21.6 12 18.2 17.2 12 17.2 2.4 12 2.4 12Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>',
+      visibility_off: '<svg class="ios-symbol ios-eye" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4.2 6.4C2.9 7.8 2.2 9.4 2.2 9.4S5.7 16.6 12 16.6c1.3 0 2.5-.3 3.5-.7M9.2 6.2A11 11 0 0 1 12 5.8c6.3 0 9.8 6.2 9.8 6.2s-.6 1.2-1.8 2.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.8 10.2a2.6 2.6 0 0 0 3.6 3.6M4 5.2 20 18.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+      folder: '<svg class="ios-symbol" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3.6 8.2V17.4c0 .8.7 1.5 1.5 1.5h13.8c.8 0 1.5-.7 1.5-1.5V9.3c0-.8-.7-1.5-1.5-1.5h-7.1L10.2 6.2H5.1c-.8 0-1.5.6-1.5 1.4v.6Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      create_new_folder: '<svg class="ios-symbol" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3.2 8.4V16.8c0 .7.6 1.3 1.3 1.3h9.2M9.2 6.4H4.5c-.7 0-1.3.6-1.3 1.3v.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.4 8.2h5.2l1.4 1.5h.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M17.6 11.2v6.2M14.5 14.3h6.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      check: '<svg class="ios-symbol" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5.4 12.6 9.8 17 18.6 7.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      bookmark: '<svg class="ios-symbol" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M7 4.8h10c.5 0 .9.4.9.9v14.6l-5.9-3.2L6.1 20.3V5.7c0-.5.4-.9.9-.9Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      key: '<svg class="ios-symbol" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="8.2" cy="12.2" r="3.1" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11.1 12.2H20.2M16.4 12.2v2.3M19.1 12.2v1.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+      feedback: '<svg class="ios-symbol" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6.2 6.4h11.6c.9 0 1.6.7 1.6 1.6v5.8c0 .9-.7 1.6-1.6 1.6H11l-3.4 2.5v-2.5H6.2c-.9 0-1.6-.7-1.6-1.6V8c0-.9.7-1.6 1.6-1.6Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+      science: '<svg class="ios-symbol" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="4.2" y="5.2" width="15.6" height="13.6" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 8.4v7.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
+    };
+
+    function paintSymbol(el) {
+      if (!el || el.closest(".status") || el.dataset.iosLabel) return;
+      const name = el.dataset.androidIcon;
+      const svg = IOS_SYMBOLS[name];
+      if (!svg) return;
+      const ios = document.documentElement.dataset.platform === "ios";
+      if (ios) {
+        el.classList.add("ios-symbol-host");
+        el.classList.remove("material-symbols-outlined");
+        if (el.dataset.iosDrawn !== name) {
+          el.innerHTML = svg;
+          el.dataset.iosDrawn = name;
+        }
+      } else if (el.classList.contains("ios-symbol-host") || el.dataset.iosDrawn) {
+        el.classList.remove("ios-symbol-host");
+        el.classList.add("material-symbols-outlined");
+        el.textContent = name;
+        delete el.dataset.iosDrawn;
+      }
+    }
+
+    function setSymbolName(el, name) {
+      if (!el) return;
+      el.dataset.androidIcon = name;
+      delete el.dataset.iosDrawn;
+      if (document.documentElement.dataset.platform === "ios" && IOS_SYMBOLS[name]) {
+        el.innerHTML = IOS_SYMBOLS[name];
+        el.dataset.iosDrawn = name;
+        el.classList.add("ios-symbol-host");
+        el.classList.remove("material-symbols-outlined");
+      } else {
+        el.textContent = name;
+        el.classList.add("material-symbols-outlined");
+        el.classList.remove("ios-symbol-host");
+      }
+    }
+
+    function syncIosSymbols() {
+      document.querySelectorAll("#proto .material-symbols-outlined, #proto .ios-symbol-host, .spec-ios .material-symbols-outlined, .spec-ios .ios-symbol-host").forEach((el) => {
+        if (!el.dataset.androidIcon) {
+          const name = (el.textContent || "").trim();
+          if (IOS_SYMBOLS[name]) el.dataset.androidIcon = name;
+        }
+        paintSymbol(el);
+      });
+    }
+
+    function syncBarIcons() {
+      const ios = document.documentElement.dataset.platform === "ios";
+      document.querySelectorAll(".appbar .icon-btn").forEach((el) => {
+        if (!el.dataset.androidIcon) el.dataset.androidIcon = (el.textContent || "").trim();
+        if (!el.dataset.iosLabel) return;
+        el.textContent = ios ? el.dataset.iosLabel : el.dataset.androidIcon;
+        el.classList.toggle("material-symbols-outlined", !ios);
+        el.classList.toggle("ios-bar-label", ios);
+        delete el.dataset.iosDrawn;
+      });
+    }
+
+    function syncIosPrompts() {
+      const ios = document.documentElement.dataset.platform === "ios";
+      document.querySelectorAll(".tf[data-live] input, .tf[data-live] textarea").forEach((el) => {
+        if (el.tagName === "SELECT") return;
+        if (!el.dataset.promptReady) {
+          el.dataset.androidPlaceholder = el.getAttribute("placeholder") || "";
+          const tf = el.closest(".tf");
+          const msg = tf ? tf.querySelector("[data-msg]") : null;
+          const idle = msg ? (msg.dataset.idle || msg.textContent || "").trim() : "";
+          const label = tf ? (tf.querySelector(".label")?.textContent || "").trim() : "";
+          const single = tf && !tf.classList.contains("is-multiline");
+          const hint = (el.dataset.iosPrompt || idle).trim();
+          el.dataset.iosPlaceholder = single ? label : (hint && hint !== label ? hint : label);
+          el.dataset.promptReady = "1";
+        }
+        const next = ios ? el.dataset.iosPlaceholder : el.dataset.androidPlaceholder;
+        if (next) el.setAttribute("placeholder", next);
+        else el.removeAttribute("placeholder");
+      });
+    }
+
+    function applyPlatform(next) {
+      const platform = next === "ios" ? "ios" : "android";
+      document.documentElement.setAttribute("data-platform", platform);
+      document.querySelectorAll("[data-platform-btn]").forEach((b) => {
+        b.setAttribute("aria-pressed", String(b.dataset.platformBtn === platform));
+      });
+      syncPlatformCopy();
+      syncBarIcons();
+      syncIosPrompts();
+      paintCatalogs();
+      ensureIosClears();
+      syncIosSymbols();
+      document.querySelectorAll(".tf[data-live]").forEach(syncIosClear);
+      document.title = platform === "ios"
+        ? "Text Fields — iOS · Seznam Aplikace"
+        : "Text Fields — MD3 Expressive · Seznam Aplikace";
+      const nextParams = new URLSearchParams(location.search);
+      if (platform === "android") nextParams.delete("platform");
+      else nextParams.set("platform", "ios");
+      const search = nextParams.toString();
+      history.replaceState(null, "", `${location.pathname}${search ? `?${search}` : ""}${location.hash}`);
+    }
+
+    document.querySelectorAll("[data-platform-btn]").forEach((b) => {
+      b.addEventListener("click", () => applyPlatform(b.dataset.platformBtn));
+    });
+    document.addEventListener("focusin", (e) => {
+      const tf = e.target.closest && e.target.closest(".tf");
+      if (tf) syncIosClear(tf);
+    });
+    document.addEventListener("focusout", (e) => {
+      const tf = e.target.closest && e.target.closest(".tf");
+      if (!tf) return;
+      window.setTimeout(() => syncIosClear(tf), 0);
+    });
 
     paintCatalogs();
 
@@ -3849,6 +4879,7 @@
       showScreen(startScreen);
     } else applyFill(fillMode);
     applySpecLang("cs");
+    applyPlatform(document.documentElement.getAttribute("data-platform") || "android");
   </script>
 </body>
 </html>
